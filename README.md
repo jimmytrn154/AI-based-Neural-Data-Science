@@ -8,6 +8,56 @@ The data has already been preprocessed (filtered, re-referenced, ICA-cleaned), s
 
 ---
 
+## Project context
+
+This is the team project for **BME54701 AI-based Neural Data Science (2026-2)**. Every team gets the same preprocessed dataset and chooses its own research question; no single analysis is required. The source is `Lecture02 - Project Overview.pdf`.
+
+### Candidate questions from the lecture
+
+**Starting points**
+- Does the Simon conflict effect differ between groups, in reaction time and in errors? This needs only the behavioral tables, no EEG, so it is a good first step.
+- Is the novelty P3 smaller in PD?
+- Does resting alpha power or peak frequency relate to MoCA?
+
+**Going further**
+- Is midfrontal theta during conflict related to cognitive status?
+- Does timing variability predict MoCA better than EEG does?
+- Visual vs. auditory novelty: is it the same response?
+- Can measures from all four tasks be combined into one index?
+- Does a model trained on one task generalize to another task in the same person?
+- How few channels are enough?
+- How does resting-state network organization relate to clinical severity?
+
+### Related work
+
+The course draws on 14 papers in three groups:
+
+- **3 original papers** describing the tasks and first results.
+- **4 papers** extending the results to clinical outcomes (MoCA, UPDRS, survival).
+- **7 papers** using the data only as a machine-learning benchmark.
+
+The original papers share one claim: PD patients fail to raise midfrontal 1–8 Hz activity in response to a cue, in proportion to cognitive decline (ρ = 0.34 with MoCA, 0.46 with executive function).
+
+One baseline paper per task:
+
+| Task | Paper | Finding | Number |
+|---|---|---|---|
+| Rest | Anjum 2024, *npj PD* (original) | LPC + PCA + distance ratio on 8 electrodes outperforms deep learning; only externally validated result | AUC 0.90, external ρ 0.68 |
+| Simon | Sun 2024, *EMBC* | Connectivity beats single-channel waveforms and RT; cannot separate congruent from incongruent (51%) | 95% (trial-level split) |
+| Oddball | Avola 2025, *DMSVIVA* | 11 models on one pipeline and split; XGBoost beat every deep model | 0.79, AUC 0.86 |
+| Timing | Singh 2021, *npj PD* (original) | Timing variability links the EEG signal to cognition; behavior alone gives a baseline | ρ −0.39 with MoCA, d = 0.66 |
+
+Sun 2024's 95% comes from a trial-level split, which inflates accuracy (see [Pitfalls](#pitfalls)), so do not treat it as a target.
+
+### Ground rules
+
+- **PD vs. control and cognitively impaired vs. normal are different problems.** 11 of the 49 controls score below 26 on MoCA. Do not compare accuracies across the two framings.
+- **Use UPDRS-III only within the PD group.** All PD participants were recorded on medication.
+- **Split train and test by subject** for any classifier or regressor.
+- **Before starting your own analysis,** run the starter code and reproduce one number from the [reference values](#sanity-check-reference-values).
+
+---
+
 ## Dataset at a glance
 
 | | |
