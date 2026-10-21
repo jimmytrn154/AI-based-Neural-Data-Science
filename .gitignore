@@ -1,0 +1,22 @@
+# Data never lives in the repo (Dataset_ALL is on each machine; see DATA_ROOT in config.yaml)
+Dataset_ALL/
+*.set
+*.fdt
+*.mat
+*.fif
+*.npy
+*.h5
+
+# Results: git-ignored except small CSVs and figures
+results/**
+!results/**/
+!results/**/.gitkeep
+!results/features/*.csv
+!results/figures/*
+
+# Python / notebooks
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.DS_Store

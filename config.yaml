@@ -1,0 +1,118 @@
+# =============================================================
+# BME54701 project — shared configuration (Phase 1)
+# Decided Oct 20, 2026. Change ONLY by team agreement, and log
+# every change in PROGRESS.md (decision log).
+# =============================================================
+
+paths:
+  data_root: "/Users/trananhchuong/OneDrive - VINACADEMY LLC/AI-based Neural Data Science/Dataset_ALL"      # each person sets their own local path
+  results: "results"
+
+random_seed: 42                           # k-means, permutations, bootstrap, CV
+
+# -------------------------------------------------------------
+# 1. Subject selection (fixed BEFORE looking at results)
+# -------------------------------------------------------------
+subjects:
+  id_column: "subject_id"                 # never use orig_* columns
+  max_interpolated_channels: 6            # drop recording if EEG.etc.iowa.nInterp > 6
+  rest:
+    require: "has_rest == 1"
+    blink_sensitivity_flag: "nICremoved == 0"   # keep, but rerun Rest results without them
+  simon:
+    require: "has_simon == 1"
+    allowed_trial_status: ["ok", "partial"]     # drop "exclude"
+    min_trials_per_condition: 40                # after trial filtering; else drop from condition analyses
+  rest_vs_simon: "subjects passing BOTH the rest and simon rules"
+  clinical:
+    missing_moca: "drop from MoCA analyses only"
+    conflicting_sex_values: "treat as missing (e.g. 'F|M'); drop only from models with sex as covariate"
+    updrs: "PD group only"
+
+# -------------------------------------------------------------
+# 2. Preprocessing for microstates
+# -------------------------------------------------------------
+preprocessing:
+  bandpass_hz: [1.0, 40.0]                # MNE default zero-phase FIR
+  resample_hz: 250
+  reference: "average (already applied)"
+  continuous_segment: "whole recording"
+
+# -------------------------------------------------------------
+# 3. Microstate clustering
+# -------------------------------------------------------------
+microstates:
+  gfp_peak_outlier_sd: 3                  # drop GFP peaks > mean + 3 SD (per recording)
+  peaks_per_subject_per_task: "min(n_rest, n_simon, 3000)"   # random sample, equal for both tasks
+  two_level_clustering: true              # individual k-means -> cluster individual maps at group level
+  algorithm: "modified k-means (polarity-invariant)"
+  n_init: 100
+  max_iter: 300
+  draft_templates:
+    n_subjects: 15                        # random sample stratified by group
+    k: 4
+  k_range: [4, 5, 6, 7]
+  k_selection: >
+    Primary K = best mean rank across silhouette, Calinski-Harabasz,
+    Davies-Bouldin (lower is better) and Dunn scores; ties -> smaller K.
+    Always report K = 4 and K = 5 as well.
+  state_labels: "match maps to canonical A-D (E...) by visual inspection; fixed once, used everywhere"
+  backfit:
+    min_segment_length_samples: 5         # = 20 ms at 250 Hz
+    reject_edges: true
+  metrics: ["mean_duration", "occurrence", "coverage", "gev", "transition_matrix_no_self"]
+
+# -------------------------------------------------------------
+# 4. Simon condition-level analysis
+# -------------------------------------------------------------
+simon_conditions:
+  epochs: "lock-cue (ready-made)"
+  keep_trials: "beh_accuracy == 1 AND NOT badEpoch AND 150 <= beh_rt <= 1500 ms"
+  filter: "1-40 Hz on the full -1.0 to 2.5 s epoch, then crop"
+  analysis_window_ms: [-200, 800]
+  erp_plot_lowpass_hz: 30                 # for ERP figures only
+  windows_ms:
+    n2: [200, 350]
+    theta: [400, 750]
+  permutation_test:
+    type: "paired cluster-based"
+    n_permutations: 5000
+    cluster_forming_p: 0.05
+
+# -------------------------------------------------------------
+# 5. Recovery pilot (exploratory)
+# -------------------------------------------------------------
+recovery:
+  epochs: "lock-resp (ready-made)"
+  baseline: "subject's mean state probabilities, cue-locked -200 to 0 ms"
+  reliability: "split-half (odd/even trials), Spearman-Brown corrected"
+  keep_if_reliability_at_least: 0.5
+
+# -------------------------------------------------------------
+# 6. Statistics
+# -------------------------------------------------------------
+statistics:
+  alpha: 0.05                             # two-sided
+  fdr: "Benjamini-Hochberg, q = 0.05, within each family (RQ1, RQ2, RQ3)"
+  primary_features:
+    - "reorganization_index (Jensen-Shannon, rest vs simon transitions)"
+    - "coverage_change per state (simon - rest)"
+    - "mean_duration per state (rest and simon)"
+    - "conflict_effect per window (n2, theta)"
+  within_subject: "Wilcoxon signed-rank (primary); mixed model metric ~ task*group + age + sex + (1|subject) (secondary)"
+  group_difference: "linear model feature ~ group + age + sex; Mann-Whitney as check"
+  clinical_association: "Spearman partial correlation controlling age; whole sample and PD only"
+  behavior_link: "Simon incongruent error rate"
+  effect_sizes: "rank-biserial r / Cohen's d; rho with 95% bootstrap CI (2000 resamples)"
+  report_n_at_every_step: true
+
+# -------------------------------------------------------------
+# 7. Outputs and naming
+# -------------------------------------------------------------
+outputs:
+  feature_tables: "results/features/<analysis>.csv, one row per subject_id"
+  column_names: "<task>_<metric>_<state>, e.g. rest_meandur_A, simon_cov_B"
+  templates: "results/templates/templates_K<k>.fif"
+  labels: "results/labels/<subject_id>_task-<Task>_labels.npy"
+  figures: "results/figures/<owner>_<analysis>.png"
+  environment: "pip freeze > requirements.txt on day 1; everyone installs from it"

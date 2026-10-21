@@ -1,0 +1,560 @@
+\documentclass[11pt,a4paper]{article}
+
+% ------------------------------------------------------------
+% Packages
+% ------------------------------------------------------------
+\usepackage[margin=2.3cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\setlist{itemsep=2pt, topsep=4pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\uV}{$\mu$V}
+
+% ------------------------------------------------------------
+\title{\textbf{Brain-State Reorganization from Rest to Task\\
+as a Marker of Cognitive Decline in Parkinson's Disease}\\[4pt]
+\large Project Proposal --- BME54701 AI-based Neural Data Science (2026-2)}
+\author{Team [Name/Number]: Tran Anh Chuong, Minseo, Seonwoo Kim, Bohyeon Rhee}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Cognitive decline is common in Parkinson's disease (PD), but it is usually detected with clinical tests rather than brain measurements. Using the Iowa PD EEG cohort (100 PD, 49 controls), we study the brain through \emph{EEG microstates}, the few recurring scalp patterns between which the brain switches every few tens of milliseconds. Our central question is whether the way a person's brain states \emph{reorganize} from rest to a demanding cognitive task carries information about cognitive function, beyond the person's resting-state profile and cheap behavioural measures.
+
+The project runs in four phases. Phase~1, presented on October~26, uses unsupervised learning to describe the data's structure:
+\begin{itemize}
+  \item microstate dynamics at rest versus during the Simon conflict task;
+  \item microstate time courses for congruent versus incongruent trials;
+  \item a first look at differences between PD and controls and the relation to cognitive scores (MoCA).
+\end{itemize}
+Later phases add robustness checks, a calibrated prediction study testing the added value of EEG over behaviour, and extensions to the other tasks and to stronger models.
+\end{abstract}
+
+% ============================================================
+\section{Project requirements}
+% ============================================================
+
+The course project (70\% of the grade, plus 10\% peer evaluation) has the following stated requirements.
+
+\begin{itemize}
+  \item \textbf{Topic:} neural data analysis using AI methods. Teams need not use every method taught. All teams use the same dataset and choose their own research question.
+  \item \textbf{Evaluation:} teams compete on \emph{scientific and engineering merit}, such as novel findings and technical advances. Unique results and insights are highly valued. Results from several teams may later be combined for publication.
+  \item \textbf{Presentations:} an in-class progress presentation and a final presentation in Week~16.
+  \item \textbf{AI assistance:} allowed, provided the prompt history is submitted. We will keep and submit all prompt histories.
+\end{itemize}
+
+\paragraph{Guidance for the October 26 presentation.} The instructor confirmed the following points.
+\begin{itemize}
+  \item It is a progress report on preliminary results from applying \emph{unsupervised learning} to the project data. One example given was microstate analysis showing how states vary with task and condition.
+  \item It should open with the main research questions.
+  \item Research questions may be refined for the final presentation.
+\end{itemize}
+Our Phase~1 is designed around this guidance.
+
+\paragraph{Ground rules.} The lecture materials and the Dataset Guide add the following rules, which we adopt throughout:
+\begin{itemize}
+  \item train/test splits are made by subject, never by trial or epoch;
+  \item PD-vs-control and impaired-vs-normal are different problems, and their accuracies are never compared;
+  \item UPDRS-III is used only within the PD group;
+  \item published reference values are reproduced before our own analyses;
+  \item the subject exclusion rule is fixed before results are seen;
+  \item averaging is done within each subject first, then across subjects;
+  \item the original OpenNeuro datasets are cited.
+\end{itemize}
+
+% ============================================================
+\section{Dataset and experiments}
+% ============================================================
+
+\subsection{Participants and recording}
+
+The data come from the University of Iowa (Narayanan Lab, 2017--2021) and are public on OpenNeuro under a CC0 licence. Older adults with and without PD were recorded with a 64-channel BrainVision actiCAP at 500\,Hz while performing up to four tasks in a single visit. All PD participants were tested on their usual dopaminergic medication.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+ & PD & Control \\
+\midrule
+$n$ & 100 & 49 \\
+Sex (F / M) & 31 / 68 & 23 / 26 \\
+Age (years) & $68.5 \pm 8.0$ & $70.9 \pm 7.5$ \\
+MoCA (/30) & $24.3 \pm 4.0$ (9--30) & $26.7 \pm 1.8$ (22--30) \\
+UPDRS-III & $12.6 \pm 7.1$ & 0 by definition \\
+\bottomrule
+\end{tabular}
+\caption{Participants. 134 people (91 PD, 43 controls) completed all four tasks.}
+\end{table}
+
+\noindent Two clinical scores are provided.
+\begin{itemize}
+  \item \textbf{MoCA} (Montreal Cognitive Assessment)~\cite{nasreddine2005} is a short cognitive screen scored out of 30. Scores below 26 conventionally indicate possible cognitive impairment; 11 of the 49 controls score below 26.
+  \item \textbf{UPDRS-III} rates motor symptom severity (higher is worse).
+\end{itemize}
+Both are continuous, so correlation and regression are possible as well as group comparisons.
+
+\subsection{The four tasks}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l c L L L}
+\toprule
+Task & $n$ & What participants did & What it probes & Main EEG signature \\
+\midrule
+Rest & 149 & Sat quietly with eyes open, $\sim$146\,s & Baseline brain state & Alpha peak, spectral shape, network dynamics \\
+Simon & 147 & Pressed a key by a square's colour, ignoring its left/right position (384 trials, inter-trial interval $\sim$2.1\,s) & Conflict, cognitive control & Midfrontal theta (4--7\,Hz), N2, ERN \\
+Oddball & 146 & Pressed a key for an arrow; the preceding audio-visual pre-cue was occasionally unexpected (240 trials) & Automatic novelty detection & Novelty P3 (P3a), 250--500\,ms after the pre-cue \\
+Interval timing & 139 & Pressed when 3\,s or 7\,s felt elapsed, without counting (80 trials) & Internal timing & Midfrontal delta (1--4\,Hz), CNV, ramping \\
+\bottomrule
+\end{tabularx}
+\caption{The four tasks.}
+\end{table}
+
+\paragraph{The Simon task, our main task.} A coloured square appears on the left or right of the screen, and the participant responds by colour.
+\begin{itemize}
+  \item On \emph{congruent} trials, the square appears on the same side as the correct hand.
+  \item On \emph{incongruent} trials, it appears on the opposite side. The automatic spatial response then conflicts with the instructed colour rule, so responses are slower and less accurate (the Simon effect).
+  \item In this cohort, PD patients make about twice as many errors on incongruent trials (17.6\% vs 8.4\%), while the reaction-time cost differs less (+50 vs +34\,ms).
+\end{itemize}
+
+\paragraph{The other tasks.}
+\begin{itemize}
+  \item \textbf{Oddball:} PD patients are less accurate (95.3\% vs 99.4\%).
+  \item \textbf{Interval timing:} PD patients produce the same average intervals as controls but are much more variable (coefficient of variation 0.31 vs 0.21 for the 3\,s target).
+\end{itemize}
+
+\paragraph{The established EEG finding.} The original papers share one claim: PD patients fail to increase midfrontal 1--8\,Hz activity when a task demands control, in proportion to cognitive decline ($\rho \approx 0.34$ with MoCA).
+
+\subsection{Preprocessing already applied}
+
+The course team distributes a cleaned version of the data with these steps already applied:
+\begin{itemize}
+  \item non-EEG channels removed and mislabelled channels repaired;
+  \item line noise removed with CleanLine, and a 0.1\,Hz high-pass filter;
+  \item bad channels detected with FASTER and interpolated;
+  \item the online Pz reference restored, and all channels re-referenced to the 64-channel average;
+  \item ICA with eye components removed using ICLabel.
+\end{itemize}
+
+\noindent Several steps are left to each team:
+\begin{itemize}
+  \item there is no low-pass filter;
+  \item bad epochs are flagged but not removed;
+  \item muscle and heart components are not removed.
+\end{itemize}
+
+\noindent About 23\% of Rest recordings had no eye component removed, so blinks may remain in them. Ready-made epochs are provided for each task, locked to the stimulus and to the response.
+
+\subsection{What previous work leaves open}
+
+The course reference papers presented in Lecture~2 suggest three gaps.
+
+\begin{enumerate}
+  \item \textbf{Weak evaluation.} The machine-learning papers report accuracy, often from a single split. One reaches 95\% only with a trial-level split, which inflates accuracy. Calibration and comparisons with cheap behavioural measures are not reported.
+  \item \textbf{No dynamics.} The EEG papers analyse each task separately with band power or ERP amplitudes. None of the approaches presented describes how the brain's \emph{state dynamics} change between rest and task within the same person, even though this cohort makes such comparisons possible.
+  \item \textbf{Rest-only microstate work.} Microstates have been related to cognition in other cohorts, but mostly at rest. Whether the \emph{change} from rest to task adds information is much less explored.
+\end{enumerate}
+
+\noindent A literature check is planned to confirm these gaps precisely.
+
+% ============================================================
+\section{Background}
+% ============================================================
+
+\subsection{EEG microstates}
+
+At every time point, the 64 electrode voltages form a scalp map (a topography). These maps do not change smoothly. A map keeps a stable shape for roughly 60--120\,ms and then switches abruptly to another~\cite{michel2018}. These quasi-stable periods are called \emph{microstates}.
+
+Across many studies, a small number of map classes (typically 4--5, often labelled A--D) recur and explain a large part of the EEG. They are often interpreted as reflecting large-scale brain networks switching on and off, although this interpretation remains a hypothesis.
+
+\paragraph{How microstates are found.} Microstates are found with \emph{modified $k$-means clustering}~\cite{pascualmarqui1995}, an unsupervised method covered in Lecture~5.
+\begin{enumerate}
+  \item Compute the global field power (GFP), the spatial standard deviation across channels at each time point.
+  \item Collect the maps at GFP peaks, where the signal is strongest and most stable.
+  \item Cluster these maps. The clustering is polarity-invariant: a map and its sign-flipped version count as the same state, because oscillations reverse sign every half-cycle.
+  \item Label every time point of a recording with its closest cluster centre (``back-fitting'').
+\end{enumerate}
+
+\paragraph{Measures.} The resulting state sequence gives simple, interpretable measures:
+\begin{itemize}
+  \item \textbf{mean duration:} how long each state lasts;
+  \item \textbf{occurrence:} how often per second it appears;
+  \item \textbf{coverage:} what fraction of time it occupies;
+  \item \textbf{transition probabilities:} how likely each state is to be followed by each other state.
+\end{itemize}
+The transition matrix can be viewed as a small directed network of brain states.
+
+\subsection{Event-related microstates}
+
+In a task, the same idea can be applied to the time after each stimulus. The classic approach segments the averaged event-related potential (ERP) of each condition into a sequence of stable maps, which shows \emph{when} and \emph{how} the brain's state sequence differs between conditions~\cite{murray2008}.
+
+A complementary approach back-fits the templates to every single trial and computes, for each subject and condition, the \emph{probability} of each state at each time point after the stimulus. This gives a state-probability time course per condition.
+
+\subsection{Why the change from rest to task}
+
+A person's resting profile describes the brain at baseline. When a demanding task begins, the brain must reorganize, for example to recruit control networks. If PD patients fail to engage control as the original papers suggest, this failure may appear as a smaller or different reorganization of brain states.
+
+Because each person serves as their own baseline, the change from rest to task removes stable individual differences, such as skull thickness or electrode impedance, that affect resting measures.
+
+% ============================================================
+\section{Research questions}
+% ============================================================
+
+\paragraph{Overall question.} Do changes in brain-state dynamics from rest to task carry information about cognitive function in PD, beyond what resting EEG and cheap behavioural tests already provide?
+
+\subsection*{Phase 1 questions (unsupervised; October 26)}
+
+\begin{description}[leftmargin=1.2em, style=nextline]
+  \item[RQ1 --- Rest vs task.] Do the same microstate classes describe rest and the Simon task? How do their duration, coverage and transitions change from rest to task within the same people?
+  \item[RQ2 --- Conflict.] Within the Simon task, do microstate time courses differ between congruent and incongruent trials, and when?
+  \item[RQ3 --- Groups and cognition (preliminary).] Do the patterns from RQ1 and RQ2 differ between PD and controls? Do they relate to MoCA and to Simon error rates?
+  \item[Exploratory --- Recovery after conflict.] After an incongruent trial, does the brain take longer to return to its baseline state, and can this be measured reliably before the next stimulus arrives?
+\end{description}
+
+\subsection*{Later questions}
+
+\begin{description}[leftmargin=1.2em, style=nextline]
+  \item[RQ4 --- Robustness (Phase 2).] Are the Phase~1 findings robust to the number of microstate classes and to possible blink contamination? Are they explained by alpha activity?
+  \item[RQ5 --- Added value (Phase 3).] Do resting microstates, and then rest-to-task reorganization, improve the prediction of cognitive impairment beyond demographics and behaviour? Are the predicted probabilities well calibrated?
+  \item[RQ6 --- Generalization (Phase 4).] Do the reorganization measures generalize to the Oddball and Timing tasks within the same people? Do stronger models improve on interpretable features?
+\end{description}
+
+% ============================================================
+\section{Methods}
+% ============================================================
+
+\subsection{Subject selection and quality control}
+
+The following rules will be written down and fixed before any results are seen.
+
+\begin{itemize}
+  \item Exclude recordings with more than 6 interpolated channels (\texttt{EEG.etc.iowa.nInterp}).
+  \item Exclude Simon data for subjects whose trial labels are marked \texttt{exclude} in \texttt{subjects.csv}.
+  \item Always identify people by the unified \texttt{subject\_id}, never by the original per-task OpenNeuro numbers.
+  \item Report the number of subjects remaining at every step.
+  \item For Rest, repeat all analyses with and without recordings in which no eye component was removed, because blinks can create frontal maps that resemble a microstate.
+\end{itemize}
+
+\subsection{Sanity checks}
+
+Before our own analyses, we will:
+\begin{itemize}
+  \item reproduce the Simon reaction times for correct trials (514.7 / 557.4\,ms, congruent / incongruent) and error rates (6.4\% / 14.8\%) from the trial tables;
+  \item reproduce the grand-average cue-locked ERP at Cz for the two Simon conditions (Dataset Guide, Figure~2).
+\end{itemize}
+
+\subsection{Phase 1: unsupervised description of the data's structure}
+
+\paragraph{Preprocessing for microstates.}
+\begin{itemize}
+  \item Band-pass filter all recordings to 1--40\,Hz and downsample to 250\,Hz to reduce computation. The data are already average-referenced, as microstate analysis requires.
+  \item Develop the pipeline on 10--20 subjects before running the full cohort.
+\end{itemize}
+
+\paragraph{Shared templates.}
+\begin{enumerate}
+  \item For every subject, extract GFP-peak maps from Rest and from the continuous Simon recording, using an equal number of peaks per subject and task so that neither dominates.
+  \item Cluster the maps of each subject with modified $k$-means, then cluster all subjects' maps again to obtain group templates.
+  \item Fit $K = 4$--$7$ and choose $K$ by global explained variance and a cluster-quality criterion. Report $K=4$ and $K=5$ in all cases.
+  \item Using one set of templates everywhere makes states comparable across rest, task and conditions.
+  \item As a check, also fit templates to Rest and Simon separately and report their spatial correlation. Clearly different maps would themselves be a finding.
+\end{enumerate}
+We will use MNE-Python~\cite{gramfort2013} and \texttt{pycrostates}~\cite{ferat2022}.
+
+\paragraph{Task-level dynamics (RQ1).} Back-fit the templates to each subject's full Rest and Simon recordings, with temporal smoothing. Then compute, for each subject, task and state: mean duration, occurrence, coverage, global explained variance, and the transition probability matrix. Rest and Simon are compared within subjects.
+
+\paragraph{Condition-level dynamics (RQ2).} Congruent and incongruent trials are interleaved about every 2\,s rather than presented in blocks. Whole-recording durations therefore cannot be computed per condition: inside a short post-stimulus window they would be cut off at the window edges and biased. Instead we use event-related measures from the stimulus-locked epochs, keeping correct trials only and excluding flagged bad epochs:
+\begin{enumerate}
+  \item \textbf{Topographic ERP segmentation.} Segment each condition's subject-averaged ERP (0--800\,ms) into a sequence of microstates, to describe when the state sequence differs between conditions.
+  \item \textbf{Single-trial state probabilities.} Back-fit the templates to every trial and compute, per subject and condition, the probability of each state at each time point.
+  \item \textbf{Comparison.} Compare congruent and incongruent time courses with cluster-based permutation tests over time.
+\end{enumerate}
+Two windows are pre-specified from the literature: 200--350\,ms (N2) and 400--750\,ms (midfrontal theta).
+
+\paragraph{Pre-specified summary features.} With about 134 subjects, the number of state-by-metric-by-condition combinations would cause overfitting in later phases. We therefore define a small set of summaries in advance.
+\begin{itemize}
+  \item \textbf{Reorganization index:} one number per subject measuring how different their Simon state dynamics are from their resting dynamics. It is computed as the Jensen--Shannon divergence between the rest and Simon transition-probability distributions.
+  \item \textbf{Coverage change:} task minus rest coverage, for each state.
+  \item \textbf{Conflict effect:} the distance between the incongruent and congruent state-probability vectors, averaged over each pre-specified window. This single number per window avoids choosing a state after seeing the data.
+\end{itemize}
+
+\paragraph{Exploratory: recovery after conflict.} The aim is to test whether the brain takes longer to return to baseline after an incongruent trial.
+\begin{enumerate}
+  \item From the response-locked epochs ($-1.5$ to $+1.0$\,s), track the state-probability vector after the response.
+  \item Measure how quickly it returns towards the pre-stimulus baseline, comparing trials that follow incongruent versus congruent trials and errors versus correct responses.
+  \item In parallel, project the time-resolved state-probability or topography vectors onto their first principal components (PCA) and describe each condition as a trajectory in this low-dimensional space. Recovery is then the trajectory's return to its starting region.
+\end{enumerate}
+Reaction times are about 550\,ms and the inter-trial interval about 2.1\,s, so only around 1.5\,s is available before the next stimulus, and response-related activity overlaps this window. We will therefore first check measurability with split-half reliability (odd vs even trials, Spearman--Brown corrected). The analysis is kept only if this reliability is adequate.
+
+\paragraph{Subject-level structure.} Embed subjects by their microstate features using PCA and UMAP, and cluster them with $k$-means. We then check whether the data-driven groups align with PD/control status or MoCA. This shows whether the main axes of variation in brain dynamics are related to the clinical picture at all.
+
+\paragraph{Statistics.}
+\begin{itemize}
+  \item \textbf{Rest vs Simon within subjects:} Wilcoxon signed-rank tests, and linear mixed models of the form \emph{metric $\sim$ task $\times$ group + age + sex + (1 | subject)}.
+  \item \textbf{Group differences:} age and sex as covariates.
+  \item \textbf{Clinical associations:} Spearman partial correlations with MoCA and with Simon error rates, controlling for age, in the whole sample and within PD. MoCA is bounded and skewed, so Spearman is preferred. UPDRS-III is used within PD only.
+  \item \textbf{Multiple comparisons:} Benjamini--Hochberg false discovery rate. The pre-specified summary features are primary; everything else is exploratory.
+\end{itemize}
+
+\subsection{Phase 2: consolidation and robustness}
+
+\begin{itemize}
+  \item Refine the research questions using the feedback from the October~26 presentation.
+  \item Check robustness to $K$, to blink contamination and to the choice of filters.
+  \item \textbf{Alpha control.} Microstate durations depend partly on alpha activity. We will separate each Rest spectrum into periodic peaks (alpha peak frequency and power) and the aperiodic $1/f$ background using spectral parameterization~\cite{donoghue2020}. We then test whether microstate associations with cognition survive after controlling for these spectral features. This also resolves whether the broadband spectral offset between PD and controls is a rhythm change or a background shift.
+  \item Fix the final feature set and decide whether to keep the recovery analysis.
+\end{itemize}
+
+\subsection{Phase 3: does EEG add value beyond cheap measures?}
+
+\paragraph{Target.} Cognitive impairment, defined as MoCA $<26$, pooled across PD and controls. A separate analysis within the PD group ensures that the model is not simply detecting PD.
+
+\paragraph{Models.} Five nested feature sets are compared on the same subjects.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l L}
+\toprule
+Model & Input features \\
+\midrule
+M0: Demographics & Age, sex \\
+M1: Behaviour & M0 + Simon incongruent error rate and Simon RT effect, interval-timing variability, oddball accuracy \\
+M2: Rest EEG & M1 + resting microstate and spectral features \\
+M3: Rest + reorganization & M2 + reorganization index, coverage change and conflict effect \\
+M4: EEG only & M0 + resting and reorganization features, without behaviour \\
+\bottomrule
+\end{tabularx}
+\caption{Models for RQ5. The key comparisons are M2 vs M1 (does resting EEG add value?) and M3 vs M2 (does reorganization add value?).}
+\end{table}
+
+\paragraph{Learning and validation.}
+\begin{itemize}
+  \item \textbf{Model:} L2-regularised logistic regression, a simple and robust choice for about 150 subjects.
+  \item \textbf{Split:} each subject contributes one row, so splits are automatically made by subject.
+  \item \textbf{Cross-validation:} repeated stratified 5-fold cross-validation (20 repetitions), with the regularisation strength chosen in an inner loop.
+  \item \textbf{No leakage:} all scaling and feature selection are fitted inside training folds only.
+  \item \textbf{Missing tasks:} the primary analysis uses subjects with all required tasks. A sensitivity analysis imputes missing values inside training folds.
+\end{itemize}
+
+\paragraph{Evaluation.}
+\begin{itemize}
+  \item \textbf{Discrimination:} area under the ROC curve (AUC).
+  \item \textbf{Calibration:} Brier score~\cite{brier1950}, calibration slope and intercept, and reliability diagrams, computed on pooled out-of-fold predictions.
+  \item \textbf{Model comparison:} $\Delta$AUC and $\Delta$Brier with bootstrap confidence intervals.
+  \item \textbf{Selective prediction:} the error rate when the model may abstain on its least confident cases. This shows how a calibrated screen could decide whom to refer for a full neuropsychological assessment.
+\end{itemize}
+
+\noindent A finding that behaviour alone performs as well as EEG would also be informative, because EEG is far more costly to record.
+
+\subsection{Phase 4: extensions}
+
+\begin{itemize}
+  \item \textbf{Generalization.} Apply the same templates and reorganization measures to the Oddball (standard vs oddball, visual vs auditory) and Timing tasks. Do people who reorganize strongly in Simon also do so in other tasks? 134 people completed all four tasks.
+  \item \textbf{Deep learning comparison.} Train a compact model such as EEGNet~\cite{lawhern2018} under the same subject-level validation, to test whether it improves on interpretable features.
+  \item \textbf{Brain networks.} Analyse the microstate transition matrices as directed networks, linking to the Brain Networks lecture.
+  \item \textbf{Optional:} the classical novelty P3 as a bridge to the original papers.
+  \item \textbf{Optional:} a stretch goal of transferring information from all four tasks to a rest-only model. A teacher model is trained on all task features, and a rest-only student learns from its predicted probabilities. This would test whether assessment burden can be reduced without losing accuracy.
+\end{itemize}
+
+% ============================================================
+\section{Why this project fits the course}
+% ============================================================
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.6cm} L}
+\toprule
+Requirement & How the project meets it \\
+\midrule
+October 26 guidance & Phase~1 is entirely unsupervised (microstate clustering, PCA trajectories, subject clustering). It shows how states vary by task (rest vs Simon) and condition (congruent vs incongruent), and the talk opens with the research questions. \\
+Neural data analysis & All core measures come from the EEG: microstate maps, dynamics and event-related state time courses. \\
+AI methods & \emph{Unsupervised:} modified $k$-means, PCA, UMAP (Lecture~5). \emph{Supervised:} regularised classifiers (Phase~3). \emph{Deep learning} and \emph{brain networks} in Phase~4. \\
+Scientific merit & Tests whether rest-to-task reorganization of brain states relates to cognition in PD. This uses the cohort's unique within-person, multi-task design, and links to the original papers' claim of reduced control-related engagement. \\
+Engineering merit & Pre-specified features, subject-level validation, a demographics baseline, calibration metrics and selective prediction. None of these is reported in the benchmark papers. \\
+Unique insight & The cost-framed question of whether task EEG adds value beyond rest and behaviour, and the exploratory measure of recovery after conflict. \\
+Course ground rules & Subject-level splits; separate framings for PD-vs-control and impaired-vs-normal; UPDRS within PD only; reference values reproduced; exclusion rule fixed in advance; within-subject averaging. \\
+Combinable for publication & Standard, documented methods and per-subject feature tables that can be merged with other teams' results. \\
+\bottomrule
+\end{tabularx}
+\caption{Mapping between course requirements and the proposed project.}
+\end{table}
+
+% ============================================================
+\section{Plan and timeline}
+% ============================================================
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l l L}
+\toprule
+Phase & When & Course topics & Goal \\
+\midrule
+1. Data structure & Now -- Oct 26 & Unsupervised learning & Describe brain-state organization at rest vs during Simon, and by condition \\
+2. Consolidation & After Oct 26 & EEG analysis & Act on feedback, robustness checks, alpha control, final features \\
+3. Prediction & Mid-semester & Supervised learning & Added value of EEG beyond behaviour, with calibration \\
+4. Extensions & Late semester & Deep learning, brain networks & Generalize to other tasks; stronger models; networks \\
+Final & Week 16 & --- & Final presentation; possible publication \\
+\bottomrule
+\end{tabularx}
+\caption{Overview of the four phases.}
+\end{table}
+
+\subsection*{Phase 1 schedule}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l L l}
+\toprule
+Dates & Work & Lead \\
+\midrule
+Oct 20 & Agree on the exclusion rule, subject IDs, output format and statistics; set up the environment & All \\
+Oct 20--21 & Behavioural sanity checks and Simon behavioural features & Minseo \\
+Oct 20--22 & Shared preprocessing and back-fitting code; template fitting and choice of $K$ & Chuong \\
+Oct 22--23 & Rest and Simon task-level metrics & Chuong \\
+Oct 21--24 & Simon ERP reproduction; condition-level segmentation and state-probability time courses & Seonwoo \\
+Oct 22--24 & Rest vs Simon comparisons, transition networks, subject clustering, PD/MoCA associations & Bohyeon \\
+Oct 22--24 & Recovery pilot: response-locked state trajectories and split-half reliability & Minseo, Bohyeon \\
+Oct 25 & Slides and rehearsal & All \\
+Oct 26 & Progress presentation & All \\
+\bottomrule
+\end{tabularx}
+\caption{Phase 1 schedule.}
+\end{table}
+
+\paragraph{Decision points.}
+\begin{itemize}
+  \item After the October~26 feedback: confirm or adjust the research questions before investing in Phase~3.
+  \item At the end of Phase~2: keep or drop the recovery analysis, based on its reliability.
+\end{itemize}
+
+% ============================================================
+\section{Team roles}
+% ============================================================
+
+Roles are matched to each member's background and to the ideas each member contributed. Everyone reviews each other's code at the merge step.
+
+\begin{itemize}
+  \item \textbf{Tran Anh Chuong --- EEG pipeline and microstate templates.} Has prior EEG experience from a hackathon project (runner-up) on EEG-driven image generation, and three years of multimodal AI/ML experience.
+  \begin{itemize}
+    \item Phase~1: shared preprocessing, template fitting, back-fitting and task-level metrics.
+    \item Phase~4: deep learning comparison and generalization to the other tasks.
+  \end{itemize}
+  \item \textbf{Seonwoo Kim --- Simon condition analysis.} Has data-analysis experience from LLM-assisted wastewater treatment research, and proposed the rest-to-task reorganization question.
+  \begin{itemize}
+    \item Phase~1: Simon ERP reproduction and event-related microstate analysis.
+    \item Phase~2: spectral parameterization (alpha control).
+    \item Phase~4: optional task-to-rest transfer stretch goal.
+  \end{itemize}
+  \item \textbf{Minseo --- Behaviour, recovery and prediction.} Has experience with ML projects, and proposed the recovery-speed hypothesis.
+  \begin{itemize}
+    \item Phase~1: sanity checks, behavioural features, and the recovery pilot.
+    \item Phase~3: leads the prediction and calibration framework.
+  \end{itemize}
+  \item \textbf{Bohyeon Rhee --- Dynamics, trajectories and networks.} Interested in data science and complex networks, and proposed the PCA trajectory analysis.
+  \begin{itemize}
+    \item Phase~1: rest-vs-task comparisons, transition networks, subject clustering and PCA trajectories for the recovery pilot.
+    \item Phase~4: brain-network analyses.
+  \end{itemize}
+\end{itemize}
+
+% ============================================================
+\section{Risks and mitigations}
+% ============================================================
+
+\begin{itemize}
+  \item \textbf{Biased condition durations} (short, interleaved trials). Use event-related state probabilities rather than whole-recording durations for condition comparisons.
+  \item \textbf{Too many features for the sample size.} Pre-specify a small set of summary features; control the false discovery rate; use regularised models with nested cross-validation.
+  \item \textbf{Sensory and motor confound in rest vs task.} Part of any rest-to-task change reflects visual stimulation and button presses rather than cognition. The congruent vs incongruent contrast is the cleaner cognitive signal, because sensory and motor demands are matched; we report both and interpret them accordingly.
+  \item \textbf{Recovery may not be measurable} (about 1.5\,s before the next stimulus, overlapping response activity). Check split-half reliability before interpreting the measure; treat it as exploratory.
+  \item \textbf{Template differences between rest and task.} Report the spatial similarity of task-specific templates; if they differ clearly, present this as a result and analyse both template sets.
+  \item \textbf{Choice of $K$ and blink contamination.} Report $K=4$ and $K=5$; repeat Rest analyses without recordings that may contain blinks.
+  \item \textbf{Age confound} (controls are older). Include age as a covariate throughout.
+  \item \textbf{Medication} (all PD patients were tested on medication). State this as a limitation; results describe medicated PD.
+  \item \textbf{Computation} (long task recordings). Downsample to 250\,Hz and develop on a subset of subjects first.
+  \item \textbf{Null results.} The phases are designed so that a null result in one part does not invalidate the project; a well-tested negative finding is itself informative.
+\end{itemize}
+
+% ============================================================
+\section{Expected outcomes}
+% ============================================================
+
+\begin{enumerate}
+  \item A description of how microstate dynamics reorganize from rest to a cognitive-control task in older adults with and without PD.
+  \item The time course of microstate differences between conflict and non-conflict trials.
+  \item A test of whether these measures relate to cognition and Simon errors, and whether they survive an alpha control.
+  \item A calibrated, subject-level estimate of how much resting and task-related EEG add to cheap behavioural measures for detecting cognitive impairment.
+  \item If reliable, a new measure of recovery after conflict.
+  \item A pipeline and per-subject feature tables that extend to the other tasks and can be shared with other teams.
+\end{enumerate}
+
+% ============================================================
+\section*{Data citation and AI-assistance statement}
+% ============================================================
+
+\noindent We use the following OpenNeuro datasets (University of Iowa, CC0):
+\begin{itemize}
+  \item ds004574, Cross-modal Oddball, doi:10.18112/openneuro.ds004574.v1.0.0
+  \item ds004579, Interval Timing, doi:10.18112/openneuro.ds004579.v1.0.0
+  \item ds004580, Simon Conflict, doi:10.18112/openneuro.ds004580.v1.0.0
+  \item ds004584, Resting State, doi:10.18112/openneuro.ds004584.v1.0.0
+\end{itemize}
+\noindent Preprocessing used FASTER~\cite{nolan2010}, ICLabel~\cite{piontonachini2019} and EEGLAB~\cite{delorme2004}. AI assistants were used for planning and drafting; prompt histories will be submitted as required.
+
+% ------------------------------------------------------------
+\begin{thebibliography}{99}\small
+
+\bibitem{anjum2024} M.~F. Anjum \emph{et al.}, resting-state EEG biomarker of Parkinson's disease, \emph{npj Parkinson's Disease}, 2024. [Full title to be added from the course reading list.]
+
+\bibitem{singh2021} A.~Singh \emph{et al.}, interval timing and EEG in Parkinson's disease, \emph{npj Parkinson's Disease}, vol.~7, art.~14, 2021. [Full title to be added.]
+
+\bibitem{wessel2019} J.~R. Wessel \emph{et al.}, cross-modal oddball paradigm, \emph{PLoS Computational Biology}, vol.~15, e1006927, 2019. [Full title to be added.]
+
+\bibitem{sun2024} X.~Sun \emph{et al.}, EEG classification in the Simon task, arXiv:2410.06534, 2024. [Full title to be added.]
+
+\bibitem{michel2018} C.~M. Michel and T.~Koenig, ``EEG microstates as a tool for studying the temporal dynamics of whole-brain neuronal networks: A review,'' \emph{NeuroImage}, vol.~180, pp.~577--593, 2018.
+
+\bibitem{pascualmarqui1995} R.~D. Pascual-Marqui, C.~M. Michel, and D.~Lehmann, ``Segmentation of brain electrical activity into microstates: model estimation and validation,'' \emph{IEEE Trans.\ Biomedical Engineering}, vol.~42, no.~7, pp.~658--665, 1995.
+
+\bibitem{murray2008} M.~M. Murray, D.~Brunet, and C.~M. Michel, ``Topographic ERP analyses: a step-by-step tutorial review,'' \emph{Brain Topography}, vol.~20, no.~4, pp.~249--264, 2008.
+
+\bibitem{donoghue2020} T.~Donoghue \emph{et al.}, ``Parameterizing neural power spectra into periodic and aperiodic components,'' \emph{Nature Neuroscience}, vol.~23, pp.~1655--1665, 2020.
+
+\bibitem{nasreddine2005} Z.~S. Nasreddine \emph{et al.}, ``The Montreal Cognitive Assessment, MoCA: a brief screening tool for mild cognitive impairment,'' \emph{J.\ Am.\ Geriatr.\ Soc.}, vol.~53, no.~4, pp.~695--699, 2005.
+
+\bibitem{brier1950} G.~W. Brier, ``Verification of forecasts expressed in terms of probability,'' \emph{Monthly Weather Review}, vol.~78, no.~1, pp.~1--3, 1950.
+
+\bibitem{lawhern2018} V.~J. Lawhern \emph{et al.}, ``EEGNet: a compact convolutional neural network for EEG-based brain--computer interfaces,'' \emph{J.\ Neural Engineering}, vol.~15, no.~5, 056013, 2018.
+
+\bibitem{gramfort2013} A.~Gramfort \emph{et al.}, ``MEG and EEG data analysis with MNE-Python,'' \emph{Frontiers in Neuroscience}, vol.~7, art.~267, 2013.
+
+\bibitem{ferat2022} V.~F\'erat \emph{et al.}, ``Pycrostates: a Python library to study EEG microstates,'' \emph{J.\ Open Source Software}, vol.~7, no.~78, 4564, 2022.
+
+\bibitem{nolan2010} H.~Nolan, R.~Whelan, and R.~B. Reilly, ``FASTER: Fully Automated Statistical Thresholding for EEG artifact Rejection,'' \emph{J.\ Neuroscience Methods}, vol.~192, no.~1, pp.~152--162, 2010.
+
+\bibitem{piontonachini2019} L.~Pion-Tonachini, K.~Kreutz-Delgado, and S.~Makeig, ``ICLabel: An automated electroencephalographic independent component classifier, dataset, and website,'' \emph{NeuroImage}, vol.~198, pp.~181--197, 2019.
+
+\bibitem{delorme2004} A.~Delorme and S.~Makeig, ``EEGLAB: an open source toolbox for analysis of single-trial EEG dynamics including independent component analysis,'' \emph{J.\ Neuroscience Methods}, vol.~134, no.~1, pp.~9--21, 2004.
+
+\end{thebibliography}
+
+\end{document}

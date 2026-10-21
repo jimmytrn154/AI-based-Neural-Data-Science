@@ -3,11 +3,12 @@
 Team project for **BME54701 AI-based Neural Data Science (2026-2)**, UNIST.
 Team: Tran Anh Chuong, Minseo, Seonwoo Kim, Bohyeon Rhee.
 
-We analyze the **Iowa Parkinson's Disease EEG dataset**: 64-channel EEG from 100 people with Parkinson's disease (PD) and 49 healthy controls, each doing up to four tasks, with clinical scores (MoCA, UPDRS-III).
+We analyze the **Iowa Parkinson's Disease (PD) EEG dataset**: 64-channel EEG from 100 people with Parkinson's disease (PD) and 49 healthy controls, each doing up to four tasks, with clinical scores (MoCA, UPDRS-III).
 
 - **Full proposal:** `docs/proposal.tex`
 - **Progress tracker:** `PROGRESS.md`
 - **Dataset documentation:** `Dataset_Guide.pdf`, which ships with the data. The dataset reference below summarizes the parts we use most.
+- **Dataset path for Chuong's machine:** `/Users/trananhchuong/OneDrive - VINACADEMY LLC/AI-based Neural Data Science/Dataset_ALL`
 
 > **The data is not in this repository.** `Dataset_ALL` is 165 GB (2,746 files). Keep it on your machine and point the code at it with the `DATA_ROOT` setting in `config.yaml`. Never commit data, derived EEG files, or large intermediate results.
 
