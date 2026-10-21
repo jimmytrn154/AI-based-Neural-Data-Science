@@ -33,7 +33,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Date | Milestone | Owner | Status |
 |---|---|---|---|
-| Oct 20 | Shared rules and interfaces agreed; repo and `config.yaml` set up | All | ⬜ |
+| Oct 20 | Shared rules and interfaces agreed; repo and `config.yaml` set up | All | ✅ |
 | Oct 21 | **Draft templates released** (~15 subjects, K = 4) | Chuong | ⬜ |
 | Oct 22 | **Final templates released** (full cohort, K chosen) | Chuong | ⬜ |
 | Oct 23 | Task-level metrics delivered for Rest and Simon | Chuong | ⬜ |
@@ -45,12 +45,12 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Create shared repo with the agreed layout (`src/`, `notebooks/`, `results/`, `docs/`) | Chuong | Oct 20 | ⬜ | |
-| Write `config.yaml` (DATA_ROOT, exclusion rules, filters, K, random seed) | Chuong | Oct 20 | ⬜ | |
-| Everyone installs the environment (mne, pycrostates, h5py, pandas, statsmodels, scikit-learn, umap-learn) and loads one subject | All | Oct 20 | ⬜ | |
-| Fix and write down the exclusion rule **before looking at results** | All | Oct 20 | ⬜ | >6 interpolated channels; `trials_simon == exclude` |
-| Agree on file formats: templates, label sequences, feature CSVs keyed by `subject_id` | All | Oct 20 | ⬜ | |
-| Agree on the statistics template (tests, covariates, FDR) | All | Oct 20 | ⬜ | |
+| Create shared repo with the agreed layout (`src/`, `notebooks/`, `results/`, `docs/`) | Chuong | Oct 20 | ✅ | |
+| Write `config.yaml` (DATA_ROOT, exclusion rules, filters, K, random seed) | Chuong | Oct 20 | ✅ | |
+| Everyone installs the environment (mne, pycrostates, h5py, pandas, statsmodels, scikit-learn, umap-learn) and loads one subject | All | Oct 20 | 🟨 | Chuong ✅ (`.venv`, `requirements.txt`) |
+| Fix and write down the exclusion rule **before looking at results** | All | Oct 20 | ✅ | >6 interpolated channels; `trials_simon == exclude` |
+| Agree on file formats: templates, label sequences, feature CSVs keyed by `subject_id` | All | Oct 20 | ✅ | |
+| Agree on the statistics template (tests, covariates, FDR) | All | Oct 20 | ✅ | |
 
 ### 1. Behavior and sanity checks (Minseo)
 
@@ -65,7 +65,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Shared loading and preprocessing functions (1–40 Hz, 250 Hz, exclusion) | Chuong | Oct 21 | ⬜ | |
+| Shared loading and preprocessing functions (1–40 Hz, 250 Hz, exclusion) | Chuong | Oct 21 | ✅ | `src/io.py`, `src/preprocess.py`; n: Rest 149, Simon 141, both 141 |
 | GFP-peak extraction, with equal peaks per subject and task | Chuong | Oct 21 | ⬜ | |
 | Draft templates (~15 subjects, K = 4) | Chuong | Oct 21 | ⬜ | Unblocks Seonwoo, Minseo, Bohyeon |
 | Final group templates (fit K = 4–7; report K = 4 and 5) | Chuong | Oct 22 | ⬜ | |
@@ -185,17 +185,19 @@ To be planned after the Oct 26 feedback. Planned so far:
 |---|---|---|
 | Oct 20 | Adopt "Rank 1" direction: rest-to-Simon microstate reorganization, with Phase 1 unsupervised only | All |
 | Oct 20 | Recovery after conflict included as exploratory pilot (from "Rank 2") | All |
-| Oct 20 | Spectral parameterization moved to Phase 2 as alpha control; prediction moved to Phase 3 | All |
+| Oct 20 | Spectral parameterization moved to Phase 2 as alpha control; prediction moved to Phase 3 | All
+| Oct 20 | Shared rules adopted as in config.yaml (no objections) | All |
 | | | |
 
 ## Blockers
 
 | Date raised | Blocker | Who is blocked | Owner | Resolved? |
 |---|---|---|---|---|
-| | | | | |
+| Oct 21 | Simon `lock-resp` epochs (383 for sub-P001) don't map 1:1 to `trials.tsv` (384 rows); the embedded `trials` table can't be read by h5py. Response epochs appear to match non-missing `onset_response` (1 missing), but 14 trials have `beh_accuracy == 99`. Align by `onset_response` and verify | Minseo (recovery), Seonwoo | Chuong | No |
 
 ## Daily log
 
 | Date | Who | What was done | Next |
 |---|---|---|---|
 | Oct 20 | | | |
+| Oct 21 | Chuong | Milestone 1: loading/preprocessing in `src/`, exclusion logged (Rest 149→149; Simon 149→147→141 after `trials_simon`; nInterp > 6 removed none; 35/149 Rest flagged `nICremoved == 0`); env + `requirements.txt` | GFP peaks and draft templates |
