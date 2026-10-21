@@ -186,7 +186,7 @@ The original papers share one claim: PD patients fail to raise midfrontal 1–8 
 
 | Task | Subjects | What it measures | Length | Conditions (median trials) |
 |---|---|---|---|---|
-| **Rest** | 149 | Spontaneous activity, eyes open | ~146 s | none (no events) |
+| **Rest** | 149 | Spontaneous activity, eyes open | ~146 s (median) | none (no events) |
 | **Simon** | 147 | Response conflict, cognitive control | ~880 s | congruent 192 / incongruent 192 |
 | **Oddball** | 146 | Novelty detection across modalities | ~741 s | standard 192 / visual oddball 24 / auditory oddball 24 |
 | **IntervalTiming** | 139 | Time production (3 s and 7 s targets) | ~1413 s | short 40 / long 40 |

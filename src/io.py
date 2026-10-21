@@ -160,3 +160,16 @@ def match_trials(epochs, trials, lock):
             f"{n_epochs} epochs but {len(trials)} trial rows for lock={lock!r}"
         )
     return trials.assign(bad_epoch=epochs["bad_epoch"])
+
+
+def epochs_to_mne(epochs, montage="standard_1005"):
+    """Convert a :func:`load_epochs` dict to an ``mne.EpochsArray`` (volts).
+
+    Bad epochs are kept, so the dict's ``bad_epoch`` still lines up. Channel
+    positions come from the standard template montage, as in the dataset.
+    """
+    info = mne.create_info(epochs["ch_names"], epochs["srate"], ch_types="eeg")
+    data = epochs["data"] * 1e-6  # microvolts -> volts
+    tmin = epochs["times"][0] / 1000.0
+    out = mne.EpochsArray(data, info, tmin=tmin, baseline=None, verbose="error")
+    return out.set_montage(montage)
