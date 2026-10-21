@@ -122,7 +122,7 @@ def load_epochs(subject_id, task, lock, cfg):
         erp_baseline : [start, end] in ms, already subtracted
 
     The trial table embedded in the file is a MATLAB ``table`` object that
-    h5py cannot decode; use :func:`load_trials` and check the row count.
+    h5py cannot decode; use :func:`match_trials` to attach the trial rows.
     """
     with h5py.File(epochs_path(subject_id, task, lock, cfg), "r") as f:
         return {
@@ -133,3 +133,30 @@ def load_epochs(subject_id, task, lock, cfg):
             "bad_epoch": np.asarray(f["badEpoch"]).ravel().astype(bool),
             "erp_baseline": np.asarray(f["erpBaseline"]).ravel(),
         }
+
+
+def match_trials(epochs, trials, lock):
+    """Return the trial-table rows matching each epoch, in epoch order.
+
+    Verified on all 147 Simon subjects:
+      - ``lock="cue"``: one epoch per trial-table row;
+      - ``lock="resp"``: one epoch per row with a non-missing
+        ``onset_response``. Rows with ``beh_accuracy == 99`` (no response)
+        still have an ``onset_response`` at the end of the response window
+        (``rt_eeg`` ~ 1.0 s), so their epochs are locked to a timeout, not a
+        key press. Drop them before response-locked analyses.
+
+    The order is assumed to be the same as in the trial table; the counts
+    match for every subject, but the order itself could not be checked
+    (see PROGRESS.md, Blockers). A ``bad_epoch`` column is added. Raises
+    ValueError if the counts differ.
+    """
+    if lock == "resp":
+        trials = trials[trials["onset_response"].notna()]
+    trials = trials.reset_index(drop=True)
+    n_epochs = len(epochs["bad_epoch"])
+    if len(trials) != n_epochs:
+        raise ValueError(
+            f"{n_epochs} epochs but {len(trials)} trial rows for lock={lock!r}"
+        )
+    return trials.assign(bad_epoch=epochs["bad_epoch"])

@@ -193,7 +193,7 @@ To be planned after the Oct 26 feedback. Planned so far:
 
 | Date raised | Blocker | Who is blocked | Owner | Resolved? |
 |---|---|---|---|---|
-| Oct 21 | Simon `lock-resp` epochs (383 for sub-P001) don't map 1:1 to `trials.tsv` (384 rows); the embedded `trials` table can't be read by h5py. Response epochs appear to match non-missing `onset_response` (1 missing), but 14 trials have `beh_accuracy == 99`. Align by `onset_response` and verify | Minseo (recovery), Seonwoo | Chuong | No |
+| Oct 21 | Simon epoch files don't carry a readable trial table (MATLAB `table`, not decodable by h5py). Checked all 147 subjects: `lock-cue` = one epoch per `trials.tsv` row; `lock-resp` = one epoch per row with non-missing `onset_response`. `beh_accuracy == 99` rows have a timeout `onset_response` (`rt_eeg` ≈ 1.0 s), so drop them in response-locked analyses. Use `src.io.match_trials`. Open point: epoch order assumed equal to TSV order (counts match; order not verifiable without MATLAB) | Minseo (recovery), Seonwoo | Chuong | Resolved with rule; order check open |
 
 ## Daily log
 
