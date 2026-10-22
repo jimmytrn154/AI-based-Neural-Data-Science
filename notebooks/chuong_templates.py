@@ -15,20 +15,13 @@ logging.getLogger("mne").setLevel(logging.ERROR)
 
 import matplotlib
 matplotlib.use("Agg")
-import numpy as np
 
-from src import io as pio, microstates as ms, preprocess as pp
+from src import io as pio, microstates as ms
 
 cfg = pio.load_config()
 draft = cfg["microstates"]["draft_templates"]
 k = draft["k"]
 band = "-".join(f"{f:g}" for f in cfg["preprocessing"]["bandpass_hz"])
-
-# Draft subjects removed by team decision, replaced by a random subject of the
-# same group (seed from config).
-DRAFT_EXCLUDE = {
-    "sub-P048": "artifact-dominated individual maps (team decision, Oct 22)",
-}
 
 # PROVISIONAL state labels by visual inspection of the draft maps
 # (A = right-frontal/left-posterior, B = left-frontal/right-posterior,
@@ -39,22 +32,11 @@ DRAFT_EXCLUDE = {
 PROVISIONAL_ORDER = [0, 1, 3, 2]  # Oct 22 draft (2-20 Hz, P048 replaced by P009)
 LABELS = ["A", "B", "C", "D"]
 
-# %% Subjects passing both the Rest and Simon rules
-rest, _ = pp.select_subjects("Rest", cfg)
-simon, _ = pp.select_subjects("Simon", cfg)
-both = pp.select_rest_vs_simon(rest, simon, cfg)
-pool = pio.load_subjects(cfg).set_index("subject_id").loc[both].reset_index()
-ids = ms.stratified_sample(pool, draft["n_subjects"], cfg)
-
-rng = np.random.default_rng(cfg["random_seed"])
-for sid, reason in DRAFT_EXCLUDE.items():
-    group = pool.set_index("subject_id").loc[sid, "group"]
-    candidates = sorted(set(pool.loc[pool.group == group, "subject_id"]) - set(ids))
-    new = str(rng.choice(candidates))
-    ids = sorted(set(ids) - {sid} | {new})
-    print(f"Excluded {sid} ({reason}); replaced by {new} ({group})")
+# %% Draft subjects (stratified sample; ms.DRAFT_EXCLUDE replaced, seeded)
+ids, replaced = ms.draft_subjects(cfg)
+for old, new in replaced.items():
+    print(f"Excluded {old} ({ms.DRAFT_EXCLUDE[old]}); replaced by {new}")
 print("Draft subjects:", ids)
-print(pool.set_index("subject_id").loc[ids, "group"].value_counts().to_dict())
 
 # %% Two-level fit
 group, individual, table = ms.fit_templates(ids, k, cfg)

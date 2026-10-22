@@ -154,6 +154,37 @@ def stratified_sample(table, n, cfg, by="group"):
     return sorted(picked)
 
 
+# Draft subjects removed by team decision (PROGRESS.md decision log, Oct 22)
+DRAFT_EXCLUDE = {
+    "sub-P048": "artifact-dominated individual maps (team decision, Oct 22)",
+}
+
+
+def draft_subjects(cfg, exclude=None):
+    """The draft-template subjects: stratified sample, with exclusions replaced.
+
+    Samples ``draft_templates.n_subjects`` from the subjects passing both the
+    Rest and Simon rules, then replaces each subject in ``exclude`` (default
+    :data:`DRAFT_EXCLUDE`) by a random subject of the same group (seeded).
+    Returns ``(ids, replacements)`` with ``replacements`` as {old: new}.
+    """
+    exclude = DRAFT_EXCLUDE if exclude is None else exclude
+    rest, _ = pp.select_subjects("Rest", cfg)
+    simon, _ = pp.select_subjects("Simon", cfg)
+    both = pp.select_rest_vs_simon(rest, simon, cfg)
+    pool = pio.load_subjects(cfg).set_index("subject_id").loc[both, "group"]
+    ids = stratified_sample(pool.reset_index(), cfg["microstates"]["draft_templates"]["n_subjects"], cfg)
+    rng = np.random.default_rng(cfg["random_seed"])
+    replacements = {}
+    for sid in exclude:
+        if sid not in ids:
+            continue
+        candidates = sorted(set(pool.index[pool == pool[sid]]) - set(ids))
+        replacements[sid] = str(rng.choice(candidates))
+        ids = sorted(set(ids) - {sid} | {replacements[sid]})
+    return ids, replacements
+
+
 def fit_templates(subject_ids, k, cfg):
     """Run the two-level fit on the given subjects.
 
@@ -231,3 +262,59 @@ def backfit(inst, templates, cfg, **kwargs):
                "reject_edges": bf["reject_edges"]}
     options.update(kwargs)
     return templates.predict(inst, picks="eeg", verbose="error", **options)
+
+
+# ------------------------------------------------------------------
+# Task-level metrics
+# ------------------------------------------------------------------
+
+def labels_path(subject_id, task, cfg):
+    """``results/labels/<subject_id>_task-<Task>_labels.npy`` (config ``outputs.labels``)."""
+    return pio.results_dir(cfg, "labels", f"{subject_id}_task-{task}_labels.npy")
+
+
+def segmentation_metrics(segmentation, prefix):
+    """Per-state metrics and transitions of one back-fitted recording.
+
+    Columns are ``<prefix>_<metric>_<state>``:
+      meandur (ms), occ (per s), cov (% of labeled samples), gev (%),
+      and ``<prefix>_trans_<X>_to_<Y>`` for X != Y (row probabilities after
+      collapsing repeats, so each state's outgoing transitions sum to 1).
+    Bookkeeping: ``<prefix>_gev_total`` (%), ``_n_samples``, ``_unlabeled_frac``.
+    """
+    params = segmentation.compute_parameters(norm_gfp=True)
+    names = segmentation.cluster_names
+    row = {}
+    for name in names:
+        row[f"{prefix}_meandur_{name}"] = params[f"{name}_meandurs"] * 1000
+        row[f"{prefix}_occ_{name}"] = params[f"{name}_occurrences"]
+        row[f"{prefix}_cov_{name}"] = params[f"{name}_timecov"] * 100
+        row[f"{prefix}_gev_{name}"] = params[f"{name}_gev"] * 100
+    trans = segmentation.compute_transition_matrix(stat="probability",
+                                                   ignore_repetitions=True)
+    for i, src in enumerate(names):
+        for j, dst in enumerate(names):
+            if i != j:
+                row[f"{prefix}_trans_{src}_to_{dst}"] = trans[i, j]
+    row[f"{prefix}_gev_total"] = sum(row[f"{prefix}_gev_{n}"] for n in names)
+    row[f"{prefix}_n_samples"] = segmentation.labels.size
+    row[f"{prefix}_unlabeled_frac"] = params["unlabeled"]
+    return row
+
+
+def task_metrics(subject_id, templates, cfg, tasks=("Rest", "Simon"), save_labels=True):
+    """Back-fit the templates to each task's continuous recording.
+
+    Returns one feature row (dict) for the subject. With ``save_labels``,
+    the label sequence of each task is saved to :func:`labels_path`.
+    """
+    row = {cfg["subjects"]["id_column"]: subject_id}
+    for task in tasks:
+        raw = pp.preprocess_raw(pio.load_continuous(subject_id, task, cfg), cfg)
+        segmentation = backfit(raw, templates, cfg)
+        if save_labels:
+            path = labels_path(subject_id, task, cfg)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            np.save(path, segmentation.labels)
+        row.update(segmentation_metrics(segmentation, task.lower()))
+    return row
