@@ -187,8 +187,11 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 20 | Recovery after conflict included as exploratory pilot (from "Rank 2") | All |
 | Oct 20 | Spectral parameterization moved to Phase 2 as alpha control; prediction moved to Phase 3 | All
 | Oct 20 | Shared rules adopted as in config.yaml (no objections) | All |
-| Oct 22 | Microstate band-pass changed to 2-20 Hz to reduce muscle contamination; decided before any results | Chuong |
+| Oct 22 | Microstate band-pass changed to 2-20 Hz to reduce muscle contamination; decided after draft templates, before any group or clinical results | Chuong |
 | Oct 22 | GFP-peak outlier cut (per recording, over peak GFP values) and minimum peak distance (1 sample, pycrostates default) written explicitly into config.yaml; no change in behaviour | Chuong |
+| Oct 22 | Recording QC: exclude a recording from microstate analyses if its template GEV robust z (median/1.4826·MAD, per task) < −3; fit full cohort → flag → refit once → stop; log subject_id, group, MoCA of each exclusion; sensitivity analysis with them included | Chuong |
+| Oct 22 | Epochs back-fitted to the templates (Simon conditions and recovery pilot) filtered 2–20 Hz like the templates; 30 Hz low-pass kept for ERP plots only | Chuong |
+| Oct 22 | Commit `e2fff64` (Milestone 2, already pushed) also contains Chuong's README edit ("~146 s (median)"); left as is to avoid rewriting shared history | Chuong |
 | | | |
 
 ## Blockers

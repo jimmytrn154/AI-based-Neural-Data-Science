@@ -58,6 +58,13 @@ microstates:
     Davies-Bouldin (lower is better) and Dunn scores; ties -> smaller K.
     Always report K = 4 and K = 5 as well.
   state_labels: "match maps to canonical A-D (E...) by visual inspection; fixed once, used everywhere"
+  recording_qc:                           # added Oct 22
+    measure: "template GEV (recording's GFP peaks fitted to the group templates)"
+    robust_z: "(x - median) / (1.4826 * MAD), per task across recordings"
+    exclude_if_z_below: -3                # exclude that RECORDING from microstate analyses
+    procedure: "fit on full cohort -> flag -> refit once without flagged recordings -> stop"
+    log_excluded: ["subject_id", "group", "moca"]
+    sensitivity: "repeat analyses with the excluded recordings included"
   backfit:
     min_segment_length_samples: 5         # = 20 ms at 250 Hz
     reject_edges: true
@@ -69,7 +76,7 @@ microstates:
 simon_conditions:
   epochs: "lock-cue (ready-made)"
   keep_trials: "beh_accuracy == 1 AND NOT badEpoch AND 150 <= beh_rt <= 1500 ms"
-  filter: "1-40 Hz on the full -1.0 to 2.5 s epoch, then crop"
+  filter: "2-20 Hz (preprocessing.bandpass_hz) on the full -1.0 to 2.5 s epoch, then crop; applies to any epochs back-fitted to the templates, incl. the recovery pilot"
   analysis_window_ms: [-200, 800]
   erp_plot_lowpass_hz: 30                 # for ERP figures only
   windows_ms:
@@ -85,6 +92,7 @@ simon_conditions:
 # -------------------------------------------------------------
 recovery:
   epochs: "lock-resp (ready-made)"
+  filter: "same as simon_conditions.filter (2-20 Hz before back-fitting)"
   baseline: "subject's mean state probabilities, cue-locked -200 to 0 ms"
   reliability: "split-half (odd/even trials), Spearman-Brown corrected"
   keep_if_reliability_at_least: 0.5
