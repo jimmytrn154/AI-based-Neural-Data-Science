@@ -33,7 +33,7 @@ subjects:
 # 2. Preprocessing for microstates
 # -------------------------------------------------------------
 preprocessing:
-  bandpass_hz: [1.0, 40.0]                # MNE default zero-phase FIR
+  bandpass_hz: [2.0, 20.0]                # MNE default zero-phase FIR; changed from 1-40 Hz on Oct 22 (muscle)
   resample_hz: 250
   reference: "average (already applied)"
   continuous_segment: "whole recording"
@@ -42,7 +42,8 @@ preprocessing:
 # 3. Microstate clustering
 # -------------------------------------------------------------
 microstates:
-  gfp_peak_outlier_sd: 3                  # drop GFP peaks > mean + 3 SD (per recording)
+  gfp_peak_outlier_sd: 3                  # drop GFP peaks > mean + 3 SD, per recording; mean and SD over the GFP values at the peaks
+  min_peak_distance_samples: 1            # pycrostates default: every local GFP maximum is a peak
   peaks_per_subject_per_task: "min(n_rest, n_simon, 3000)"   # random sample, equal for both tasks
   two_level_clustering: true              # individual k-means -> cluster individual maps at group level
   algorithm: "modified k-means (polarity-invariant)"

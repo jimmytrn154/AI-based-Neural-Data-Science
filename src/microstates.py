@@ -36,14 +36,17 @@ def gfp(data):
 def extract_peaks(raw, cfg):
     """GFP-peak maps of one recording, without high-GFP outliers.
 
+    Peaks are local GFP maxima at least ``min_peak_distance_samples`` apart.
     Peaks whose GFP exceeds the recording's mean + ``gfp_peak_outlier_sd`` SD
     (computed over the GFP values at the peaks) are dropped. Returns a
     pycrostates ChData of shape (n_channels, n_peaks).
     """
-    peaks = extract_gfp_peaks(raw, picks="eeg", verbose="error")
+    ms = cfg["microstates"]
+    peaks = extract_gfp_peaks(raw, picks="eeg", verbose="error",
+                              min_peak_distance=ms["min_peak_distance_samples"])
     data = peaks.get_data()
     peak_gfp = gfp(data)
-    limit = peak_gfp.mean() + cfg["microstates"]["gfp_peak_outlier_sd"] * peak_gfp.std()
+    limit = peak_gfp.mean() + ms["gfp_peak_outlier_sd"] * peak_gfp.std()
     keep = peak_gfp <= limit
     return ChData(data[:, keep], peaks.info)
 
@@ -171,6 +174,18 @@ def fit_templates(subject_ids, k, cfg):
     return group, individual, table
 
 
+def label_templates(cluster, order, names):
+    """Reorder and rename templates in place, so state ``i`` is ``names[i]``.
+
+    ``order[i]`` is the current index of the map that becomes ``names[i]``,
+    e.g. ``order=[1, 3, 2, 0], names=["A", "B", "C", "D"]``. Labels are
+    assigned by visual inspection (config ``state_labels``).
+    """
+    cluster.reorder_clusters(order=list(order))
+    cluster.rename_clusters(new_names=list(names))
+    return cluster
+
+
 # ------------------------------------------------------------------
 # Templates on disk
 # ------------------------------------------------------------------
@@ -205,7 +220,7 @@ def backfit(inst, templates, cfg, **kwargs):
     Uses ``min_segment_length_samples`` and ``reject_edges`` from config;
     any keyword passed here overrides them or adds other
     ``ModKMeans.predict`` options. The data must be preprocessed like the
-    templates (1-40 Hz, 250 Hz) and contain the same channel names. Units
+    templates (``preprocessing`` in config) and contain the same channel names. Units
     don't matter (spatial correlation is scale-free).
 
     Returns a pycrostates RawSegmentation or EpochsSegmentation; ``.labels``

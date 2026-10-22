@@ -15,11 +15,29 @@ logging.getLogger("mne").setLevel(logging.ERROR)
 
 import matplotlib
 matplotlib.use("Agg")
+import numpy as np
 
 from src import io as pio, microstates as ms, preprocess as pp
 
 cfg = pio.load_config()
 draft = cfg["microstates"]["draft_templates"]
+k = draft["k"]
+band = "-".join(f"{f:g}" for f in cfg["preprocessing"]["bandpass_hz"])
+
+# Draft subjects removed by team decision, replaced by a random subject of the
+# same group (seed from config).
+DRAFT_EXCLUDE = {
+    "sub-P048": "artifact-dominated individual maps (team decision, Oct 22)",
+}
+
+# PROVISIONAL state labels by visual inspection of the draft maps
+# (A = right-frontal/left-posterior, B = left-frontal/right-posterior,
+# C = anterior-posterior, D = fronto-central; polarity ignored).
+# PROVISIONAL_ORDER[i] = fitted map index that becomes label i.
+# Set to None to save unlabeled maps for inspection.
+# Final labels are fixed on the final templates.
+PROVISIONAL_ORDER = [0, 1, 3, 2]  # Oct 22 draft (2-20 Hz, P048 replaced by P009)
+LABELS = ["A", "B", "C", "D"]
 
 # %% Subjects passing both the Rest and Simon rules
 rest, _ = pp.select_subjects("Rest", cfg)
@@ -27,22 +45,38 @@ simon, _ = pp.select_subjects("Simon", cfg)
 both = pp.select_rest_vs_simon(rest, simon, cfg)
 pool = pio.load_subjects(cfg).set_index("subject_id").loc[both].reset_index()
 ids = ms.stratified_sample(pool, draft["n_subjects"], cfg)
+
+rng = np.random.default_rng(cfg["random_seed"])
+for sid, reason in DRAFT_EXCLUDE.items():
+    group = pool.set_index("subject_id").loc[sid, "group"]
+    candidates = sorted(set(pool.loc[pool.group == group, "subject_id"]) - set(ids))
+    new = str(rng.choice(candidates))
+    ids = sorted(set(ids) - {sid} | {new})
+    print(f"Excluded {sid} ({reason}); replaced by {new} ({group})")
 print("Draft subjects:", ids)
 print(pool.set_index("subject_id").loc[ids, "group"].value_counts().to_dict())
 
 # %% Two-level fit
-group, individual, table = ms.fit_templates(ids, draft["k"], cfg)
-path = ms.save_templates(group, cfg)
-print("Saved", path)
+group, individual, table = ms.fit_templates(ids, k, cfg)
 print(table.to_string(index=False))
 print(f"Group-level GEV (on individual maps): {group.GEV_:.3f}")
 print(f"Template GEV on subjects' GFP peaks: {table.gev_template.mean():.3f} "
       f"± {table.gev_template.std():.3f}")
 
-# %% Topomaps
+# %% Topomaps, labeled if the provisional order is set
+title = (f"Draft templates, K = {k}, {band} Hz, {len(ids)} subjects "
+         f"(GEV {table.gev_template.mean():.1%})")
+if PROVISIONAL_ORDER is None:
+    name = f"chuong_templates_K{k}_draft_unlabeled.png"
+else:
+    ms.label_templates(group, PROVISIONAL_ORDER, LABELS)
+    title += " — labels PROVISIONAL"
+    name = f"chuong_templates_K{k}_draft.png"
 fig = group.plot(show=False)
-fig.suptitle(f"Draft templates, K = {draft['k']}, {len(ids)} subjects "
-             f"(GEV {table.gev_template.mean():.1%})")
-out = pio.results_dir(cfg, "figures", f"chuong_templates_K{draft['k']}_draft.png")
+fig.suptitle(title)
+out = pio.results_dir(cfg, "figures", name)
 fig.savefig(out, dpi=150, bbox_inches="tight")
 print("Saved", out)
+
+if PROVISIONAL_ORDER is not None:
+    print("Saved", ms.save_templates(group, cfg))

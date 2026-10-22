@@ -67,7 +67,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 |---|---|---|---|---|
 | Shared loading and preprocessing functions (1–40 Hz, 250 Hz, exclusion) | Chuong | Oct 21 | ✅ | `src/io.py`, `src/preprocess.py`; n: Rest 149, Simon 141, both 141 |
 | GFP-peak extraction, with equal peaks per subject and task | Chuong | Oct 21 | ✅ | `ms.subject_peaks`; outliers > mean + 3 SD of peak GFP dropped per recording |
-| Draft templates (~15 subjects, K = 4) | Chuong | Oct 21 | ✅ | Unblocks Seonwoo, Minseo, Bohyeon. 10 PD + 5 C; template GEV 44.1% ± 12.5%; `results/figures/chuong_templates_K4_draft.png`. A–D labels not assigned yet |
+| Draft templates (~15 subjects, K = 4) | Chuong | Oct 21 | ✅ | Unblocks Seonwoo, Minseo, Bohyeon. Refit Oct 22 at 2–20 Hz with sub-P048 replaced by sub-P009: 10 PD + 5 C; template GEV 53.7% ± 9.0% (group level 75.5%); labels A–D **provisional**; `results/figures/chuong_templates_K4_draft.png` |
 | Final group templates (fit K = 4–7; report K = 4 and 5) | Chuong | Oct 22 | ⬜ | |
 | Task-specific templates and spatial-correlation check | Chuong | Oct 22 | ⬜ | |
 | Back-fitting function shared in `src/microstates.py` | Chuong | Oct 21 | ✅ | `ms.load_templates(4, cfg)`, `ms.backfit(inst, templates, cfg)`; epochs via `pio.epochs_to_mne` |
@@ -187,6 +187,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 20 | Recovery after conflict included as exploratory pilot (from "Rank 2") | All |
 | Oct 20 | Spectral parameterization moved to Phase 2 as alpha control; prediction moved to Phase 3 | All
 | Oct 20 | Shared rules adopted as in config.yaml (no objections) | All |
+| Oct 22 | Microstate band-pass changed to 2-20 Hz to reduce muscle contamination; decided before any results | Chuong |
+| Oct 22 | GFP-peak outlier cut (per recording, over peak GFP values) and minimum peak distance (1 sample, pycrostates default) written explicitly into config.yaml; no change in behaviour | Chuong |
 | | | |
 
 ## Blockers
@@ -194,8 +196,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Date raised | Blocker | Who is blocked | Owner | Resolved? |
 |---|---|---|---|---|
 | Oct 21 | Simon epoch files don't carry a readable trial table (MATLAB `table`, not decodable by h5py). Checked all 147 subjects: `lock-cue` = one epoch per `trials.tsv` row; `lock-resp` = one epoch per row with non-missing `onset_response`. `beh_accuracy == 99` rows have a timeout `onset_response` (`rt_eeg` ≈ 1.0 s), so drop them in response-locked analyses. Use `src.io.match_trials`. Open point: epoch order assumed equal to TSV order (counts match; order not verifiable without MATLAB) | Minseo (recovery), Seonwoo | Chuong | Resolved with rule; order check open |
-| Oct 21 | sub-P048 (draft set) looks artifact-dominated: individual maps peak at AF8/Fp2, FC5/T7, TP10/I1; template GEV 16% vs 44% mean. No config rule covers this | Chuong (final templates) | Chuong | No, needs team decision |
-| Oct 21 | Draft template states not yet matched to canonical A–D (config: visual inspection, fixed once). Needed before `microstates_task.csv` column names | Chuong, all | Chuong | No |
+| Oct 21 | sub-P048 (draft set) looks artifact-dominated: individual maps peak at AF8/Fp2, FC5/T7, TP10/I1; template GEV 16% vs 44% mean. No config rule covers this | Chuong (final templates) | Chuong | Draft: yes (P048 replaced by P009). Data-quality rule for final templates: wording open (individual-fit GEV doesn't flag P048) |
+| Oct 21 | Draft template states not yet matched to canonical A–D (config: visual inspection, fixed once). Needed before `microstates_task.csv` column names | Chuong, all | Chuong | Provisional labels on draft (Oct 22); final labels on final templates |
 
 ## Daily log
 
@@ -204,3 +206,4 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 20 | | | |
 | Oct 21 | Chuong | Milestone 1: loading/preprocessing in `src/`, exclusion logged (Rest 149→149; Simon 149→147→141 after `trials_simon`; nInterp > 6 removed none; 35/149 Rest flagged `nICremoved == 0`); env + `requirements.txt` | GFP peaks and draft templates |
 | Oct 21 | Chuong | Milestone 2: GFP peaks + two-level modified k-means; draft K = 4 templates (15 subjects, 10 PD / 5 C) saved to `results/templates/templates_K4.fif`; group GEV 68.1% on individual maps, 44.1% ± 12.5% on subjects' GFP peaks; `backfit` tested on Raw and Epochs; `match_trials`, `epochs_to_mne` helpers | A–D labels, P048 decision, then task-level metrics |
+| Oct 22 | Chuong | Band-pass 2–20 Hz in config; draft K = 4 refit without sub-P048 (replaced by sub-P009, seed 42): group GEV 75.5%, template GEV 53.7% ± 9.0%; provisional A–D labels; tested proposed GEV data-quality rule (does not flag P048 on individual-fit GEV) | Team check of maps; QC rule wording; Milestone 3 |
