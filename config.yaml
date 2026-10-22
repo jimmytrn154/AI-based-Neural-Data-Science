@@ -68,6 +68,12 @@ microstates:
   backfit:
     min_segment_length_samples: 5         # = 20 ms at 250 Hz
     reject_edges: true
+    # Temporal smoothing (added Oct 22), values from the pycrostates 0.6.1
+    # segmentation tutorial (tutorials/segmentation/00_segmentation.py, tag 0.6.1):
+    # predict(raw, factor=10, half_window_size=10, min_segment_length=5, reject_edges=True).
+    # (The group-level tutorial uses half_window_size=8; we follow the segmentation one.)
+    smoothing_factor: 10                  # pycrostates `factor`; 0 = no smoothing (sensitivity analysis)
+    smoothing_half_window_samples: 10     # pycrostates `half_window_size`; window = 21 samples = 84 ms at 250 Hz
   metrics: ["mean_duration", "occurrence", "coverage", "gev", "transition_matrix_no_self"]
 
 # -------------------------------------------------------------

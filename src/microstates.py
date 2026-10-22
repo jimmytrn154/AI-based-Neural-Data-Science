@@ -12,11 +12,14 @@ import logging
 import os
 import zlib
 
+import mne
 import numpy as np
 import pandas as pd
 from pycrostates.cluster import ModKMeans
 from pycrostates.io import ChData, read_cluster
 from pycrostates.preprocessing import extract_gfp_peaks
+from pycrostates.segmentation import RawSegmentation
+from pycrostates.utils import _corr_vectors
 
 from src import io as pio
 from src import preprocess as pp
@@ -245,32 +248,128 @@ def load_templates(k, cfg):
 # Back-fitting
 # ------------------------------------------------------------------
 
-def backfit(inst, templates, cfg, **kwargs):
+def backfit_options(cfg, smoothing=True):
+    """``ModKMeans.predict`` options from config ``microstates.backfit``.
+
+    ``smoothing=False`` sets ``factor=0`` (the no-smoothing sensitivity analysis).
+    """
+    bf = cfg["microstates"]["backfit"]
+    return {"factor": bf["smoothing_factor"] if smoothing else 0,
+            "half_window_size": bf["smoothing_half_window_samples"],
+            "min_segment_length": bf["min_segment_length_samples"],
+            "reject_edges": bf["reject_edges"]}
+
+
+def backfit(inst, templates, cfg, smoothing=True, fast=True, **kwargs):
     """Back-fit templates to a Raw or Epochs object.
 
-    Uses ``min_segment_length_samples`` and ``reject_edges`` from config;
-    any keyword passed here overrides them or adds other
-    ``ModKMeans.predict`` options. The data must be preprocessed like the
-    templates (``preprocessing`` in config) and contain the same channel names. Units
-    don't matter (spatial correlation is scale-free).
+    Uses :func:`backfit_options` from config; any keyword passed here
+    overrides them or adds other ``ModKMeans.predict`` options. The data must
+    be preprocessed like the templates (``preprocessing`` in config) and
+    contain the same channel names. Units don't matter (spatial correlation
+    is scale-free).
+
+    With ``fast=True`` (default), Raw data use :func:`reject_short_segments`
+    instead of pycrostates' own short-segment step, which gives identical
+    labels (tests/test_backfit.py) but runs in seconds instead of minutes.
+    Epochs, and Raw with BAD annotations, always use pycrostates.
 
     Returns a pycrostates RawSegmentation or EpochsSegmentation; ``.labels``
     holds the state index per sample, with -1 for unlabeled samples.
     """
-    bf = cfg["microstates"]["backfit"]
-    options = {"min_segment_length": bf["min_segment_length_samples"],
-               "reject_edges": bf["reject_edges"]}
+    options = backfit_options(cfg, smoothing)
     options.update(kwargs)
-    return templates.predict(inst, picks="eeg", verbose="error", **options)
+    min_length = options["min_segment_length"]
+    use_library = (not fast or min_length == 0 or not isinstance(inst, mne.io.BaseRaw)
+                   or any(d.lower().startswith("bad") for d in inst.annotations.description))
+    if use_library:
+        return templates.predict(inst, picks="eeg", verbose="error", **options)
+
+    options["min_segment_length"] = 0
+    segmentation = templates.predict(inst, picks="eeg", verbose="error", **options)
+    raw = segmentation.raw
+    labels = reject_short_segments(segmentation.labels,
+                                   normalize_samples(raw.get_data()), min_length)
+    return RawSegmentation(
+        labels=labels,
+        inst=raw,
+        cluster_centers_=segmentation.cluster_centers_,
+        cluster_names=segmentation.cluster_names,
+        predict_parameters={**segmentation.predict_parameters,
+                            "min_segment_length": min_length},
+    )
+
+
+def normalize_samples(data):
+    """Center and scale each time point across channels, as pycrostates does.
+
+    pycrostates normalizes the data in place before rejecting short
+    segments, so the same values are used here to get identical results.
+    """
+    data = data - np.mean(data, axis=0)
+    std = np.std(data, axis=0)
+    std[std == 0] = 1
+    return data / std
+
+
+def reject_short_segments(labels, data, min_segment_length):
+    """Merge segments shorter than ``min_segment_length`` into their neighbours.
+
+    Same rule as pycrostates ``_BaseCluster._reject_short_segments``: take
+    the first short segment (not the first or last segment, not unlabeled),
+    and give its samples, one at a time from both ends, to the neighbour
+    whose boundary sample correlates better. pycrostates rescans the whole
+    recording after every merge; here the scan restarts at the segment just
+    before the merged one, because nothing earlier can change. ``data`` must
+    be normalized with :func:`normalize_samples`.
+    """
+    labels = np.array(labels, copy=True)
+    n = labels.size
+    start, previous = 0, None
+    while start < n:
+        end = start + 1
+        while end < n and labels[end] == labels[start]:
+            end += 1
+        if (start == 0 or end == n or labels[start] == -1
+                or end - start >= min_segment_length):
+            previous, start = start, end
+            continue
+        left, right = start, end - 1
+        while left <= right:
+            left_corr = np.abs(_corr_vectors(data[:, left - 1], data[:, left]))
+            right_corr = np.abs(_corr_vectors(data[:, right], data[:, right + 1]))
+            if np.abs(right_corr - left_corr) <= 1e-8:
+                if left == right:
+                    labels[left] = labels[left - 1]
+                    left += 1
+                else:
+                    labels[right] = labels[right + 1]
+                    labels[left] = labels[left - 1]
+                    right -= 1
+                    left += 1
+            elif left_corr < right_corr:
+                labels[right] = labels[right + 1]
+                right -= 1
+            elif right_corr < left_corr:
+                labels[left] = labels[left - 1]
+                left += 1
+            else:
+                raise RuntimeError(f"Undefined correlation at samples {left}-{right}")
+        start, previous = previous, None
+    return labels
 
 
 # ------------------------------------------------------------------
 # Task-level metrics
 # ------------------------------------------------------------------
 
-def labels_path(subject_id, task, cfg):
-    """``results/labels/<subject_id>_task-<Task>_labels.npy`` (config ``outputs.labels``)."""
-    return pio.results_dir(cfg, "labels", f"{subject_id}_task-{task}_labels.npy")
+def labels_path(subject_id, task, cfg, nosmooth=False):
+    """``results/labels/<subject_id>_task-<Task>_labels.npy`` (config ``outputs.labels``).
+
+    The no-smoothing sensitivity labels end in ``_labels_nosmooth.npy``.
+    """
+    suffix = "_nosmooth" if nosmooth else ""
+    return pio.results_dir(cfg, "labels", f"{subject_id}_task-{task}_labels{suffix}.npy")
 
 
 def segmentation_metrics(segmentation, prefix):
@@ -302,19 +401,30 @@ def segmentation_metrics(segmentation, prefix):
     return row
 
 
-def task_metrics(subject_id, templates, cfg, tasks=("Rest", "Simon"), save_labels=True):
+def task_metrics(subject_id, templates, cfg, tasks=("Rest", "Simon"), smoothing=True,
+                 save_labels=True):
     """Back-fit the templates to each task's continuous recording.
 
     Returns one feature row (dict) for the subject. With ``save_labels``,
-    the label sequence of each task is saved to :func:`labels_path`.
+    the label sequence of each task is saved to :func:`labels_path`
+    (suffix ``_nosmooth`` when ``smoothing=False``).
     """
     row = {cfg["subjects"]["id_column"]: subject_id}
     for task in tasks:
         raw = pp.preprocess_raw(pio.load_continuous(subject_id, task, cfg), cfg)
-        segmentation = backfit(raw, templates, cfg)
+        segmentation = backfit(raw, templates, cfg, smoothing=smoothing)
         if save_labels:
-            path = labels_path(subject_id, task, cfg)
+            path = labels_path(subject_id, task, cfg, nosmooth=not smoothing)
             path.parent.mkdir(parents=True, exist_ok=True)
             np.save(path, segmentation.labels)
         row.update(segmentation_metrics(segmentation, task.lower()))
     return row
+
+
+def segment_durations_ms(labels, sfreq):
+    """Durations (ms) of all labeled segments in a label sequence."""
+    change = np.flatnonzero(np.diff(labels)) + 1
+    bounds = np.concatenate([[0], change, [labels.size]])
+    lengths = np.diff(bounds)
+    states = labels[bounds[:-1]]
+    return lengths[states != -1] * 1000.0 / sfreq
