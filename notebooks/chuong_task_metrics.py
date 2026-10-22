@@ -1,13 +1,18 @@
 # %% [markdown]
-# # Task-level microstate metrics (Chuong)
-# Back-fit the group templates to continuous Rest and Simon recordings and
-# save, one row per subject_id:
-# - `results/features/microstates_task.csv` (temporal smoothing, primary);
-# - `results/features/microstates_task_nosmooth.csv` (no smoothing, sensitivity).
-# Run from the repo root: `python notebooks/chuong_task_metrics.py`
+# # Task-level microstate metrics, full cohort (Chuong)
+# Back-fit the final templates to every eligible continuous Rest and Simon
+# recording and save, one row per subject_id (results/features/):
+# - microstates_task.csv            primary K, temporal smoothing (primary file)
+# - microstates_task_nosmooth.csv   primary K, no smoothing (sensitivity)
+# - microstates_task_K4.csv / _K5   K = 4 / 5 if not the primary K (sensitivity)
+# - microstates_task_qcincluded.csv primary K with QC-excluded recordings kept
+# - microstates_rest_noblink.csv    Rest columns without nICremoved == 0 recordings
+# Recordings excluded by the recording QC (per K) are left empty (NaN).
+# Run after notebooks/chuong_final_templates.py, from the repo root.
 
 # %%
 import logging
+import os
 import sys
 import time
 from pathlib import Path
@@ -18,50 +23,111 @@ logging.getLogger("mne").setLevel(logging.ERROR)
 
 import numpy as np
 import pandas as pd
+from joblib import Parallel, delayed
 
-from src import io as pio, microstates as ms
+from src import io as pio, microstates as ms, preprocess as pp
 
 cfg = pio.load_config()
-k = cfg["microstates"]["draft_templates"]["k"]
+DRY = os.environ.get("MS_DRYRUN") == "1"  # same dry run as chuong_final_templates.py
+if DRY:
+    cfg["paths"]["results"] = os.environ["MS_DRYRUN_DIR"]
+    cfg["microstates"]["primary_k"] = int(os.environ.get("MS_PRIMARY_K", 4))
+primary_k = cfg["microstates"]["primary_k"]
 sfreq = cfg["preprocessing"]["resample_hz"]
-templates = ms.load_templates(k, cfg)
-states = templates.cluster_names
-print("Templates:", ms.templates_path(k, cfg), "states", states, "(labels PROVISIONAL)")
-print("Back-fit options:", ms.backfit_options(cfg))
+ks = [primary_k] + [k for k in (4, 5) if k != primary_k]
+templates = {k: ms.load_templates(k, cfg) for k in ks}
+print("Primary K:", primary_k, "| K run:", ks, "| back-fit:", ms.backfit_options(cfg))
+print("State labels are PENDING VISUAL CONFIRMATION")
 
-# %% Subjects: the draft-template subjects for now; full cohort with final templates
-ids, _ = ms.draft_subjects(cfg)
+rest, _ = pp.select_subjects("Rest", cfg)
+simon, _ = pp.select_subjects("Simon", cfg)
+eligible = {"Rest": set(rest.subject_id), "Simon": set(simon.subject_id)}
+qc = pd.read_csv(pio.results_dir(cfg, "templates", "recording_qc.csv"))
+if DRY:
+    eligible = {task: set(qc.loc[qc.task == task, "subject_id"]) for task in eligible}
+ids = sorted(eligible["Rest"] | eligible["Simon"])
+print(f"Subjects: {len(ids)} (Rest {len(eligible['Rest'])}, Simon {len(eligible['Simon'])})")
 
-# %% Back-fit and metrics, with and without smoothing
-SETTINGS = {"smooth": ("microstates_task.csv", True),
-            "nosmooth": ("microstates_task_nosmooth.csv", False)}
-features, timing = {}, []
-for name, (filename, smoothing) in SETTINGS.items():
-    rows = []
-    for sid in ids:
-        start = time.perf_counter()
-        rows.append(ms.task_metrics(sid, templates, cfg, smoothing=smoothing))
-        timing.append({"subject_id": sid, "setting": name,
-                       "seconds": time.perf_counter() - start})
-    features[name] = pd.DataFrame(rows)
-    out = pio.results_dir(cfg, "features", filename)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    features[name].to_csv(out, index=False)
-    print("Saved", out, features[name].shape)
+# %% Back-fit every recording once per template set and setting
+def subject_rows(sid):
+    """Feature rows for one subject: {(k, smoothing): row}."""
+    rows = {}
+    start = time.perf_counter()
+    for task in ("Rest", "Simon"):
+        if sid not in eligible[task]:
+            continue
+        raw = pp.preprocess_raw(pio.load_continuous(sid, task, cfg), cfg)
+        for k in ks:
+            for smoothing in ((True, False) if k == primary_k else (True,)):
+                segmentation = ms.backfit(raw, templates[k], cfg, smoothing=smoothing)
+                if k == primary_k:
+                    path = ms.labels_path(sid, task, cfg, nosmooth=not smoothing)
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    np.save(path, segmentation.labels)
+                row = rows.setdefault((k, smoothing), {"subject_id": sid})
+                row.update(ms.segmentation_metrics(segmentation, task.lower()))
+    return rows, time.perf_counter() - start
 
-timing = pd.DataFrame(timing).pivot(index="subject_id", columns="setting", values="seconds")
-print("\nRuntime per subject (s, Rest + Simon incl. loading and filtering):")
-print(timing.round(1).to_string())
+
+results = Parallel(n_jobs=8, verbose=2)(delayed(subject_rows)(sid) for sid in ids)
+seconds = pd.Series([r[1] for r in results], index=ids)
+print(f"Runtime per subject: median {seconds.median():.1f} s, max {seconds.max():.1f} s, "
+      f"total wall-clock see log")
+
+
+def table(k, smoothing):
+    df = pd.DataFrame([r[0][(k, smoothing)] for r in results if (k, smoothing) in r[0]])
+    columns = ["subject_id"] + [c for task in ("rest", "simon") for c in df.columns
+                                if c.startswith(task + "_")]
+    return df[columns].set_index("subject_id")
+
+
+def apply_qc(df, k):
+    """Empty the columns of recordings excluded by the recording QC at this K."""
+    df = df.copy()
+    flagged = qc[(qc.k == k) & qc.excluded]
+    for sid, task in zip(flagged.subject_id, flagged.task):
+        df.loc[sid, [c for c in df.columns if c.startswith(task.lower() + "_")]] = np.nan
+    return df
+
+
+out_dir = pio.results_dir(cfg, "features")
+out_dir.mkdir(parents=True, exist_ok=True)
+features = {
+    "microstates_task.csv": apply_qc(table(primary_k, True), primary_k),
+    "microstates_task_nosmooth.csv": apply_qc(table(primary_k, False), primary_k),
+}
+for k in ks[1:]:
+    features[f"microstates_task_K{k}.csv"] = apply_qc(table(k, True), k)
+n_flagged = int(qc[(qc.k == primary_k) & qc.excluded].shape[0])
+if n_flagged:
+    features["microstates_task_qcincluded.csv"] = table(primary_k, True)
+
+# Blink sensitivity: Rest without recordings where no eye component was removed
+blink = rest.set_index("subject_id")["blink_flag"]
+rest_cols = [c for c in features["microstates_task.csv"].columns if c.startswith("rest_")]
+noblink = features["microstates_task.csv"][rest_cols].dropna(how="all")
+noblink = noblink[~blink.reindex(noblink.index).fillna(True).astype(bool)]
+features["microstates_rest_noblink.csv"] = noblink
+
+for name, df in features.items():
+    df.to_csv(out_dir / name)
+    n = {task: int(df[f"{task}_gev_total"].notna().sum())
+         for task in ("rest", "simon") if f"{task}_gev_total" in df}
+    print(f"Saved {name}: {df.shape[0]} rows x {df.shape[1]} columns; recordings {n}")
+print(f"Rest recordings with nICremoved == 0: {int(blink.sum())} of {len(blink)}")
 
 # %% Sanity checks
 def sanity(df, task):
+    states = [c.rsplit("_", 1)[1] for c in df.columns if c.startswith(f"{task}_meandur_")]
+    df = df[df[f"{task}_gev_total"].notna()]
     dur = df[[f"{task}_meandur_{s}" for s in states]]
     cov = df[[f"{task}_cov_{s}" for s in states]].sum(axis=1)
-    trans = [df[[f"{task}_trans_{s}_to_{d}" for d in states if d != s]].sum(axis=1)
-             for s in states]
-    trans = pd.concat(trans, axis=1)
+    trans = pd.concat([df[[f"{task}_trans_{s}_to_{d}" for d in states if d != s]].sum(axis=1)
+                       for s in states], axis=1)
     return {
-        "meandur by state (ms)": dur.mean().round(1).values.tolist(),
+        "n recordings": len(df),
+        "meandur by state (ms)": dict(zip(states, dur.mean().round(1))),
         "meandur range (ms)": f"{dur.min().min():.1f}-{dur.max().max():.1f}",
         "% values in 60-120 ms": f"{dur.stack().between(60, 120).mean():.0%}",
         "coverage sum (%)": f"{cov.min():.3f}-{cov.max():.3f}",
@@ -72,34 +138,47 @@ def sanity(df, task):
 
 
 def duration_distribution(task, nosmooth):
+    included = features["microstates_task.csv"][f"{task.lower()}_gev_total"].dropna().index
     durs = np.concatenate([
         ms.segment_durations_ms(np.load(ms.labels_path(sid, task, cfg, nosmooth)), sfreq)
-        for sid in ids])
+        for sid in included])
     floor = cfg["microstates"]["backfit"]["min_segment_length_samples"] * 1000 / sfreq
     return {"n segments": durs.size, "median (ms)": float(np.median(durs)),
             "mean (ms)": round(float(durs.mean()), 1),
-            f"% at floor ({floor:g}-{floor + 1000 / sfreq:g} ms)":
-                f"{np.mean(durs <= floor + 1000 / sfreq):.0%}",
+            "% at 20 ms floor (<= 24 ms)": f"{np.mean(durs <= floor + 1000 / sfreq):.0%}",
             "% >= 60 ms": f"{np.mean(durs >= 60):.0%}"}
 
 
-for task in ["Rest", "Simon"]:
-    t = task.lower()
-    table = pd.DataFrame({name: sanity(df, t) for name, df in features.items()})
-    dist = pd.DataFrame({name: duration_distribution(task, name == "nosmooth")
-                         for name in SETTINGS})
-    print(f"\n== {task} ==")
-    print(pd.concat([table, dist.astype(str)]).to_string())
+for name, df in features.items():
+    for task in ("rest", "simon"):
+        if f"{task}_gev_total" not in df:
+            continue
+        print(f"\n== {name} | {task} ==")
+        for key, value in sanity(df, task).items():
+            print(f"  {key}: {value}")
+        if name in ("microstates_task.csv", "microstates_task_nosmooth.csv"):
+            for key, value in duration_distribution(task.capitalize(),
+                                                    "nosmooth" in name).items():
+                print(f"  {key}: {value}")
 
-# %% Smoothing vs no smoothing, per metric (mean over subjects and states)
-rows = []
-for task in ["rest", "simon"]:
-    for metric in ["meandur", "occ", "cov", "gev"]:
-        cols = [f"{task}_{metric}_{s}" for s in states]
-        a, b = features["smooth"][cols], features["nosmooth"][cols]
-        rho = pd.Series(a.to_numpy().ravel()).corr(pd.Series(b.to_numpy().ravel()),
-                                                   method="spearman")
-        rows.append({"task": task, "metric": metric, "smooth": a.mean().mean(),
-                     "nosmooth": b.mean().mean(), "spearman_rho": rho})
-print("\nSmoothing vs no smoothing (mean over subjects × states; rho over subject × state values):")
-print(pd.DataFrame(rows).round(3).to_string(index=False))
+# %% sub-C049 and the distribution of state C coverage
+main = features["microstates_task.csv"]
+unmasked = table(primary_k, True)
+print("\n== sub-C049 ==")
+for task, table_ in (("Rest", rest), ("Simon", simon)):
+    if "sub-C049" not in eligible[task]:
+        continue
+    row = table_.set_index("subject_id").loc["sub-C049"]
+    q = qc[(qc.k == primary_k) & (qc.subject_id == "sub-C049") & (qc.task == task)].iloc[0]
+    print(f"  {task}: nInterp {row['nInterp']}, nICremoved {row['nICremoved']}, "
+          f"template GEV {q.gev_template:.3f}, robust z {q.gev_z:.2f}, excluded {q.excluded}")
+for task in ("rest", "simon"):
+    cov = main[f"{task}_cov_C"].dropna()
+    c049 = unmasked[f"{task}_cov_C"].get("sub-C049", np.nan)
+    mad = 1.4826 * np.median(np.abs(cov - cov.median()))
+    print(f"  {task}_cov_C (n = {len(cov)}): median {cov.median():.1f}%, IQR {cov.quantile(.25):.1f}-"
+          f"{cov.quantile(.75):.1f}%, 5-95% {cov.quantile(.05):.1f}-{cov.quantile(.95):.1f}%, "
+          f"max {cov.max():.1f}% | sub-C049 {c049:.1f}% (percentile "
+          f"{(cov < c049).mean():.0%}, robust z {(c049 - cov.median()) / mad:.1f})")
+    top = cov.sort_values(ascending=False).head(5).round(1)
+    print(f"    highest: {top.to_dict()}")

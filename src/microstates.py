@@ -74,6 +74,31 @@ def sample_peaks(peaks, n, rng):
     return ChData(data[:, idx], peaks.info)
 
 
+def recording_peaks(subject_id, task, cfg):
+    """Load and preprocess one recording; return its GFP peaks (:func:`extract_peaks`)."""
+    raw = pp.preprocess_raw(pio.load_continuous(subject_id, task, cfg), cfg)
+    return extract_peaks(raw, cfg)
+
+
+def equal_task_sample(peaks, subject_id, cfg):
+    """Random sample of the same number of peaks from each task.
+
+    ``peaks`` maps task -> ChData (all peaks of that recording). Samples
+    ``min(n_rest, n_simon, 3000)`` per task with :func:`subject_rng`, in the
+    order of ``peaks``. Returns ``(sampled, n)`` with ``sampled`` a dict
+    task -> ChData.
+    """
+    n = n_peaks_per_task(*(p.get_data().shape[1] for p in peaks.values()))
+    rng = subject_rng(subject_id, cfg)
+    return {task: sample_peaks(p, n, rng) for task, p in peaks.items()}, n
+
+
+def pool(chdatas):
+    """Concatenate several ChData (same channels) along the sample axis."""
+    chdatas = list(chdatas)
+    return ChData(np.hstack([c.get_data() for c in chdatas]), chdatas[0].info)
+
+
 def subject_peaks(subject_id, cfg, tasks=("Rest", "Simon")):
     """Load, preprocess and pool an equal number of GFP peaks per task.
 
@@ -81,18 +106,11 @@ def subject_peaks(subject_id, cfg, tasks=("Rest", "Simon")):
     peaks of all tasks, and ``counts`` a dict of peaks before sampling and
     the number kept per task.
     """
-    peaks = {}
-    for task in tasks:
-        raw = pp.preprocess_raw(pio.load_continuous(subject_id, task, cfg), cfg)
-        peaks[task] = extract_peaks(raw, cfg)
-    n_avail = {task: p.get_data().shape[1] for task, p in peaks.items()}
-    n = n_peaks_per_task(*n_avail.values())
-    rng = subject_rng(subject_id, cfg)
-    sampled = [sample_peaks(peaks[task], n, rng).get_data() for task in tasks]
-    info = peaks[tasks[0]].info
-    counts = {f"n_peaks_{task.lower()}": n_avail[task] for task in tasks}
+    peaks = {task: recording_peaks(subject_id, task, cfg) for task in tasks}
+    sampled, n = equal_task_sample(peaks, subject_id, cfg)
+    counts = {f"n_peaks_{task.lower()}": p.get_data().shape[1] for task, p in peaks.items()}
     counts["n_sampled_per_task"] = n
-    return ChData(np.hstack(sampled), info), counts
+    return pool(sampled.values()), counts
 
 
 # ------------------------------------------------------------------
@@ -221,17 +239,158 @@ def label_templates(cluster, order, names):
 
 
 # ------------------------------------------------------------------
+# Recording QC (config ``microstates.recording_qc``)
+# ------------------------------------------------------------------
+
+def robust_z(x):
+    """Robust z-score: (x - median) / (1.4826 * MAD)."""
+    x = np.asarray(x, dtype=float)
+    median = np.median(x)
+    mad = np.median(np.abs(x - median))
+    return (x - median) / (1.4826 * mad)
+
+
+def flag_recordings(qc, cfg):
+    """Add robust z of ``gev_template`` per task and the exclusion flag.
+
+    ``qc`` has one row per recording with columns subject_id, task,
+    gev_template. Returns a copy with ``gev_z`` and ``excluded`` added.
+    """
+    threshold = cfg["microstates"]["recording_qc"]["exclude_if_z_below"]
+    qc = qc.copy()
+    qc["gev_z"] = qc.groupby("task")["gev_template"].transform(robust_z)
+    qc["excluded"] = qc["gev_z"] < threshold
+    return qc
+
+
+# ------------------------------------------------------------------
+# Labels and choice of K
+# ------------------------------------------------------------------
+
+def spatial_corr(maps_a, maps_b):
+    """Absolute (polarity-invariant) spatial correlation, (n_a, n_b)."""
+    a = maps_a - maps_a.mean(axis=1, keepdims=True)
+    b = maps_b - maps_b.mean(axis=1, keepdims=True)
+    a = a / np.linalg.norm(a, axis=1, keepdims=True)
+    b = b / np.linalg.norm(b, axis=1, keepdims=True)
+    return np.abs(np.einsum("ic,jc->ij", a, b))
+
+
+def state_gev(templates, peaks):
+    """GEV (fraction) explained by each template on a set of maps.
+
+    Each map goes to its best template (polarity ignored); sums to
+    :func:`template_gev`.
+    """
+    data = peaks.get_data()
+    data = data - data.mean(axis=0)
+    g = gfp(data)
+    corr = spatial_corr(templates.cluster_centers_, data.T)
+    best = corr.argmax(axis=0)
+    explained = (g * corr.max(axis=0)) ** 2
+    return np.array([explained[best == i].sum() for i in range(corr.shape[0])]) / np.sum(g ** 2)
+
+
+def match_labels(templates, reference, peaks, extra_names="EFGHIJ", min_corr=0.8):
+    """Label templates by polarity-invariant correlation with reference maps.
+
+    Reference maps (e.g. the approved draft A-D) are matched one-to-one to
+    templates by maximizing the total absolute correlation (Hungarian
+    algorithm). Remaining templates get ``extra_names`` in order of
+    decreasing explained variance on ``peaks`` (:func:`state_gev`).
+
+    Returns ``(order, names, corr, flags)``: pass ``order`` and ``names`` to
+    :func:`label_templates`; ``corr`` is a DataFrame (templates in fitted
+    order x reference names); ``flags`` lists problems: a matched template
+    with correlation below ``min_corr``, a template at or above ``min_corr``
+    with two or more reference maps, or an extra template at or above
+    ``min_corr`` with a reference map (a possible split of that state).
+    """
+    from scipy.optimize import linear_sum_assignment
+
+    ref_names = list(reference.cluster_names)
+    corr = spatial_corr(templates.cluster_centers_, reference.cluster_centers_)
+    rows, cols = linear_sum_assignment(-corr)
+    matched = dict(zip(cols, rows))  # reference index -> template index
+    explained = state_gev(templates, peaks)
+    extra = sorted(set(range(corr.shape[0])) - set(rows), key=lambda i: -explained[i])
+    order = [matched[j] for j in range(len(ref_names))] + extra
+    names = ref_names + list(extra_names[:len(extra)])
+
+    flags = []
+    for j, name in enumerate(ref_names):
+        r = corr[matched[j], j]
+        if r < min_corr:
+            flags.append(f"{name}: best match r = {r:.2f} < {min_corr}")
+    for i in range(corr.shape[0]):
+        label = names[order.index(i)]
+        high = [ref_names[j] for j in np.flatnonzero(corr[i] >= min_corr)]
+        if len(high) >= 2:
+            flags.append(f"{label}: r >= {min_corr} with {'+'.join(high)}")
+        if i in extra and high:
+            flags.append(f"{label} (extra): r >= {min_corr} with {'+'.join(high)}")
+    corr = pd.DataFrame(corr, columns=ref_names)
+    corr.index = [names[order.index(i)] for i in range(corr.shape[0])]
+    return order, names, corr.loc[names], flags
+
+
+def cluster_scores(cluster, data=None):
+    """Silhouette, Calinski-Harabasz, Davies-Bouldin and Dunn (pycrostates).
+
+    By default the scores use the data the cluster was fitted on. With
+    ``data`` (a ChData), they are computed on those maps instead, each
+    assigned to its best template (polarity ignored), using the same
+    pycrostates functions on a copy of the cluster.
+    """
+    from pycrostates.metrics import (calinski_harabasz_score, davies_bouldin_score,
+                                     dunn_score, silhouette_score)
+
+    if data is not None:
+        cluster = cluster.copy()
+        values = data.get_data()
+        cluster._fitted_data = values  # pycrostates scores read these attributes
+        cluster._labels_ = spatial_corr(cluster.cluster_centers_, values.T).argmax(axis=0)
+    return {"silhouette": silhouette_score(cluster),
+            "calinski_harabasz": calinski_harabasz_score(cluster),
+            "davies_bouldin": davies_bouldin_score(cluster),
+            "dunn": dunn_score(cluster)}
+
+
+def choose_k(scores):
+    """Primary K by the config rule: best mean rank over the four scores.
+
+    ``scores`` is a DataFrame indexed by K with the :func:`cluster_scores`
+    columns. Higher is better except Davies-Bouldin; ties go to the smaller K.
+    Returns ``(k, ranks)``.
+    """
+    ranks = pd.DataFrame({
+        "silhouette": scores["silhouette"].rank(ascending=False),
+        "calinski_harabasz": scores["calinski_harabasz"].rank(ascending=False),
+        "davies_bouldin": scores["davies_bouldin"].rank(ascending=True),
+        "dunn": scores["dunn"].rank(ascending=False),
+    })
+    ranks["mean_rank"] = ranks.mean(axis=1)
+    best = ranks["mean_rank"].min()
+    k = int(min(ranks.index[np.isclose(ranks["mean_rank"], best)]))
+    return k, ranks
+
+
+# ------------------------------------------------------------------
 # Templates on disk
 # ------------------------------------------------------------------
 
-def templates_path(k, cfg):
-    """``results/templates/templates_K<k>.fif`` (config ``outputs.templates``)."""
-    return pio.results_dir(cfg, "templates", f"templates_K{k}.fif")
+def templates_path(k, cfg, suffix=""):
+    """``results/templates/templates_K<k><suffix>.fif`` (config ``outputs.templates``).
+
+    Suffixes in use: ``_draft`` (approved Oct 22 draft), ``_pass1`` (before
+    recording QC), ``_rest`` / ``_simon`` (task-specific templates).
+    """
+    return pio.results_dir(cfg, "templates", f"templates_K{k}{suffix}.fif")
 
 
-def save_templates(cluster, cfg):
-    """Save group templates to ``templates_path``, overwriting any old file."""
-    path = templates_path(cluster.n_clusters, cfg)
+def save_templates(cluster, cfg, suffix=""):
+    """Save group templates to :func:`templates_path`, overwriting any old file."""
+    path = templates_path(cluster.n_clusters, cfg, suffix)
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         path.unlink()
@@ -239,9 +398,9 @@ def save_templates(cluster, cfg):
     return path
 
 
-def load_templates(k, cfg):
-    """Load the group templates for ``k`` states (a fitted ModKMeans)."""
-    return read_cluster(templates_path(k, cfg))
+def load_templates(k, cfg, suffix=""):
+    """Load group templates for ``k`` states (a fitted ModKMeans)."""
+    return read_cluster(templates_path(k, cfg, suffix))
 
 
 # ------------------------------------------------------------------

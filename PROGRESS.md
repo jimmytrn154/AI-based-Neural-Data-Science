@@ -35,8 +35,8 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 |---|---|---|---|
 | Oct 20 | Shared rules and interfaces agreed; repo and `config.yaml` set up | All | ✅ |
 | Oct 21 | **Draft templates released** (~15 subjects, K = 4) | Chuong | ✅ |
-| Oct 22 | **Final templates released** (full cohort, K chosen) | Chuong | ⬜ |
-| Oct 23 | Task-level metrics delivered for Rest and Simon | Chuong | ⬜ |
+| Oct 22 | **Final templates released** (full cohort, K chosen) | Chuong | ✅ (Oct 23; labels pending visual confirmation) |
+| Oct 23 | Task-level metrics delivered for Rest and Simon | Chuong | ✅ (labels pending visual confirmation) |
 | Oct 24 | All feature tables merged; PD/MoCA associations run; figures chosen | All | ⬜ |
 | Oct 25 | Slides finished and rehearsed | All | ⬜ |
 | Oct 26 | **Progress presentation** | All | ⬜ |
@@ -68,10 +68,10 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 | Shared loading and preprocessing functions (1–40 Hz, 250 Hz, exclusion) | Chuong | Oct 21 | ✅ | `src/io.py`, `src/preprocess.py`; n: Rest 149, Simon 141, both 141 |
 | GFP-peak extraction, with equal peaks per subject and task | Chuong | Oct 21 | ✅ | `ms.subject_peaks`; outliers > mean + 3 SD of peak GFP dropped per recording |
 | Draft templates (~15 subjects, K = 4) | Chuong | Oct 21 | ✅ | Unblocks Seonwoo, Minseo, Bohyeon. Refit Oct 22 at 2–20 Hz with sub-P048 replaced by sub-P009: 10 PD + 5 C; template GEV 53.7% ± 9.0% (group level 75.5%); labels A–D **provisional**; `results/figures/chuong_templates_K4_draft.png` |
-| Final group templates (fit K = 4–7; report K = 4 and 5) | Chuong | Oct 22 | ⬜ | |
-| Task-specific templates and spatial-correlation check | Chuong | Oct 22 | ⬜ | |
+| Final group templates (fit K = 4–7; report K = 4 and 5) | Chuong | Oct 22 | ✅ | Primary K = 4 (config rule). 138–139 subjects after QC; template GEV K4 54.8%, K5 56.8%, K6 58.4%, K7 59.3%. Labels by correlation with draft, **pending visual confirmation**; K = 4 'D' does not match draft D (r = 0.42), see Blockers. `results/figures/chuong_templates_K{4..7}.png` |
+| Task-specific templates and spatial-correlation check | Chuong | Oct 22 | ✅ | K = 4. Rest-only vs shared |r|: A .94, B .93, C .95, D .39; Simon-only: A 1.00, B .98, C .99, D .79. The shared 'D' (central map) is not reproduced by Rest-only templates |
 | Back-fitting function shared in `src/microstates.py` | Chuong | Oct 21 | ✅ | `ms.load_templates(4, cfg)`, `ms.backfit(inst, templates, cfg)`; epochs via `pio.epochs_to_mne` |
-| Rest and Simon metrics: duration, occurrence, coverage, GEV, transitions | Chuong | Oct 23 | ⬜ | `results/features/microstates_task.csv` |
+| Rest and Simon metrics: duration, occurrence, coverage, GEV, transitions | Chuong | Oct 23 | ✅ | `results/features/microstates_task.csv` (149 subjects; Rest 147, Simon 140 recordings after QC); sensitivity files `_nosmooth`, `_K5`, `_qcincluded`, `microstates_rest_noblink.csv`. Labels pending visual confirmation |
 
 ### 3. Condition-level dynamics (Seonwoo)
 
@@ -193,6 +193,9 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 22 | Epochs back-fitted to the templates (Simon conditions and recovery pilot) filtered 2–20 Hz like the templates; 30 Hz low-pass kept for ERP plots only | Chuong |
 | Oct 22 | Commit `e2fff64` (Milestone 2, already pushed) also contains Chuong's README edit ("~146 s (median)"); left as is to avoid rewriting shared history | Chuong |
 | Oct 22 | Back-fitting uses temporal smoothing (pycrostates documented settings), to match the proposal. Decided after draft metrics showed short durations, but values taken from documentation, not tuned to results. No-smoothing kept as a sensitivity analysis | Chuong |
+| Oct 23 | Primary K = 4 by the config k_selection rule on full-cohort group fits (silhouette and Calinski-Harabasz both best at K = 4; Davies-Bouldin ~1e15 and Dunn ~0 at every K, i.e. uninformative). `primary_k: 4` added to config.yaml | Chuong |
+| Oct 23 | Recording QC (K = 4, pass 1) excluded: sub-P001 Rest (PD, MoCA 19, z = −3.72), sub-P040 Rest (PD, MoCA 27, z = −3.09), sub-P048 Simon (PD, MoCA 21, z = −4.84). At K = 5: sub-P001 Rest, sub-P048 Simon. Subjects with a flagged recording left out of the template refit; flagged recordings empty in the metric files (kept in `_qcincluded`) | Chuong |
+| Oct 23 | State labels assigned automatically by polarity-invariant correlation with the approved draft A–D (Hungarian matching; extra maps E, F, G by explained variance); pending visual confirmation | Chuong |
 | | | |
 
 ## Blockers
@@ -204,6 +207,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 21 | Draft template states not yet matched to canonical A–D (config: visual inspection, fixed once). Needed before `microstates_task.csv` column names | Chuong, all | Chuong | Provisional labels on draft (Oct 22); final labels on final templates |
 | Oct 22 | Task-level sanity check fails on durations: mean durations 44–57 ms (only 8% of subject×state values in 60–120 ms; median segment 36 ms, 22% at the 20 ms floor) with draft templates, 2–20 Hz, `min_segment_length` 5, no temporal smoothing. Proposal says back-fit "with temporal smoothing", config sets none. Bookkeeping verified (occ × dur = cov) | Chuong (task metrics), Bohyeon | Chuong | Yes (Oct 22): temporal smoothing from pycrostates 0.6.1 tutorial (factor 10, half window 10); no-smoothing kept as sensitivity |
 | Oct 22 | Back-fitting is slow: pycrostates short-segment rejection ~10 min per Simon recording (0.1 s without it); 15 subjects took 31 min with 8 parallel workers; full cohort ≈ 2–3 h per run | Chuong | Chuong | Yes (Oct 22): `ms.reject_short_segments` is the default; identical labels to pycrostates on all 15 subjects × Rest/Simon × smooth/no-smooth (`tests/test_backfit.py`, 64 passed); ~1.7 s per subject |
+| Oct 23 | Full-cohort K = 4 (primary by config rule) has no map matching draft D (best r = 0.42): its 4th map is a central maximum with temporal-edge negativity (= K = 5 map E, 3.7–4.4% of GEV), while fronto-central D is merged into C (r = 0.95 with draft C, 0.86 with draft D). At K = 5, A–D match the draft at r ≥ 0.97. Column `*_D` at K = 4 is therefore not canonical D | Chuong, Bohyeon, Seonwoo (anyone using K = 4 labels) | Chuong | No, needs visual review and team decision (keep K = 4 per rule, or switch primary to K = 5) |
+| Oct 23 | Davies-Bouldin (~1e15) and Dunn (~0) are degenerate for every K with pycrostates' distance (\|1/r\| − 1 explodes for near-orthogonal maps); the K choice rests on silhouette and Calinski-Harabasz (both K = 4) | Chuong | Chuong | No, team to decide whether to keep these two scores in the rule |
 
 ## Daily log
 
@@ -215,3 +220,4 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 22 | Chuong | Band-pass 2–20 Hz in config; draft K = 4 refit without sub-P048 (replaced by sub-P009, seed 42): group GEV 75.5%, template GEV 53.7% ± 9.0%; provisional A–D labels; tested proposed GEV data-quality rule (does not flag P048 on individual-fit GEV) | Team check of maps; QC rule wording; Milestone 3 |
 | Oct 22 | Chuong | Milestone 3 (draft): back-fit draft K = 4 templates to Rest and Simon of the 15 draft subjects; `results/features/microstates_task.csv` (15 × 63); labels saved; coverage sums 100%, transition rows sum to 1, gev_total Rest 48.0% ± 10.6, Simon 48.2% ± 9.4 (vs 53.7% on GFP peaks); durations short (44–57 ms), see Blockers | Team decision on smoothing; final templates |
 | Oct 22 | Chuong | Milestone 3 rerun with smoothing (factor 10, half window 10, min segment 20 ms): mean durations by state Rest 114–170 ms, Simon 115–171 ms; median segment 100 ms, 0% at the 20 ms floor; gev_total Rest 42.9% ± 10.0, Simon 43.1% ± 9.3; coverage and transition sums OK. No-smoothing sensitivity in `microstates_task_nosmooth.csv` (rho with smoothed 0.93–1.00). Fast exact back-fit + tests. Note: state C dominates sub-C049 (80% coverage, Rest and Simon) and sub-C004 Simon (58% vs 13% Rest); recheck on full cohort | Milestone 4: final templates on full cohort |
+| Oct 23 | Chuong | Milestone 4: full-cohort templates K = 4–7 (two-level, QC two-pass, auto-labels vs draft), primary K = 4 by rule; task-specific templates; metrics for 149 subjects (primary smoothed, no-smoothing, K = 5, QC-included, Rest no-blink: 35/149 Rest recordings have nICremoved == 0). Sanity checks pass (coverage 100%, transitions sum to 1; median segment 100 ms, 0% at floor). sub-C049 not flagged by QC (z 0.07 Rest, 0.78 Simon); its state C coverage is high (97th/99th percentile) but 4 subjects are as high or higher (max 92%, sub-P051) | Morning: visual check of labels; K = 4 vs 5 decision |

@@ -53,6 +53,7 @@ microstates:
     n_subjects: 15                        # random sample stratified by group
     k: 4
   k_range: [4, 5, 6, 7]
+  primary_k: 4                            # Oct 23: chosen by k_selection on full-cohort group fits (notebooks/chuong_final_templates.py)
   k_selection: >
     Primary K = best mean rank across silhouette, Calinski-Harabasz,
     Davies-Bouldin (lower is better) and Dunn scores; ties -> smaller K.
