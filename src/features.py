@@ -30,3 +30,35 @@ def simon_behavior(trials):
              "simon_err_inc", "simon_effect_err", "simon_noresp_rate",
              "simon_n_con", "simon_n_inc"]
     return {key: row[key] for key in order}
+
+
+# ------------------------------------------------------------------
+# Recovery pilot (docs/TEAM_TASKS.md, C4)
+# ------------------------------------------------------------------
+
+def state_probabilities(labels, n_states):
+    """P(state) per time point from trial labels (n_trials, n_times).
+
+    Probabilities are over the trials labeled at each time point (-1 =
+    unlabeled is left out), so they sum to 1 wherever any trial is labeled;
+    time points with no labeled trial are NaN. Returns (n_states, n_times).
+    """
+    labeled = (labels >= 0).sum(axis=0).astype(float)
+    labeled[labeled == 0] = np.nan
+    return np.stack([(labels == s).sum(axis=0) / labeled for s in range(n_states)])
+
+
+def recovery_curve(probs, baseline):
+    """Euclidean distance from the baseline probability vector at each time point."""
+    return np.sqrt(((probs - baseline[:, None]) ** 2).sum(axis=0))
+
+
+def window_mean(values, times, window):
+    """Mean of ``values`` over ``window`` = (start, end), in the units of ``times``."""
+    mask = (times >= window[0]) & (times <= window[1])
+    return float(np.nanmean(values[mask]))
+
+
+def spearman_brown(r):
+    """Spearman-Brown correction of a split-half correlation: 2r / (1 + r)."""
+    return 2 * r / (1 + r)

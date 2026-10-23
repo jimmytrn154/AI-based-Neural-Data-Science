@@ -99,10 +99,10 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Define the recovery measure and baseline window (response-locked epochs) | Chuong | Oct 24 | ⬜ | |
-| Post-incongruent vs. post-congruent (and post-error) state-probability recovery | Chuong | Oct 24 | ⬜ | |
+| Define the recovery measure and baseline window (response-locked epochs) | Chuong | Oct 24 | ✅ | Baseline cue −200–0 ms; Euclidean distance of state probabilities from baseline; mean over +200–1000 ms after keypress (`docs/recovery_pilot.md`) |
+| Incongruent vs. congruent and error vs. correct recovery (per `docs/TEAM_TASKS.md` C4) | Chuong | Oct 24 | ✅ | 140 subjects; `results/features/recovery.csv`, `results/figures/chuong_recovery.png`. Errors compared with size-matched correct subsets |
 | PCA trajectories of response-locked activity (optional) | Chuong | Oct 24 | ⬜ | |
-| Split-half reliability (odd vs. even trials, Spearman–Brown) | Chuong | Oct 24 | ⬜ | Go/no-go input for Phase 2 |
+| Split-half reliability (odd vs. even trials, Spearman–Brown) | Chuong | Oct 24 | ✅ | Overall recovery 0.97 (keep); conflict effect 0.24 (drop); error effect 0.68 (keep, marginal) |
 
 ### 6. Robustness checks (owner of each analysis)
 
@@ -216,6 +216,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 23 | Simon error rates in `behavior.csv` follow the TEAM_TASKS spec (errors / responded trials); the Dataset Guide reference values use errors / all trials. Both reproduced; team to confirm which definition the RQ3 analyses use | Chuong |
 | Oct 23 | Teammates use GitHub read-only (browse/download); outputs sent to Chuong, who integrates them and maintains PROGRESS.md | Chuong |
 | Oct 23 | Template files (`results/templates/*.fif`, derived maps, no EEG) committed so teammates can download them; labels, peaks and QC tables stay git-ignored | Chuong |
+| Oct 23 | Recovery pilot choices where the spec was open: Euclidean distance between state-probability vectors; probabilities over labeled trials (epoch-edge segments unlabeled); errors compared with random correct subsets of the same size (fewer trials inflate the distance); error measures need ≥ 10 errors; correct and error trials both need RT 150–1500 ms; split halves by odd/even trial number, each with its own baseline | Chuong |
+| Oct 23 | Recovery pilot go/no-go (config: keep if reliability ≥ 0.5): keep overall recovery (0.97) and error effect (0.68, marginal); drop conflict effect (0.24) | Chuong |
 
 ## Blockers
 
@@ -242,3 +244,4 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 23 | Chuong | Milestone 4: full-cohort templates K = 4–7 (two-level, QC two-pass, auto-labels vs draft), primary K = 4 by rule; task-specific templates; metrics for 149 subjects (primary smoothed, no-smoothing, K = 5, QC-included, Rest no-blink: 35/149 Rest recordings have nICremoved == 0). Sanity checks pass (coverage 100%, transitions sum to 1; median segment 100 ms, 0% at floor). sub-C049 not flagged by QC (z 0.07 Rest, 0.78 Simon); its state C coverage is high (97th/99th percentile) but 4 subjects are as high or higher (max 92%, sub-P051) | Morning: visual check of labels; K = 4 vs 5 decision |
 | Oct 23 | Chuong | Switched primary to K = 5 and rebuilt primary files (K = 5 QC; sanity checks pass: coverage 100%, transitions sum to 1, median segment 96 ms, 0% at floor, gev_total Rest 46.3%, Simon 43.4%); confirmed labels applied (K = 4 'Central'); K = 5 task-specific templates (all \|r\| ≥ .98). State E descriptives: coverage median Rest 11.0%, Simon 12.1%; in Simon epochs (20 subjects) P(E) rises from .11 to a peak of .155 at 452 ms post-stimulus and .148 at +16 ms around the keypress, then drops; \|r\| = .09 with the first-draft muscle-like map. sub-C049 state C coverage at K = 5: robust z 3.8 Rest, 4.7 Simon (QC not flagged). Cleared outputs from notebooks/test.ipynb | Hand over K = 5 features to Bohyeon/Seonwoo |
 | Oct 23 | Chuong | Task board `docs/TEAM_TASKS.md` added (paths checked) and tasks reassigned (Minseo away until Oct 24). C1–C3 done: Simon RT 514.4 / 557.4 ms (reference 514.7 / 557.4), error rates 6.44% / 14.82% with the Guide's definition (errors / all trials; 6.84% / 16.27% with the spec's errors / responded trials); by group RT effect PD +47 / C +35 ms, incongruent errors PD 18.0% / C 8.5%; `results/features/behavior.csv` (141 × 9); summary for Minseo in `docs/behavior_sanity_checks.md` | C4 recovery pilot after approval |
+| Oct 23 | Chuong | GitHub read-only workflow (`docs/SETUP.md`, templates committed). C4 recovery pilot on 140 subjects: split-half reliability (Spearman–Brown) overall recovery 0.97 (rank-based 0.81), conflict effect 0.24, error effect 0.68 (rank-based 0.57) → keep overall and error measures, drop conflict; robust to ending the window at +800 ms; `recovery.csv`, `chuong_recovery.png`, `docs/recovery_pilot.md` | C5 (optional PCA), C6 slides |

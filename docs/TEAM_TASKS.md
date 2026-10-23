@@ -73,7 +73,7 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 | C1 | Reproduce Simon RT (514.7 / 557.4 ms) and error rates (6.4% / 14.8%) | Oct 23 | ✅ | `trial_info/simon/*.tsv`, `subjects.csv` | Numbers in the daily log; summary for Minseo's slide |
 | C2 | Simon effect by group (RT and errors), descriptive | Oct 23 | ✅ | Same | Table: PD vs. control means |
 | C3 | Behavioral feature table | Oct 23 | ✅ | Same | `results/features/behavior.csv` (see spec below) |
-| C4 | Recovery pilot: measure, comparison, reliability | Oct 24 | ⬜ | Response- and cue-locked Simon epochs, templates, `backfit()` | `results/features/recovery.csv`, `results/figures/chuong_recovery.png`, go/no-go note |
+| C4 | Recovery pilot: measure, comparison, reliability | Oct 24 | ✅ | Response- and cue-locked Simon epochs, templates, `backfit()` | `results/features/recovery.csv`, `results/figures/chuong_recovery.png`, go/no-go note (`docs/recovery_pilot.md`) |
 | C5 | PCA trajectories of response-locked state probabilities (optional) | Oct 24 | ⬜ | C4 outputs | `results/figures/chuong_recovery_pca.png` |
 | C6 | Slides: pipeline, K choice, templates, state E, next phases | Oct 25 | ⬜ | All of the above | Slides in the shared deck |
 
