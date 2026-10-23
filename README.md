@@ -7,6 +7,7 @@ We analyze the **Iowa Parkinson's Disease (PD) EEG dataset**: 64-channel EEG fro
 
 - **Full proposal:** `docs/proposal.tex`
 - **Progress tracker:** `PROGRESS.md`
+- **Team tasks:** `docs/TEAM_TASKS.md`
 - **Dataset documentation:** `Dataset_Guide.pdf`, which ships with the data. The dataset reference below summarizes the parts we use most.
 - **Dataset path for Chuong's machine:** `/Users/trananhchuong/OneDrive - VINACADEMY LLC/AI-based Neural Data Science/Dataset_ALL`
 
