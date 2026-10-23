@@ -53,12 +53,20 @@ microstates:
     n_subjects: 15                        # random sample stratified by group
     k: 4
   k_range: [4, 5, 6, 7]
-  primary_k: 4                            # Oct 23: chosen by k_selection on full-cohort group fits (notebooks/chuong_final_templates.py)
+  primary_k: 5                            # Oct 23 team decision (decision log): only K = 5 recovers canonical A-D (r >= 0.97 with draft) with E separate; GEV gains flatten after K = 5. The rule below gave K = 4 (kept as sensitivity)
   k_selection: >
-    Primary K = best mean rank across silhouette, Calinski-Harabasz,
-    Davies-Bouldin (lower is better) and Dunn scores; ties -> smaller K.
-    Always report K = 4 and K = 5 as well.
+    Best mean rank across silhouette and Calinski-Harabasz (higher is
+    better); ties -> smaller K. Always report K = 4 and K = 5 as well.
+    Davies-Bouldin and Dunn were in the original rule but are degenerate with
+    pycrostates' distance (|1/r| - 1 explodes for near-orthogonal maps:
+    Davies-Bouldin ~1e15, Dunn ~0 at every K), so they are excluded (Oct 23).
+  k_selection_scores: ["silhouette", "calinski_harabasz"]
   state_labels: "match maps to canonical A-D (E...) by visual inspection; fixed once, used everywhere"
+  labeling: "one-to-one (Hungarian) matching by polarity-invariant spatial correlation with the approved draft A-D; extra maps named E, F, G in order of explained variance; then visual confirmation"
+  confirmed_labels:                       # Oct 23, visually confirmed
+    5: ["A", "B", "C", "D", "E"]          # E = central maximum with opposite-sign temporal edges
+    4: ["A", "B", "C", "Central"]         # sensitivity; C at K = 4 includes canonical D
+  sensitivity_only_k: [6, 7]              # automatic labels, not confirmed
   recording_qc:                           # added Oct 22
     measure: "template GEV (recording's GFP peaks fitted to the group templates)"
     robust_z: "(x - median) / (1.4826 * MAD), per task across recordings"
@@ -66,6 +74,9 @@ microstates:
     procedure: "fit on full cohort -> flag -> refit once without flagged recordings -> stop"
     log_excluded: ["subject_id", "group", "moca"]
     sensitivity: "repeat analyses with the excluded recordings included"
+    per_k: true                           # QC applied separately for each K (template GEV depends on that K's templates)
+    refit_excludes: "subject"             # a subject with any flagged recording is left out of the template refit; its unflagged recordings are still back-fitted
+    gev_peaks: "all"                      # QC GEV uses all of a recording's GFP peaks (after the 3 SD cut), not the 3000-peak sample
   backfit:
     min_segment_length_samples: 5         # = 20 ms at 250 Hz
     reject_edges: true

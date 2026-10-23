@@ -356,23 +356,60 @@ def cluster_scores(cluster, data=None):
             "dunn": dunn_score(cluster)}
 
 
-def choose_k(scores):
-    """Primary K by the config rule: best mean rank over the four scores.
+def choose_k(scores, cfg):
+    """Primary K by the config rule: best mean rank over ``k_selection_scores``.
 
     ``scores`` is a DataFrame indexed by K with the :func:`cluster_scores`
     columns. Higher is better except Davies-Bouldin; ties go to the smaller K.
     Returns ``(k, ranks)``.
     """
-    ranks = pd.DataFrame({
-        "silhouette": scores["silhouette"].rank(ascending=False),
-        "calinski_harabasz": scores["calinski_harabasz"].rank(ascending=False),
-        "davies_bouldin": scores["davies_bouldin"].rank(ascending=True),
-        "dunn": scores["dunn"].rank(ascending=False),
-    })
+    names = cfg["microstates"]["k_selection_scores"]
+    ranks = pd.DataFrame({name: scores[name].rank(ascending=(name == "davies_bouldin"))
+                          for name in names})
     ranks["mean_rank"] = ranks.mean(axis=1)
     best = ranks["mean_rank"].min()
     k = int(min(ranks.index[np.isclose(ranks["mean_rank"], best)]))
     return k, ranks
+
+
+def apply_confirmed_labels(cluster, cfg):
+    """Rename templates to the visually confirmed labels for their K, if any.
+
+    Uses ``microstates.confirmed_labels`` (labels in the current template
+    order). Returns True if the K has confirmed labels.
+    """
+    confirmed = cfg["microstates"].get("confirmed_labels", {}).get(cluster.n_clusters)
+    if confirmed is None:
+        return False
+    cluster.rename_clusters(new_names=list(confirmed))
+    return True
+
+
+def label_status(k, cfg):
+    """Short label status for figure titles and reports."""
+    ms_cfg = cfg["microstates"]
+    if k == ms_cfg["primary_k"] and k in ms_cfg.get("confirmed_labels", {}):
+        return "primary, labels confirmed"
+    if k in ms_cfg.get("confirmed_labels", {}):
+        return "sensitivity, labels confirmed"
+    if k in ms_cfg.get("sensitivity_only_k", []):
+        return "sensitivity only (automatic labels)"
+    return "labels pending visual confirmation"
+
+
+def task_specific_templates(sampled, subject_ids, k, shared, cfg, task):
+    """Two-level templates from one task's sampled peaks, labeled like ``shared``.
+
+    ``sampled`` maps subject -> {task: ChData}. Returns ``(templates, corr)``
+    with ``corr`` the |r| matrix against the shared templates
+    (:func:`match_labels`).
+    """
+    individual = [fit_individual(sampled[sid][task], k, cfg) for sid in subject_ids]
+    specific = fit_group(individual, k, cfg)
+    task_peaks = pool(sampled[sid][task] for sid in subject_ids)
+    order, names, corr, flags = match_labels(specific, shared, task_peaks)
+    label_templates(specific, order, names)
+    return specific, corr, flags
 
 
 # ------------------------------------------------------------------

@@ -6,7 +6,8 @@
 #    subjects (pass 2) -> labels by correlation with the approved draft A-D.
 # 3. Primary K by the config rule (cluster scores on the group-level fits).
 # 4. Task-specific templates (Rest only, Simon only) at the primary K.
-# Labels are assigned automatically and are PENDING VISUAL CONFIRMATION.
+# Labels are assigned automatically, then replaced by the visually confirmed
+# labels in config.yaml (microstates.confirmed_labels) where they exist.
 #
 # Run from the repo root: `python notebooks/chuong_final_templates.py`
 # Dry run (12 subjects, n_init 10, output to MS_DRYRUN_DIR): MS_DRYRUN=1
@@ -133,6 +134,7 @@ for k in k_range:
     fit_peaks = ms.pool(pooled[sid] for sid in fit_ids)
     order, names, corr, flags = ms.match_labels(final, draft, fit_peaks)
     ms.label_templates(final, order, names)
+    ms.apply_confirmed_labels(final, cfg)
     p_order, p_names, _, _ = ms.match_labels(pass1, draft, fit_peaks)
     ms.label_templates(pass1, p_order, p_names)
     explained = ms.state_gev(final, fit_peaks)
@@ -144,7 +146,7 @@ for k in k_range:
     path = ms.save_templates(final, cfg)
     gev_subject = pd.Series({sid: ms.template_gev(final, pooled[sid]) for sid in fit_ids})
     title = (f"Templates K = {k}, {band} Hz, {len(fit_ids)} subjects "
-             f"(GEV {gev_subject.mean():.1%}) - labels pending visual confirmation")
+             f"(GEV {gev_subject.mean():.1%}) - {ms.label_status(k, cfg)}")
     figure = save_figure(final, title, f"chuong_templates_K{k}.png")
     print("Saved", path, figure)
 
@@ -166,11 +168,14 @@ qc_all.to_csv(pio.results_dir(cfg, "templates", "recording_qc.csv"), index=False
 # %% 3. Primary K
 scores = pd.DataFrame(scores).T
 scores_pooled = pd.DataFrame(scores_pooled).T
-primary_k, ranks = ms.choose_k(scores)
-check_k, ranks_pooled = ms.choose_k(scores_pooled)
+primary_k, ranks = ms.choose_k(scores, cfg)
+check_k, ranks_pooled = ms.choose_k(scores_pooled, cfg)
 print("\nCluster scores (group-level fits):\n" + scores.round(4).to_string())
 print("Ranks:\n" + ranks.to_string())
-print(f"Primary K (config rule): {primary_k}")
+print(f"K by the config rule: {primary_k}")
+if cfg["microstates"].get("primary_k") not in (None, primary_k):
+    primary_k = cfg["microstates"]["primary_k"]  # team decision (decision log)
+    print(f"Primary K set in config.yaml: {primary_k}")
 print(f"\nCheck on {score_data.get_data().shape[1]} pooled GFP peaks:\n"
       + scores_pooled.round(4).to_string())
 print("Ranks:\n" + ranks_pooled.to_string())
@@ -188,12 +193,8 @@ shared = ms.load_templates(primary_k, cfg)
 fit_ids = [sid for sid in both if sid not in summary["K"][primary_k]["dropped"]]
 summary["task_specific"] = {}
 for task in ("Rest", "Simon"):
-    individual = [ms.fit_individual(sampled[sid][task], primary_k, cfg) for sid in fit_ids]
-    specific = ms.fit_group(individual, primary_k, cfg)
-    task_peaks = ms.pool(sampled[sid][task] for sid in fit_ids)
-    order, names, corr, flags = ms.match_labels(specific, shared, task_peaks)
-    ms.label_templates(specific, order, names)
-    del task_peaks
+    specific, corr, flags = ms.task_specific_templates(sampled, fit_ids, primary_k, shared,
+                                                       cfg, task)
     ms.save_templates(specific, cfg, f"_{task.lower()}")
     save_figure(specific, f"{task}-only templates K = {primary_k} (matched to shared)",
                 f"chuong_templates_K{primary_k}_{task.lower()}.png")

@@ -4,10 +4,12 @@
 # recording and save, one row per subject_id (results/features/):
 # - microstates_task.csv            primary K, temporal smoothing (primary file)
 # - microstates_task_nosmooth.csv   primary K, no smoothing (sensitivity)
-# - microstates_task_K4.csv / _K5   K = 4 / 5 if not the primary K (sensitivity)
+# - microstates_task_K4.csv / _K5   K = 4 / 5 if not the primary K (sensitivity;
+#                                   each with its own K's recording QC)
 # - microstates_task_qcincluded.csv primary K with QC-excluded recordings kept
 # - microstates_rest_noblink.csv    Rest columns without nICremoved == 0 recordings
 # Recordings excluded by the recording QC (per K) are left empty (NaN).
+# State names come from the saved templates (confirmed labels, e.g. K = 4 'Central').
 # Run after notebooks/chuong_final_templates.py, from the repo root.
 
 # %%
@@ -37,7 +39,7 @@ sfreq = cfg["preprocessing"]["resample_hz"]
 ks = [primary_k] + [k for k in (4, 5) if k != primary_k]
 templates = {k: ms.load_templates(k, cfg) for k in ks}
 print("Primary K:", primary_k, "| K run:", ks, "| back-fit:", ms.backfit_options(cfg))
-print("State labels are PENDING VISUAL CONFIRMATION")
+print("Label status:", {k: ms.label_status(k, cfg) for k in ks})
 
 rest, _ = pp.select_subjects("Rest", cfg)
 simon, _ = pp.select_subjects("Simon", cfg)
