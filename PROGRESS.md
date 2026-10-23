@@ -7,8 +7,8 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 **How to use this file:**
 
-- Update your own rows whenever a task's status changes.
-- Add one line to the daily log each day you work on the project.
+- Teammates read this file on GitHub; Chuong updates it from what teammates send (see `docs/TEAM_TASKS.md`, Handoff rules).
+- Add one line to the daily log each day someone works on the project.
 - Record every change to a shared rule (exclusion, filters, K, features) in the decision log, with the date and who agreed.
 
 ---
@@ -214,6 +214,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 23 | Minseo unavailable until Oct 24: behavior (section 1) and recovery pilot moved to Chuong; PCA trajectories moved from Bohyeon to Chuong (optional); Minseo takes presentation-support tasks M1-M5 | Chuong |
 | | | |
 | Oct 23 | Simon error rates in `behavior.csv` follow the TEAM_TASKS spec (errors / responded trials); the Dataset Guide reference values use errors / all trials. Both reproduced; team to confirm which definition the RQ3 analyses use | Chuong |
+| Oct 23 | Teammates use GitHub read-only (browse/download); outputs sent to Chuong, who integrates them and maintains PROGRESS.md | Chuong |
+| Oct 23 | Template files (`results/templates/*.fif`, derived maps, no EEG) committed so teammates can download them; labels, peaks and QC tables stay git-ignored | Chuong |
 
 ## Blockers
 

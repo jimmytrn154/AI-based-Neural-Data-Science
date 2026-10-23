@@ -8,6 +8,7 @@ We analyze the **Iowa Parkinson's Disease (PD) EEG dataset**: 64-channel EEG fro
 - **Full proposal:** `docs/proposal.tex`
 - **Progress tracker:** `PROGRESS.md`
 - **Team tasks:** `docs/TEAM_TASKS.md`
+- **Setup without git (download, install, run):** `docs/SETUP.md`
 - **Dataset documentation:** `Dataset_Guide.pdf`, which ships with the data. The dataset reference below summarizes the parts we use most.
 - **Dataset path for Chuong's machine:** `/Users/trananhchuong/OneDrive - VINACADEMY LLC/AI-based Neural Data Science/Dataset_ALL`
 
@@ -127,7 +128,7 @@ All of these live in `config.yaml`. Change them only by team agreement, and log 
 │   ├── features.py           summary features (reorganization, conflict effect, recovery)
 │   └── stats.py              mixed models, partial correlations, FDR, permutation tests
 ├── notebooks/                exploration, one notebook per person or analysis
-└── results/                  git-ignored except small CSVs and figures
+└── results/                  git-ignored except small CSVs, figures and template .fif files
     ├── templates/
     ├── labels/
     ├── features/

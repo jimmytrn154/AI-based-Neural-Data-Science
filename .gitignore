@@ -13,6 +13,8 @@ results/**
 !results/**/.gitkeep
 !results/features/*.csv
 !results/figures/*
+# Microstate templates (derived maps, no EEG): downloadable for teammates (Oct 23)
+!results/templates/*.fif
 
 # Python / notebooks
 __pycache__/

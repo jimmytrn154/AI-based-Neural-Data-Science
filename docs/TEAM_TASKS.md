@@ -7,7 +7,8 @@ This file describes **each member's tasks, the inputs they need, and the outputs
 - `PROGRESS.md` (repo root): status, milestones, decision log, blockers, daily log;
 - `README.md`: project plan and dataset reference;
 - `config.yaml`: all analysis rules (never change it without team agreement);
-- `docs/proposal.tex`: full proposal.
+- `docs/proposal.tex`: full proposal;
+- `docs/SETUP.md`: how to download the project from GitHub, install it and run an example (no git needed).
 
 **Rule of thumb:** this file says *what* each person delivers and *from which inputs*; `PROGRESS.md` says *how far along* it is. When a task changes owner or scope, update both.
 
@@ -39,7 +40,7 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 | Dataset | `paths.data_root` in `config.yaml` (local copy, never committed) | Full `Dataset_ALL`, including epoch files |
 | Rules and settings | `config.yaml` | Exclusions, filters, K, smoothing, statistics, naming |
 | Primary K | `config.yaml` → `microstates.primary_k: 5` | States **A, B, C, D, E**. Always read K from the config; never hard-code it |
-| Templates | `results/templates/templates_K{primary_k}.fif` | Git-ignored: shared by Drive/chat. K = 4 file is sensitivity only (4th map = "Central") |
+| Templates | `results/templates/templates_K{primary_k}.fif` | On GitHub (download from `results/templates/`). K = 4 file is sensitivity only (4th map = "Central") |
 | Loading | `src/io.py` | `load_subjects`, `load_continuous` (`.set` files), `load_epochs` (epoch `.mat` files), `load_trials`; `match_trials` aligns epochs with trial tables; `epochs_to_mne` converts epochs |
 | Preprocessing | `src/preprocess.py` | `select_subjects` (exclusion rules), `preprocess_raw` (filtering, resampling) |
 | Microstates | `src/microstates.py` | `load_templates(k, cfg)`, `backfit(inst, templates, cfg)`, metrics (`segmentation_metrics`, `task_metrics`) |
@@ -173,7 +174,13 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 
 ## Handoff rules
 
-- **Feature tables:** one row per `subject_id`, columns named `<task>_<measure>_<state>`, no clinical columns, saved in `results/features/`.
+Teammates use GitHub **read-only**: browse and download, no git and no edits to repo files. See `docs/SETUP.md`.
+
+- **Tasks and status:** read your tasks in `docs/TEAM_TASKS.md` and the current status in `PROGRESS.md`, on the GitHub page.
+- **Inputs:** download them from GitHub (single files, or Code → Download ZIP). When Chuong announces an update, download them again.
+- **Outputs:** send your outputs (CSVs, figures, slides) **and** the code or notebooks that produced them to Chuong by Drive or chat, using the file names in the task tables.
+- **Integration:** Chuong commits them to the repo and updates `PROGRESS.md` and this file. Teammates don't edit repo files.
+- **Feature tables:** one row per `subject_id`, columns named `<task>_<measure>_<state>`, no clinical columns; they go in `results/features/`.
 - **Figures:** `results/figures/<owner>_<analysis>.png`.
-- **When you finish a deliverable:** update your rows here and in `PROGRESS.md`, add a daily-log line, and post the file name in the group chat.
-- **When blocked:** add a row to the Blockers table in `PROGRESS.md` and tell the owner of the input you need.
+- **When you finish a deliverable:** send it to Chuong as above and post the file names in the group chat.
+- **When blocked:** tell Chuong in the group chat, with the input you need and from whom; Chuong records it in the Blockers table of `PROGRESS.md`.
