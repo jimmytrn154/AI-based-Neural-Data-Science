@@ -46,7 +46,7 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 | Microstates | `src/microstates.py` | `load_templates(k, cfg)`, `backfit(inst, templates, cfg)`, metrics (`segmentation_metrics`, `task_metrics`) |
 | Primary metrics | `results/features/microstates_task.csv` | One row per `subject_id`; columns `<task>_<metric>_<state>` (e.g. `rest_cov_A`); transitions `<task>_trans_<X>_to_<Y>` |
 
-**Before back-fitting any epochs:** filter at **2–20 Hz** (`config.yaml`, `simon_conditions.filter`) and resample to **250 Hz** (`preprocessing.resample_hz`), as done in `notebooks/chuong_state_E.py`. In response-locked analyses, drop trials with `beh_accuracy == 99` (no response). See the epoch-order blocker in `PROGRESS.md`.
+**Before back-fitting any epochs:** filter at **2–20 Hz** (`config.yaml`, `simon_conditions.filter`) and resample to **250 Hz** (`preprocessing.resample_hz`), as done in `notebooks/chuong_state_E.py`. In response-locked analyses, drop trials with `beh_accuracy == 99` (no response). `match_trials` gives the trial row of every epoch; the order was verified for all Simon subjects (Oct 24).
 
 ---
 
@@ -75,7 +75,7 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 | C3 | Behavioral feature table | Oct 23 | ✅ | Same | `results/features/behavior.csv` (see spec below) |
 | C4 | Recovery pilot: measure, comparison, reliability | Oct 24 | ✅ | Response- and cue-locked Simon epochs, templates, `backfit()` | `results/features/recovery.csv` (passing measures only; failed conflict measure in `recovery_conflict_unreliable.csv`, do not use), `results/figures/chuong_recovery.png`, go/no-go note (`docs/recovery_pilot.md`) |
 | C5 | PCA trajectories of response-locked state probabilities (optional) | Phase 2 | ⏸️ (postponed Oct 24) | C4 outputs | `results/figures/chuong_recovery_pca.png` |
-| C6 | Slides: pipeline, K choice, templates, state E, next phases | Oct 25 | ⬜ | All of the above | Slides in the shared deck |
+| C6 | Slides: pipeline, K choice, templates, state E, next phases | Oct 25 | 🟨 | All of the above | Slides in the shared deck (draft: `docs/slides_chuong.md`) |
 
 **`behavior.csv` specification:** one row per `subject_id`, Simon only.
 

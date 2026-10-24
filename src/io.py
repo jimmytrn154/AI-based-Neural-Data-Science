@@ -146,9 +146,10 @@ def match_trials(epochs, trials, lock):
         (``rt_eeg`` ~ 1.0 s), so their epochs are locked to a timeout, not a
         key press. Drop them before response-locked analyses.
 
-    The order is assumed to be the same as in the trial table; the counts
-    match for every subject, but the order itself could not be checked
-    (see PROGRESS.md, Blockers). A ``bad_epoch`` column is added. Raises
+    The order is the trial table's order: verified Oct 24 for all 147 Simon
+    subjects by rebuilding every epoch from the continuous data and the
+    onsets (notebooks/chuong_epoch_order_check.py; max difference 2.4e-4 µV,
+    0 mismatching trials). A ``bad_epoch`` column is added. Raises
     ValueError if the counts differ.
     """
     if lock == "resp":
