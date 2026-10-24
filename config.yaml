@@ -89,12 +89,23 @@ microstates:
   metrics: ["mean_duration", "occurrence", "coverage", "gev", "transition_matrix_no_self"]
 
 # -------------------------------------------------------------
+# 3b. Behavior (results/features/behavior.csv; confirmed Oct 24)
+# -------------------------------------------------------------
+behavior:
+  subjects: "trials_simon in subjects.simon.allowed_trial_status"
+  rt: "mean beh_rt (ms) over correct trials (beh_accuracy == 1); no RT limit for behavior features"
+  error_rate_primary: "errors / responded trials (beh_accuracy == 2 over beh_accuracy in {1, 2}): simon_err_con, simon_err_inc, simon_effect_err"
+  error_rate_guide: "errors / all trials (Dataset Guide definition): simon_err_con_all, simon_err_inc_all, simon_effect_err_all"
+  trial_counts: "simon_n_con / simon_n_inc count all trials of the condition; simon_nresp_con / simon_nresp_inc count responded trials"
+
+# -------------------------------------------------------------
 # 4. Simon condition-level analysis
 # -------------------------------------------------------------
 simon_conditions:
   epochs: "lock-cue (ready-made)"
   keep_trials: "beh_accuracy == 1 AND NOT badEpoch AND 150 <= beh_rt <= 1500 ms"
   filter: "2-20 Hz (preprocessing.bandpass_hz) on the full -1.0 to 2.5 s epoch, then crop; applies to any epochs back-fitted to the templates, incl. the recovery pilot"
+  resample_before_backfit_hz: 250         # confirmed Oct 24: filter, then resample to preprocessing.resample_hz, then back-fit (as for the templates)
   analysis_window_ms: [-200, 800]
   erp_plot_lowpass_hz: 30                 # for ERP figures only
   windows_ms:

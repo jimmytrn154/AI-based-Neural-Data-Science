@@ -59,7 +59,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 | Reproduce Simon RT, correct trials (514.7 / 557.4 ms) | Chuong | Oct 23 | ✅ | 514.4 / 557.4 ms (141 subjects; per-subject means first) |
 | Reproduce Simon error rates (6.4% / 14.8%) | Chuong | Oct 23 | ✅ | 6.44% / 14.82% with errors / all trials (the Guide's definition); `behavior.csv` spec uses errors / responded trials: 6.84% / 16.27% |
 | Simon effect by group (RT and errors) | Chuong | Oct 23 | ✅ | Descriptive: RT effect PD +47 / C +35 ms (Guide +50 / +34); incongruent errors PD 18.0% / C 8.5% (Guide 17.6 / 8.4). `docs/behavior_sanity_checks.md` |
-| Behavioral feature table (`results/features/behavior.csv`) | Chuong | Oct 23 | ✅ | 141 rows, 9 columns per `docs/TEAM_TASKS.md` spec; no clinical columns |
+| Behavioral feature table (`results/features/behavior.csv`) | Chuong | Oct 23 | ✅ | 141 rows, 14 columns: primary error rates (errors / responded trials) plus Guide-definition `_all` columns and responded counts (Oct 24); rules in config `behavior` |
 
 ### 2. Templates and task-level dynamics (Chuong)
 
@@ -101,7 +101,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 |---|---|---|---|---|
 | Define the recovery measure and baseline window (response-locked epochs) | Chuong | Oct 24 | ✅ | Baseline cue −200–0 ms; Euclidean distance of state probabilities from baseline; mean over +200–1000 ms after keypress (`docs/recovery_pilot.md`) |
 | Incongruent vs. congruent and error vs. correct recovery (per `docs/TEAM_TASKS.md` C4) | Chuong | Oct 24 | ✅ | 140 subjects; `results/features/recovery.csv`, `results/figures/chuong_recovery.png`. Errors compared with size-matched correct subsets |
-| PCA trajectories of response-locked activity (optional) | Chuong | Oct 24 | ⬜ | |
+| PCA trajectories of response-locked activity (optional) | Chuong | Phase 2 | ⏸️ | Postponed to Phase 2 (Oct 24) |
 | Split-half reliability (odd vs. even trials, Spearman–Brown) | Chuong | Oct 24 | ✅ | Overall recovery 0.97 (keep); conflict effect 0.24 (drop); error effect 0.68 (keep, marginal) |
 
 ### 6. Robustness checks (owner of each analysis)
@@ -218,6 +218,11 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 23 | Template files (`results/templates/*.fif`, derived maps, no EEG) committed so teammates can download them; labels, peaks and QC tables stay git-ignored | Chuong |
 | Oct 23 | Recovery pilot choices where the spec was open: Euclidean distance between state-probability vectors; probabilities over labeled trials (epoch-edge segments unlabeled); errors compared with random correct subsets of the same size (fewer trials inflate the distance); error measures need ≥ 10 errors; correct and error trials both need RT 150–1500 ms; split halves by odd/even trial number, each with its own baseline | Chuong |
 | Oct 23 | Recovery pilot go/no-go (config: keep if reliability ≥ 0.5): keep overall recovery (0.97) and error effect (0.68, marginal); drop conflict effect (0.24) | Chuong |
+| Oct 24 | Primary Simon error rate = errors / responded trials (pre-specified; separates commission errors from omissions); Guide definition kept as extra columns. Decided before any RQ3 analysis | Chuong |
+| Oct 24 | Recovery files split by reliability: `recovery.csv` keeps the measures that passed (overall recovery, error effect); the failed conflict-recovery columns moved to `recovery_conflict_unreliable.csv` (do not use) | Chuong |
+| Oct 24 | Epochs are resampled to 250 Hz (after filtering) before back-fitting; written into config.yaml (`simon_conditions.resample_before_backfit_hz`) | Chuong |
+| Oct 24 | Behavior rules written into config.yaml (`behavior`): `simon_n_*` count all trials; no RT limit for behavior features | Chuong |
+| Oct 24 | C5 (PCA trajectories of the recovery pilot) postponed to Phase 2 | Chuong |
 
 ## Blockers
 

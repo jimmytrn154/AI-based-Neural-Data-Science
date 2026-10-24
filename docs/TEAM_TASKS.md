@@ -73,23 +73,25 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 | C1 | Reproduce Simon RT (514.7 / 557.4 ms) and error rates (6.4% / 14.8%) | Oct 23 | ✅ | `trial_info/simon/*.tsv`, `subjects.csv` | Numbers in the daily log; summary for Minseo's slide |
 | C2 | Simon effect by group (RT and errors), descriptive | Oct 23 | ✅ | Same | Table: PD vs. control means |
 | C3 | Behavioral feature table | Oct 23 | ✅ | Same | `results/features/behavior.csv` (see spec below) |
-| C4 | Recovery pilot: measure, comparison, reliability | Oct 24 | ✅ | Response- and cue-locked Simon epochs, templates, `backfit()` | `results/features/recovery.csv`, `results/figures/chuong_recovery.png`, go/no-go note (`docs/recovery_pilot.md`) |
-| C5 | PCA trajectories of response-locked state probabilities (optional) | Oct 24 | ⬜ | C4 outputs | `results/figures/chuong_recovery_pca.png` |
+| C4 | Recovery pilot: measure, comparison, reliability | Oct 24 | ✅ | Response- and cue-locked Simon epochs, templates, `backfit()` | `results/features/recovery.csv` (passing measures only; failed conflict measure in `recovery_conflict_unreliable.csv`, do not use), `results/figures/chuong_recovery.png`, go/no-go note (`docs/recovery_pilot.md`) |
+| C5 | PCA trajectories of response-locked state probabilities (optional) | Phase 2 | ⏸️ (postponed Oct 24) | C4 outputs | `results/figures/chuong_recovery_pca.png` |
 | C6 | Slides: pipeline, K choice, templates, state E, next phases | Oct 25 | ⬜ | All of the above | Slides in the shared deck |
 
 **`behavior.csv` specification:** one row per `subject_id`, Simon only.
 
-- **Trials:** subjects with `trials_simon` in {ok, partial}. RTs come from correct trials only. `beh_rt` is in **milliseconds** for Simon.
+- **Trials:** subjects with `trials_simon` in {ok, partial}. RTs come from correct trials only, with no RT limit. `beh_rt` is in **milliseconds** for Simon. Rules: `config.yaml` → `behavior`.
 - **Columns:**
 
   | Column | Meaning |
   |---|---|
   | `simon_rt_con`, `simon_rt_inc` | Mean RT, correct trials, per condition |
   | `simon_effect_rt` | incongruent − congruent RT |
-  | `simon_err_con`, `simon_err_inc` | Error rate = `beh_accuracy == 2` / responded trials (`beh_accuracy` in {1, 2}) |
-  | `simon_effect_err` | incongruent − congruent error rate |
+  | `simon_err_con`, `simon_err_inc` | **Primary** error rate = `beh_accuracy == 2` / responded trials (`beh_accuracy` in {1, 2}) |
+  | `simon_effect_err` | incongruent − congruent error rate (primary) |
+  | `simon_err_con_all`, `simon_err_inc_all`, `simon_effect_err_all` | Same with errors / all trials (Dataset Guide definition) |
   | `simon_noresp_rate` | `beh_accuracy == 99` / all trials |
-  | `simon_n_con`, `simon_n_inc` | Trial counts |
+  | `simon_n_con`, `simon_n_inc` | All trials of the condition |
+  | `simon_nresp_con`, `simon_nresp_inc` | Responded trials of the condition |
 
 - **Reference values** are computed as per-subject means first, then averaged across subjects.
 - **No clinical columns**: those are merged from `subjects.csv` on `subject_id`.

@@ -31,10 +31,13 @@ print("Saved", out, behavior.shape)
 print("Trials per condition:", behavior[["simon_n_con", "simon_n_inc"]].describe().loc[["min", "50%", "max"]].to_dict())
 
 # %% C1: reference values (Dataset Guide)
+# The Guide's error rates are errors / all trials (our *_all columns); the
+# primary columns (errors / responded trials) are shown for comparison.
 reference = {"simon_rt_con": 514.7, "simon_rt_inc": 557.4,
+             "simon_err_con_all": 0.064, "simon_err_inc_all": 0.148,
              "simon_err_con": 0.064, "simon_err_inc": 0.148}
-scale = {"simon_rt_con": 1, "simon_rt_inc": 1, "simon_err_con": 100, "simon_err_inc": 100}
-unit = {"simon_rt_con": "ms", "simon_rt_inc": "ms", "simon_err_con": "%", "simon_err_inc": "%"}
+scale = {key: (1 if key.startswith("simon_rt") else 100) for key in reference}
+unit = {key: ("ms" if key.startswith("simon_rt") else "%") for key in reference}
 rows = [{"measure": key, "ours": behavior[key].mean() * scale[key],
          "reference": ref * scale[key], "unit": unit[key]} for key, ref in reference.items()]
 c1 = pd.DataFrame(rows)
@@ -42,13 +45,14 @@ c1["difference"] = c1["ours"] - c1["reference"]
 print("\nC1, mean across subjects of per-subject values:\n" + c1.round(2).to_string(index=False))
 
 # %% C2: Simon effect by group (descriptive)
-guide = {"PD": {"simon_effect_rt": 50, "simon_err_con": 7.4, "simon_err_inc": 17.6},
-         "Control": {"simon_effect_rt": 34, "simon_err_con": 4.5, "simon_err_inc": 8.4}}
+guide = {"PD": {"simon_effect_rt": 50, "simon_err_con_all": 7.4, "simon_err_inc_all": 17.6},
+         "Control": {"simon_effect_rt": 34, "simon_err_con_all": 4.5, "simon_err_inc_all": 8.4}}
 grouped = behavior.join(subjects.set_index("subject_id")["group"])
 rows = []
 for group, df in grouped.groupby("group"):
-    for key, s in (("simon_effect_rt", 1), ("simon_err_con", 100), ("simon_err_inc", 100),
-                   ("simon_effect_err", 100), ("simon_rt_con", 1), ("simon_rt_inc", 1)):
+    for key, s in (("simon_effect_rt", 1), ("simon_err_con_all", 100), ("simon_err_inc_all", 100),
+                   ("simon_err_con", 100), ("simon_err_inc", 100), ("simon_effect_err", 100),
+                   ("simon_rt_con", 1), ("simon_rt_inc", 1)):
         rows.append({"group": group, "n": len(df), "measure": key, "mean": df[key].mean() * s,
                      "sd": df[key].std() * s, "guide": guide[group].get(key)})
 c2 = pd.DataFrame(rows)

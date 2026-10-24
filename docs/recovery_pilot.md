@@ -38,6 +38,11 @@ Exploratory. Computed Oct 23 by Chuong with `notebooks/chuong_recovery.py`. Per-
 - **A few extreme subjects:** five subjects have overall recovery values of 0.45–0.58 (median 0.10). They raise the Pearson-based reliability; the rank-based value (0.81) still passes.
 - **Error-effect reliability passes, but only marginally** (0.68; rank-based 0.57), so it is less dependable than the overall measure.
 
-## For the RQ3 analyses (Bohyeon)
+## Files
 
-Use only `simon_recovery_correct` and `simon_recovery_error_effect`. Leave out `simon_recovery_conflict` (failed reliability) and treat the count columns (`simon_recovery_n_*`) as bookkeeping. The file has one row per `subject_id` and no clinical columns.
+| File | Columns | Use |
+|---|---|---|
+| `results/features/recovery.csv` | `simon_recovery_correct`, `simon_recovery_err`, `simon_recovery_correct_matched`, `simon_recovery_error_effect`, counts `simon_recovery_n_correct`, `simon_recovery_n_err` | **Use** `simon_recovery_correct` and `simon_recovery_error_effect` for RQ3; the others are their components and bookkeeping |
+| `results/features/recovery_conflict_unreliable.csv` | `simon_recovery_con`, `simon_recovery_inc`, `simon_recovery_conflict`, counts `simon_recovery_n_con`, `simon_recovery_n_inc` | **Do not use.** The conflict effect failed reliability (split-half r = 0.14, Spearman–Brown 0.24; rank-based 0.25; threshold 0.5). Kept only as a record of the pilot |
+
+Both files have one row per `subject_id` and no clinical columns.

@@ -10,12 +10,19 @@ For the sanity-check slide (task M2). Computed Oct 23 by Chuong with `notebooks/
 |---|---|---|---|
 | RT, congruent (correct trials) | 514.7 ms | 514.4 ms | −0.3 ms |
 | RT, incongruent (correct trials) | 557.4 ms | 557.4 ms | 0.0 ms |
-| Error rate, congruent | 6.4% | 6.4% | 0.0 points |
-| Error rate, incongruent | 14.8% | 14.8% | 0.0 points |
+| Error rate, congruent (errors / all trials) | 6.4% | 6.4% | 0.0 points |
+| Error rate, incongruent (errors / all trials) | 14.8% | 14.8% | 0.0 points |
 
-**All four reference values are reproduced.** The error rates match when calculated as errors divided by all trials, which is how the Dataset Guide calculates them.
+**All four reference values are reproduced.** The error rates match when calculated as errors divided by all trials, which is how the Dataset Guide calculates them (columns `simon_err_con_all`, `simon_err_inc_all` in `behavior.csv`).
 
-`behavior.csv` uses a slightly different error rate: errors divided by trials that got a response, leaving out no-response trials. That version gives 6.8% (congruent) and 16.3% (incongruent). For the slide, use the Dataset Guide definition above.
+**Two error-rate definitions are in `behavior.csv`:**
+
+| Definition | Columns | Congruent | Incongruent | Used for |
+|---|---|---|---|---|
+| Errors / responded trials (**primary**, team decision Oct 24) | `simon_err_con`, `simon_err_inc`, `simon_effect_err` | 6.8% | 16.3% | The RQ3 analyses |
+| Errors / all trials (Dataset Guide) | `simon_err_con_all`, `simon_err_inc_all`, `simon_effect_err_all` | 6.4% | 14.8% | This reference comparison |
+
+The primary definition leaves out no-response trials, so it counts wrong keypresses (commission errors) separately from missed responses. On the slide, show the Guide definition for the reference comparison and say so ("errors / all trials, as in the Dataset Guide").
 
 ## Simon effect by group (descriptive)
 
@@ -25,7 +32,7 @@ For the sanity-check slide (task M2). Computed Oct 23 by Chuong with `notebooks/
 | Error rate, congruent | 7.4% | 7.4% | 4.5% | 4.5% |
 | Error rate, incongruent | 18.0% | 17.6% | 8.5% | 8.4% |
 
-Error rates in this table use the Dataset Guide definition (errors / all trials). Both groups show the Simon effect. PD participants make about twice as many incongruent errors as controls, as in the Dataset Guide.
+Error rates in this table use the Dataset Guide definition (errors / all trials). With the primary definition (errors / responded trials), incongruent errors are 20.1% (PD) and 8.7% (control). Both groups show the Simon effect. PD participants make about twice as many incongruent errors as controls, as in the Dataset Guide.
 
 These are descriptive means only; the group comparisons with statistics are Bohyeon's (task B6).
 

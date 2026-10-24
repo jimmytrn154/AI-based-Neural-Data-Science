@@ -147,9 +147,6 @@ columns = ["simon_recovery_correct", "simon_recovery_con", "simon_recovery_inc",
            "simon_recovery_n_inc", "simon_recovery_n_err"]
 recovery = recovery[columns]
 recovery.index.name = "subject_id"
-out = pio.results_dir(cfg, "features", "recovery.csv")
-recovery.to_csv(out)
-print("Saved", out, recovery.shape)
 
 n_err = recovery["simon_recovery_n_err"].astype(int)
 print(f"Error trials per subject: median {n_err.median():.0f}, IQR {n_err.quantile(.25):.0f}-"
@@ -197,6 +194,21 @@ for name in ("simon_recovery_correct", "simon_recovery_conflict", "simon_recover
                         "keep (>= %.1f)" % KEEP_IF: sb >= KEEP_IF})
 reliability = pd.DataFrame(reliability)
 print("\nSplit-half reliability (odd vs even trial numbers):\n" + reliability.round(3).to_string(index=False))
+
+# Measures that pass go to recovery.csv; failed ones to a separate "do not use" file
+MEASURE_COLUMNS = {
+    "simon_recovery_correct": ["simon_recovery_correct", "simon_recovery_n_correct"],
+    "simon_recovery_conflict": ["simon_recovery_con", "simon_recovery_inc", "simon_recovery_conflict",
+                                "simon_recovery_n_con", "simon_recovery_n_inc"],
+    "simon_recovery_error_effect": ["simon_recovery_err", "simon_recovery_correct_matched",
+                                    "simon_recovery_error_effect", "simon_recovery_n_err"],
+}
+passed = reliability.set_index("measure")["spearman_brown"] >= KEEP_IF
+for name, keep in (("recovery.csv", True), ("recovery_conflict_unreliable.csv", False)):
+    cols = [c for measure, cs in MEASURE_COLUMNS.items() if passed[measure] == keep for c in cs]
+    out = pio.results_dir(cfg, "features", name)
+    recovery[cols].to_csv(out)
+    print("Saved", out, recovery[cols].shape, cols)
 
 # %% 5. Figure
 fig, axes = plt.subplots(1, 3, figsize=(15, 4))
