@@ -37,7 +37,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 | Oct 21 | **Draft templates released** (~15 subjects, K = 4) | Chuong | ✅ |
 | Oct 22 | **Final templates released** (full cohort, K chosen) | Chuong | ✅ (Oct 23; primary K = 5) |
 | Oct 23 | Task-level metrics delivered for Rest and Simon | Chuong | ✅ |
-| Oct 24 | All feature tables merged; PD/MoCA associations run; figures chosen | All | ⬜ |
+| Oct 24 | All feature tables merged; PD/MoCA associations run; figures chosen | All | 🟨 (associations run; teammates' outputs reviewed Nov 2, not yet merged into the repo) |
 | Oct 25 | Slides finished and rehearsed | All | ⬜ |
 | Oct 26 | **Progress presentation** | All | ⬜ |
 
@@ -77,23 +77,23 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Load Simon cue-locked epochs; drop bad epochs; keep correct trials | Seonwoo | Oct 21 | ⬜ | |
-| Reproduce the Simon ERP at Cz (Dataset Guide, Figure 2) | Seonwoo | Oct 21 | ⬜ | Sanity check |
-| Topographic segmentation of each condition's ERP (0–800 ms) | Seonwoo | Oct 22 | ⬜ | Doesn't need templates |
-| Single-trial back-fitting and state-probability time courses | Seonwoo | Oct 23 | ⬜ | Needs draft/final templates |
-| Congruent vs. incongruent: cluster-based permutation test | Seonwoo | Oct 24 | ⬜ | |
-| Conflict-effect feature in 200–350 ms and 400–750 ms windows | Seonwoo | Oct 24 | ⬜ | `results/features/conflict.csv` |
+| Load Simon cue-locked epochs; drop bad epochs; keep correct trials | Seonwoo | Oct 21 | ✅ | Config trial rules (correct, RT 150–1500 ms, no bad epochs, ≥ 40 per condition): 138 subjects. Received in `seonwoo_S1-S6_review/`, reviewed Nov 2; not yet in the repo. |
+| Reproduce the Simon ERP at Cz (Dataset Guide, Figure 2) | Seonwoo | Oct 21 | ✅ | `seonwoo_erp_cz.png`: central positivity ≈ 440 ms, larger for incongruent; matches the Guide (138 subjects) |
+| Topographic segmentation of each condition's ERP (0–800 ms) | Seonwoo | Oct 22 | ✅ | Template-based: condition ERPs labeled with the shared K = 5 templates (137 subjects); `seonwoo_erp_segmentation.png` |
+| Single-trial back-fitting and state-probability time courses | Seonwoo | Oct 23 | ✅ | 137 subjects (Simon recording QC applied); 2–20 Hz, 250 Hz, K = 5, documented smoothing |
+| Congruent vs. incongruent: cluster-based permutation test | Seonwoo | Oct 24 | ✅ | 5,000 permutations, family-wise corrected over states and times: E incongruent > congruent 464–576 ms (+1.6 points, p = 0.008); C incongruent < congruent 348–512 ms (−1.2 points, p = 0.006); `seonwoo_conflict_timecourse.png` |
+| Conflict-effect feature in 200–350 ms and 400–750 ms windows | Seonwoo | Oct 24 | ✅ | `conflict.csv` (137 rows; per-state incongruent − congruent differences, 10 columns), reproduced exactly from S4. Definition of the scalar conflict effect still to agree (see Blockers) |
 
 ### 4. Comparisons, networks and clustering (Bohyeon)
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Statistics functions on dummy data (mixed models, partial Spearman, FDR) | Bohyeon | Oct 21 | ⬜ | Doesn't need templates |
-| Rest vs. Simon within-subject comparisons | Bohyeon | Oct 23 | ⬜ | Needs task-level metrics |
-| Reorganization index (Jensen–Shannon divergence) and coverage change | Bohyeon | Oct 23 | ⬜ | `results/features/reorganization.csv` |
-| Transition networks (rest vs. Simon) | Bohyeon | Oct 24 | ⬜ | |
-| Subject embedding (PCA, UMAP) and k-means clustering; alignment with group and MoCA | Bohyeon | Oct 24 | ⬜ | |
-| PD vs. control and MoCA associations for all primary features | Bohyeon | Oct 24 | ⬜ | Age and sex as covariates |
+| Statistics functions on dummy data (mixed models, partial Spearman, FDR) | Bohyeon | Oct 21 | ✅ | `src/stats.py` (received in `bohyeon/`, reviewed Nov 2; not yet in the repo): FDR by family, paired Wilcoxon + rank-biserial, mixed model, partial Spearman with bootstrap CI, group model |
+| Rest vs. Simon within-subject comparisons | Bohyeon | Oct 23 | 🟨 | `rq1_stats.csv` (139 subjects): Simon > Rest for A and E coverage and occurrence; Simon < Rest for C coverage and C duration (FDR-significant); p-values reproduced. Mixed models missing |
+| Reorganization index (Jensen–Shannon divergence) and coverage change | Bohyeon | Oct 23 | ✅ | `reorganization.csv` (139 subjects), reproduced: JSD = mean over the five source states of the Rest-vs-Simon Jensen–Shannon divergence (log 2) of transition probabilities |
+| Transition networks (rest vs. Simon) | Bohyeon | Oct 24 | ✅ | `bohyeon_transition_networks.png` (edge threshold not stated) |
+| Subject embedding (PCA, UMAP) and k-means clustering; alignment with group and MoCA | Bohyeon | Oct 24 | 🟨 | Clusters don't align with group (ARI −0.01) or MoCA. Uses states A–D only (E missing); k = 5 at the edge of the range searched, silhouette 0.26. Rerun with E |
+| PD vs. control and MoCA associations for all primary features | Bohyeon | Oct 24 | 🟨 | `rq3_stats.csv`: nothing survives FDR (smallest raw p 0.036, JSD vs UPDRS within PD); primary error rate used. To fix: one RQ3 FDR family (config), add mean duration per state and the Mann–Whitney check, restore sub-P001 in conflict analyses |
 
 ### 5. Recovery pilot (Chuong; reassigned from Minseo and Bohyeon, Oct 23; exploratory)
 
@@ -235,6 +235,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 22 | Back-fitting is slow: pycrostates short-segment rejection ~10 min per Simon recording (0.1 s without it); 15 subjects took 31 min with 8 parallel workers; full cohort ≈ 2–3 h per run | Chuong | Chuong | Yes (Oct 22): `ms.reject_short_segments` is the default; identical labels to pycrostates on all 15 subjects × Rest/Simon × smooth/no-smooth (`tests/test_backfit.py`, 64 passed); ~1.7 s per subject |
 | Oct 23 | Full-cohort K = 4 (primary by config rule) has no map matching draft D (best r = 0.42): its 4th map is a central maximum with temporal-edge negativity (= K = 5 map E, 3.7–4.4% of GEV), while fronto-central D is merged into C (r = 0.95 with draft C, 0.86 with draft D). At K = 5, A–D match the draft at r ≥ 0.97. Column `*_D` at K = 4 is therefore not canonical D | Chuong, Bohyeon, Seonwoo (anyone using K = 4 labels) | Chuong | Yes (Oct 23): primary K = 5; K = 4 fourth map renamed 'Central' (sensitivity) |
 | Oct 23 | Davies-Bouldin (~1e15) and Dunn (~0) are degenerate for every K with pycrostates' distance (\|1/r\| − 1 explodes for near-orthogonal maps); the K choice rests on silhouette and Calinski-Harabasz (both K = 4) | Chuong | Chuong | Yes (Oct 23): both removed from the K-selection rule in config.yaml |
+| Nov 2 | Bohyeon sent `src/stats.py` and the B2–B6 outputs but not the B2–B6 analysis code (handoff rules ask for code with outputs); key numbers were reproduced from repo files, the rest can't be audited. Open fixes: mixed models (B2), B5 with state E, one RQ3 FDR family, mean durations and Mann–Whitney check, sub-P001 in conflict analyses (B6) | Chuong (integration), team (RQ3 slides) | Bohyeon | No |
+| Nov 2 | Conflict effect: the config's primary feature is one distance per window, but `conflict.csv` holds per-state differences; Bohyeon used the L2 norm of the window-averaged difference vector. Team to agree the definition and which file holds it (checked: not related to trial counts, ρ ≈ −0.02 to −0.05) | Seonwoo, Bohyeon | Team | No |
 
 ## Daily log
 
@@ -251,3 +253,4 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 23 | Chuong | Task board `docs/TEAM_TASKS.md` added (paths checked) and tasks reassigned (Minseo away until Oct 24). C1–C3 done: Simon RT 514.4 / 557.4 ms (reference 514.7 / 557.4), error rates 6.44% / 14.82% with the Guide's definition (errors / all trials; 6.84% / 16.27% with the spec's errors / responded trials); by group RT effect PD +47 / C +35 ms, incongruent errors PD 18.0% / C 8.5%; `results/features/behavior.csv` (141 × 9); summary for Minseo in `docs/behavior_sanity_checks.md` | C4 recovery pilot after approval |
 | Oct 23 | Chuong | GitHub read-only workflow (`docs/SETUP.md`, templates committed). C4 recovery pilot on 140 subjects: split-half reliability (Spearman–Brown) overall recovery 0.97 (rank-based 0.81), conflict effect 0.24, error effect 0.68 (rank-based 0.57) → keep overall and error measures, drop conflict; robust to ending the window at +800 ms; `recovery.csv`, `chuong_recovery.png`, `docs/recovery_pilot.md` | C5 (optional PCA), C6 slides |
 | Oct 24 | Chuong | Behavior: primary error rate errors / responded trials plus Guide-definition columns; recovery files split by reliability; config: epoch resampling and behavior rules; C5 postponed to Phase 2. Epoch-order blocker resolved (all 147 subjects, 0 mismatching trials). Slide draft `docs/slides_chuong.md` (C6) | Integrate teammates' outputs; finalize slides with Minseo |
+| Nov 2 | Chuong | Reviewed Seonwoo's S1–S6 (`seonwoo_S1-S6_review/`) and Bohyeon's B1–B6 (`bohyeon/`) deliverables. Seonwoo: all config rules followed; ERP matches the Guide; 2 significant clusters (E and C, ≈ 350–580 ms); `conflict.csv` reproduced. Bohyeon: RQ1, JSD, coverage changes and RQ3 numbers reproduced; code for B2–B6, mixed models and several RQ3/B5 fixes still needed. `docs/TEAM_TASKS.md` updated; nothing integrated yet | Integrate outputs; request fixes from Bohyeon; agree conflict-effect definition |
