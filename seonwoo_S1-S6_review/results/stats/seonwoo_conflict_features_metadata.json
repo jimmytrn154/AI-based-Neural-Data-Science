@@ -1,0 +1,63 @@
+{
+  "schema": "seonwoo_s6_v1",
+  "created_utc": "2026-10-24T05:37:13.872632+00:00",
+  "mode": "full_cohort",
+  "input_s4_sha256": "d5bfb8414614ba800234ab4f64b6e6c68fa2f02b319b8470a83ea185d9dc98b8",
+  "input_s4_pipeline_signature": "deeb45065e48e99be7ff08de8eeb0e09fd6bad2bcf375a4d30e407a082ebdd66",
+  "script_sha256": "9e5c850d1d1b514e258126ebc80a721a3b65af595d03bd3e46b927b814bcfd83",
+  "n_subjects": 137,
+  "state_names": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "windows": [
+    {
+      "window": "n2",
+      "requested_start_ms": 200.0,
+      "requested_end_ms": 350.0,
+      "first_sample_ms": 200.0,
+      "last_sample_ms": 348.0,
+      "n_expected_samples": 38,
+      "n_complete_subjects": 137,
+      "n_incomplete_subjects": 0
+    },
+    {
+      "window": "theta",
+      "requested_start_ms": 400.0,
+      "requested_end_ms": 750.0,
+      "first_sample_ms": 400.0,
+      "last_sample_ms": 748.0,
+      "n_expected_samples": 88,
+      "n_complete_subjects": 137,
+      "n_incomplete_subjects": 0
+    }
+  ],
+  "contrast": "incongruent_minus_congruent",
+  "units": "probability_difference",
+  "probability_denominator": "labeled_trials_at_each_timepoint",
+  "missing_rule": "any missing sample in either condition -> all state features for that window NaN",
+  "columns": [
+    "subject_id",
+    "simon_conflict_n2_A",
+    "simon_conflict_n2_B",
+    "simon_conflict_n2_C",
+    "simon_conflict_n2_D",
+    "simon_conflict_n2_E",
+    "simon_conflict_theta_A",
+    "simon_conflict_theta_B",
+    "simon_conflict_theta_C",
+    "simon_conflict_theta_D",
+    "simon_conflict_theta_E"
+  ],
+  "versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scipy": "1.15.3",
+    "mne": "1.12.1",
+    "pycrostates": "0.6.1",
+    "h5py": "3.16.0"
+  }
+}

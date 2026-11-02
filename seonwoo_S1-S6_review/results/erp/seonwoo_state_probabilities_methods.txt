@@ -1,0 +1,17 @@
+Included subjects: 137; primary K=5; states=['A', 'B', 'C', 'D', 'E'].
+Selection: completed S2/S3 rules and primary Simon microstate recording QC.
+Trials: correct; no badEpoch; inclusive RT 150--1500 ms; minimum per condition from config.
+Full individual epochs are filtered/resampled/back-fitted BEFORE cropping.
+Bandpass Hz: [2.0, 20.0]; sample rate Hz: 250.
+Backfit options: {'factor': 10, 'half_window_size': 10, 'min_segment_length': 5, 'reject_edges': True}.
+Batches do not concatenate epochs or smooth across trial boundaries.
+Primary P(state): shared src.features.state_probabilities; -1 trials omitted at each time.
+Zero labeled trials -> NaN. No extra trial-count threshold imposed after labeling.
+Alternative all-trial fractions and labeled-trial counts are also saved.
+Across subjects: equal weight; +/-1 SEM; available N recorded per time/condition.
+No subtraction of a probability baseline; no hypothesis test in S4.
+Trial rows saved as zero-based positions in the TSV; match_trials order assumption retained.
+Cache validity: code/config/template/package hashes and input file size/mtime/path.
+Resume reruns an interrupted subject but reuses compatible completed subjects.
+NPZ probability axes: subject, condition (con/inc), state, time.
+S5 should use paired subjects and report any non-finite data; do not replace NaN with zero.

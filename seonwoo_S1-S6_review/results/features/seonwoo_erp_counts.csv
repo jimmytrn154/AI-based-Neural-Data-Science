@@ -1,0 +1,7 @@
+step,n_remaining
+all subjects in subjects.csv,149
+has_simon == 1,147
+"trials_simon in ['ok', 'partial']",141
+continuous file present,141
+nInterp <= 6,141
+minimum trials in BOTH conditions,138

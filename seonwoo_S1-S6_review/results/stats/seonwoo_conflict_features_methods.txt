@@ -1,0 +1,22 @@
+S6: participant-level Simon conflict features
+Full S4 cohort
+Subjects: 137; feature columns: 10; one row per subject_id.
+Definition: equal-time-sample mean of P(state|incongruent) minus P(state|congruent).
+Use shared src.features.window_mean with inclusive configured window endpoints.
+No interpolation at endpoints; use the existing S4 sample grid.
+Probabilities exclude unlabeled trials at each time point, as in S4.
+Values are probability differences, not percent change: +0.02 means +2 percentage points.
+Positive: higher probability in incongruent trials; negative: higher in congruent trials.
+Missing rule: require every sample of a window in both conditions/all states.
+An incomplete window yields NaN/blank features; retain subject ID and any other complete window.
+Do not replace missing values with zero or calculate a shorter-window mean.
+The table retains the S4 cohort, not S5's complete-whole-timecourse subset.
+No filtering by S5 significance; all pre-specified states and windows are exported.
+n2/theta name time windows; these features are NOT N2 ERP amplitude or theta-band power.
+State-wise differences sum to zero within each complete window because probabilities sum to one.
+No clinical columns, group comparison, new hypothesis tests, or FDR results in this step.
+Clinical variables should be merged later on subject_id; do not merge by row position.
+n2: requested 200--350 ms; samples 200--348 ms; n_samples=38; complete subjects=137/137.
+theta: requested 400--750 ms; samples 400--748 ms; n_samples=88; complete subjects=137/137.
+Input SHA256: d5bfb8414614ba800234ab4f64b6e6c68fa2f02b319b8470a83ea185d9dc98b8
+Task source: https://drive.google.com/file/d/1pcLE6YSJH0KPbDStXObmbNMqv2GRHCC-/view

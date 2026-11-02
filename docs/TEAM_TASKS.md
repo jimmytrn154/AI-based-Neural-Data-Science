@@ -14,7 +14,7 @@ This file describes **each member's tasks, the inputs they need, and the outputs
 
 **Status key:** ⬜ not started · 🟨 in progress · ✅ done · 🟥 blocked · ⏸️ postponed
 
-*Last updated: Oct 23, 2026.*
+*Last updated: Nov 2, 2026 (Seonwoo's and Bohyeon's deliverables reviewed; not yet integrated into the repo).*
 
 ---
 
@@ -113,15 +113,23 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 
 | # | Task | Due | Status | Inputs | Output |
 |---|---|---|---|---|---|
-| S1 | Load cue-locked epochs; keep correct trials with RT 150–1500 ms; drop bad epochs | Oct 23 | ⬜ (confirm with owner) | `epoched_data/simon/*_lock-cue_epo.mat`, `trial_info/simon/*.tsv`, `src/io.py` (`load_epochs`, `load_trials`, `match_trials`) | — |
-| S2 | Reproduce the Simon ERP at Cz (Dataset Guide, Figure 2) | Oct 23 | ⬜ (confirm with owner) | S1 | `results/figures/seonwoo_erp_cz.png` (sanity check) |
-| S3 | Topographic segmentation of each condition's ERP (0–800 ms) | Oct 24 | ⬜ (confirm with owner) | S1 | `results/figures/seonwoo_erp_segmentation.png` |
-| S4 | Single-trial back-fitting and state-probability time courses (A–E), per condition | Oct 24 | ⬜ (confirm with owner) | S1, `templates_K5.fif`, `backfit()` (2–20 Hz, 250 Hz) | Per-subject time courses (saved as arrays) |
-| S5 | Congruent vs. incongruent: paired cluster-based permutation test (5,000 permutations) | Oct 24 | ⬜ (confirm with owner) | S4 | `results/figures/seonwoo_conflict_timecourse.png` |
-| S6 | Conflict-effect feature in the 200–350 ms and 400–750 ms windows | Oct 24 | ⬜ (confirm with owner) | S4 | `results/features/conflict.csv` (one row per `subject_id`) |
+| S1 | Load cue-locked epochs; keep correct trials with RT 150–1500 ms; drop bad epochs | Oct 23 | ✅ | `epoched_data/simon/*_lock-cue_epo.mat`, `trial_info/simon/*.tsv`, `src/io.py` (`load_epochs`, `load_trials`, `match_trials`) | — |
+| S2 | Reproduce the Simon ERP at Cz (Dataset Guide, Figure 2) | Oct 23 | ✅ | S1 | `results/figures/seonwoo_erp_cz.png` (sanity check) |
+| S3 | Topographic segmentation of each condition's ERP (0–800 ms) | Oct 24 | ✅ | S1 | `results/figures/seonwoo_erp_segmentation.png` |
+| S4 | Single-trial back-fitting and state-probability time courses (A–E), per condition | Oct 24 | ✅ | S1, `templates_K5.fif`, `backfit()` (2–20 Hz, 250 Hz) | Per-subject time courses (saved as arrays) |
+| S5 | Congruent vs. incongruent: paired cluster-based permutation test (5,000 permutations) | Oct 24 | ✅ | S4 | `results/figures/seonwoo_conflict_timecourse.png` |
+| S6 | Conflict-effect feature in the 200–350 ms and 400–750 ms windows | Oct 24 | ✅ (definition to confirm) | S4 | `results/features/conflict.csv` (one row per `subject_id`) |
 | S7 | Results slides for RQ2 | Oct 25 | ⬜ | S2–S6 | Slides in the shared deck |
 
 **Deliverables for Oct 26:** the ERP sanity-check figure, the condition time courses with significant clusters marked, and `conflict.csv`.
+
+**Review, Nov 2 (Chuong):** received in `seonwoo_S1-S6_review/`; reviewed, not yet integrated into the repo.
+- S1–S6 follow `config.yaml` (trial rules, ≥ 40 trials per condition, 2–20 Hz, 250 Hz, K = 5, documented smoothing, 5,000 permutations). ERP at Cz: 138 subjects; S3–S6: 137 (Simon recording QC applied).
+- S5: two clusters survive family-wise correction: E incongruent > congruent, 464–576 ms (+1.6 points, p = 0.008); C incongruent < congruent, 348–512 ms (−1.2 points, p = 0.006).
+- S6: `conflict.csv` reproduced exactly from the S4 probabilities. It holds per-state differences (10 columns), while the config's primary feature is one distance per window; the official definition is still to be agreed.
+- S3 uses the shared K = 5 templates to label the condition ERPs (template-based segmentation), as documented in its methods note.
+- Not to be merged: the bundled copies of `src/io.py`, `src/features.py` and `config.yaml` are older than the repo's.
+- Open: S7 slides.
 
 **Tip:** `notebooks/chuong_state_E.py` (function `state_probabilities`) already back-fits cue- and response-locked epochs on a 20-subject subset and produced `chuong_E_timecourse.png`. Reuse it as a starting point.
 
@@ -133,16 +141,23 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 
 | # | Task | Due | Status | Inputs | Output |
 |---|---|---|---|---|---|
-| B1 | Statistics functions (mixed models, partial Spearman, FDR) | Oct 23 | ⬜ (confirm with owner) | `config.yaml` (statistics) | `src/stats.py` |
-| B2 | Rest vs. Simon within-subject comparisons (Wilcoxon, FDR, effect sizes); mixed models with group, age, sex | Oct 24 | ⬜ (confirm with owner) | `microstates_task.csv`, `subjects.csv` | `results/features/rq1_stats.csv`, figure |
-| B3 | Reorganization index (Jensen–Shannon divergence of transitions) and coverage change | Oct 24 | ⬜ (confirm with owner) | `microstates_task.csv` (transition columns `<task>_trans_<X>_to_<Y>`) | `results/features/reorganization.csv` |
-| B4 | Transition networks, Rest vs. Simon | Oct 24 | ⬜ (confirm with owner) | `microstates_task.csv` | `results/figures/bohyeon_transition_networks.png` |
-| B5 | Subject embedding (PCA, UMAP) and k-means; alignment with group and MoCA | Oct 24 | ⬜ (confirm with owner) | `microstates_task.csv`, `subjects.csv` | Figure + short summary |
-| B6 | PD vs. control and MoCA associations for the primary features (age, sex covariates; UPDRS within PD only; FDR) | Oct 24 | ⬜ (confirm with owner) | B2, B3, `behavior.csv` (from Chuong), `conflict.csv` (from Seonwoo) | `results/features/rq3_stats.csv` |
+| B1 | Statistics functions (mixed models, partial Spearman, FDR) | Oct 23 | ✅ | `config.yaml` (statistics) | `src/stats.py` |
+| B2 | Rest vs. Simon within-subject comparisons (Wilcoxon, FDR, effect sizes); mixed models with group, age, sex | Oct 24 | 🟨 | `microstates_task.csv`, `subjects.csv` | `results/features/rq1_stats.csv`, figure |
+| B3 | Reorganization index (Jensen–Shannon divergence of transitions) and coverage change | Oct 24 | ✅ | `microstates_task.csv` (transition columns `<task>_trans_<X>_to_<Y>`) | `results/features/reorganization.csv` |
+| B4 | Transition networks, Rest vs. Simon | Oct 24 | ✅ | `microstates_task.csv` | `results/figures/bohyeon_transition_networks.png` |
+| B5 | Subject embedding (PCA, UMAP) and k-means; alignment with group and MoCA | Oct 24 | 🟨 | `microstates_task.csv`, `subjects.csv` | Figure + short summary |
+| B6 | PD vs. control and MoCA associations for the primary features (age, sex covariates; UPDRS within PD only; FDR) | Oct 24 | 🟨 | B2, B3, `behavior.csv` (from Chuong), `conflict.csv` (from Seonwoo) | `results/features/rq3_stats.csv` |
 | B7 | Robustness: rerun the key RQ1/RQ3 results with `_K4`, `_nosmooth`, `_qcincluded` and `microstates_rest_noblink.csv` | Oct 24–25 | ⬜ | The sensitivity files | Short table: does each result hold? |
 | B8 | Results slides for RQ1 and RQ3 | Oct 25 | ⬜ | B2–B7 | Slides in the shared deck |
 
 **Deliverables for Oct 26:** the RQ1 figure (rest vs. Simon per state), the reorganization index, the transition networks, and the preliminary group and MoCA associations.
+
+**Review, Nov 2 (Chuong):** received in `bohyeon/` (`src/stats.py`, `rq1_stats.csv`, `reorganization.csv`, `rq3_stats.csv`, four figures, B5 summary); reviewed, not yet integrated into the repo. Key numbers were reproduced from the repo files (Wilcoxon p-values, coverage changes, JSD, error-rate column, conflict L2 features, group estimates).
+- **All of B2–B6:** only `stats.py` was sent; the analysis code for B2–B6 is still needed (handoff rules).
+- **B2:** Wilcoxon results done (A and E coverage and occurrence up, C coverage and duration down in Simon; FDR-significant). The mixed models (secondary analysis) are missing.
+- **B3:** JSD = mean over the five source states of the Jensen–Shannon divergence (log 2) between Rest and Simon transition probabilities; to be written down as the definition.
+- **B5:** uses states A–D only (E missing); k = 5 is the upper end of the range searched and the silhouette is weak (0.26). Rerun with E.
+- **B6:** no result survives FDR. To fix: FDR within one RQ3 family (config) instead of six sub-families; add mean duration per state (a config primary feature) and the Mann–Whitney check; restore sub-P001 in the conflict analyses (its Rest recording was excluded, its Simon data is valid).
 
 **Notes:**
 - Descriptive preview (Chuong, Oct 23; paired Simon − Rest medians over 139 subjects, uncorrected, no tests): coverage of E +1.3 points (68% of subjects increase) and A +2.1 (60%); C coverage −1.8 (37% increase) and C mean duration −8.3 ms. The formal test is B2.

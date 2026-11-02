@@ -1,0 +1,11 @@
+condition,state,start_ms,stop_ms_exclusive,duration_ms,n_samples,touches_window_start,touches_window_end
+Congruent,E,0.0,108.0,108.0,27,True,False
+Congruent,C,108.0,388.0,280.0,70,False,False
+Congruent,E,388.0,508.0,120.0,30,False,False
+Congruent,D,508.0,564.0,56.0,14,False,False
+Congruent,C,564.0,800.0,236.0,59,False,True
+Incongruent,E,0.0,108.0,108.0,27,True,False
+Incongruent,C,108.0,392.0,284.0,71,False,False
+Incongruent,E,392.0,592.0,200.0,50,False,False
+Incongruent,D,592.0,660.0,68.0,17,False,False
+Incongruent,C,660.0,800.0,140.0,35,False,True

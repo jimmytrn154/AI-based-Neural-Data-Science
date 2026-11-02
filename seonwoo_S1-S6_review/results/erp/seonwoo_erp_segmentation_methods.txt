@@ -1,0 +1,21 @@
+Run UTC: 2026-10-24T03:16:28.770542+00:00
+Mode: full cohort from completed S2 audit
+Included subjects: 137
+Shared templates: C:\Users\ksw32\OneDrive\바탕 화면\UNIST\학기\3학년 2학기\AI 기반 뇌과학 데이터 사이언스_김성필P\project\AI-based-Neural-Data-Science-main\AI-based-Neural-Data-Science-main\results\templates\templates_K5.fif
+States: ['A', 'B', 'C', 'D', 'E']
+Method choice: map condition-wise grand ERPs to the approved shared templates.
+This is template-based segmentation; no ERP-specific clusters were estimated.
+Same subject/trial rules as completed S2; trial counts checked against S2 audit.
+Additional Simon recording QC: require nonmissing primary simon_cov_<state>.
+Within-subject condition means first; equal subject weights for grand ERPs.
+Filter band Hz: [2.0, 20.0]; resampled Hz: 250.
+Filter/resample each FULL condition ERP; supplied baseline preserved.
+Backfit options: {'factor': 10, 'half_window_size': 10, 'min_segment_length': 5, 'reject_edges': True}.
+Backfit two full grand ERPs separately before cropping; -1 remains unlabeled.
+Displayed sample bins: 0 <= t < 800 ms (stop_ms_exclusive is a bin boundary).
+Segment lengths describe this averaged waveform and are not task-level durations.
+Polarity invariant; topomaps normalized to unit spatial standard deviation.
+Descriptive only; S4 single-trial probabilities and S5 inference remain.
+Epoch/TSV order follows src.io.match_trials: count verified, order assumed.
+Congruent: 0/200 unlabeled samples
+Incongruent: 0/200 unlabeled samples

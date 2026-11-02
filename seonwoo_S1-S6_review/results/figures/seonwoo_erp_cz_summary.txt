@@ -1,0 +1,29 @@
+Run UTC: 2026-10-24T02:52:46.884765+00:00
+Mode: complete team-rule cohort
+Included subjects: 138
+Total retained congruent trials: 23165
+Total retained incongruent trials: 21111
+
+                             step  n_remaining
+     all subjects in subjects.csv          149
+                   has_simon == 1          147
+trials_simon in ['ok', 'partial']          141
+          continuous file present          141
+                     nInterp <= 6          141
+minimum trials in BOTH conditions          138
+
+Subject rules: src.preprocess.select_subjects, from config.yaml.
+Maximum interpolated channels: 6.
+Trial rules: correct; no badEpoch; inclusive RT 150--1500 ms.
+At least 40 retained trials in EACH condition.
+Condition 1=congruent; 2=incongruent.
+ERP: 30 Hz zero-phase FIR low-pass on the full epoch, then crop.
+Original sample rate and supplied -200..0 ms baseline preserved.
+Within-subject means first; equal weight for every included subject.
+Shading: +/-1 SEM across subjects; difference SEM uses paired differences.
+Descriptive ERP sanity check; no significance test performed.
+Template-GEV QC is specified for microstates and is not applied to this ERP.
+Dataset Guide Figure 2 used 145 subjects with different selection rules.
+Alignment: src.io.match_trials checks counts; epoch-to-TSV order is assumed.
+Status codes: excluded_recording_qc = nInterp above limit or missing QC value;
+excluded_min_trials = fewer than the minimum in at least one condition.

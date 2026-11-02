@@ -1,0 +1,32 @@
+S5: Simon congruent versus incongruent state probabilities
+Full eligible cohort
+S4 subjects: 137; S5 complete paired subjects: 137; missing-data exclusions: 0.
+Window: -200 to 800 ms, inclusive; states: ['A', 'B', 'C', 'D', 'E'].
+Contrast: incongruent minus congruent. Each participant has equal weight.
+Primary probabilities condition on labeled trials; no probability baseline subtraction.
+Missing rule: exclude a participant from S5 if any required probability is non-finite.
+Paired sign flips act on an entire participant's difference array, preserving state/time dependence.
+Assumption: independent participants and sign-exchangeable paired differences under the null.
+Two-sided paired t; cluster-forming p=0.05, t threshold=1.97756, df=136.
+All-zero difference columns have t=0; constant nonzero columns have signed infinite t.
+Clusters connect neighboring time samples within a state, with separate positive/negative clusters.
+Cluster statistic: absolute sum of t; null maximum over ALL states, times and both signs.
+Requested permutations: 5000; actual null statistics: 5000; seed=42.
+MNE random API: seed (random streams may differ across MNE versions).
+Exact enumeration replaces sampling when the number of distinct two-sided sign patterns is smaller.
+If no observed cluster exceeds the forming threshold, permutations are skipped and the table is empty.
+Observed clusters: 29; clusters with familywise-corrected p < 0.05: 2.
+S5 correction is max-cluster FWER across this state/time family. Do not label these p-values as FDR q-values.
+No second BH adjustment is applied to selected clusters; planned scalar-feature families still require the team's BH rule.
+General config FDR note: Benjamini-Hochberg, q = 0.05, within each family (RQ1, RQ2, RQ3)
+Cluster membership supports the condition-level test, not significance of individual time samples or precise onset/offset.
+Cluster-averaged differences in the table are descriptive, selected using the same data, not independent effect estimates.
+p >= alpha does not establish equivalence or absence of a condition difference.
+Figures show means +/-1 SEM over the SAME complete participants used in the test.
+S4 trial order, smoothing, cohort and template-QC assumptions are inherited unchanged.
+No PD/control or clinical association test is performed here; S6 conflict.csv is a separate next step.
+Input SHA256: d5bfb8414614ba800234ab4f64b6e6c68fa2f02b319b8470a83ea185d9dc98b8
+MNE version: 1.12.1
+Reference: https://mne.tools/stable/generated/mne.stats.permutation_cluster_1samp_test.html
+Reference: https://mne.tools/stable/generated/mne.stats.combine_adjacency.html
+Interpretation: https://www.fieldtriptoolbox.org/faq/stats/clusterstats_interpretation/

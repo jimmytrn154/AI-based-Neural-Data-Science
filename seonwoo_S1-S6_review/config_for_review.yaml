@@ -1,0 +1,150 @@
+paths:
+  data_root: '[local Dataset_ALL path omitted]'
+  results: results
+random_seed: 42
+subjects:
+  id_column: subject_id
+  max_interpolated_channels: 6
+  rest:
+    require: has_rest == 1
+    blink_sensitivity_flag: nICremoved == 0
+  simon:
+    require: has_simon == 1
+    allowed_trial_status:
+    - ok
+    - partial
+    min_trials_per_condition: 40
+  rest_vs_simon: subjects passing BOTH the rest and simon rules
+  clinical:
+    missing_moca: drop from MoCA analyses only
+    conflicting_sex_values: treat as missing (e.g. 'F|M'); drop only from models with
+      sex as covariate
+    updrs: PD group only
+preprocessing:
+  bandpass_hz:
+  - 2.0
+  - 20.0
+  resample_hz: 250
+  reference: average (already applied)
+  continuous_segment: whole recording
+microstates:
+  gfp_peak_outlier_sd: 3
+  min_peak_distance_samples: 1
+  peaks_per_subject_per_task: min(n_rest, n_simon, 3000)
+  two_level_clustering: true
+  algorithm: modified k-means (polarity-invariant)
+  n_init: 100
+  max_iter: 300
+  draft_templates:
+    n_subjects: 15
+    k: 4
+  k_range:
+  - 4
+  - 5
+  - 6
+  - 7
+  primary_k: 5
+  k_selection: 'Best mean rank across silhouette and Calinski-Harabasz (higher is
+    better); ties -> smaller K. Always report K = 4 and K = 5 as well. Davies-Bouldin
+    and Dunn were in the original rule but are degenerate with pycrostates'' distance
+    (|1/r| - 1 explodes for near-orthogonal maps: Davies-Bouldin ~1e15, Dunn ~0 at
+    every K), so they are excluded (Oct 23).
+
+    '
+  k_selection_scores:
+  - silhouette
+  - calinski_harabasz
+  state_labels: match maps to canonical A-D (E...) by visual inspection; fixed once,
+    used everywhere
+  labeling: one-to-one (Hungarian) matching by polarity-invariant spatial correlation
+    with the approved draft A-D; extra maps named E, F, G in order of explained variance;
+    then visual confirmation
+  confirmed_labels:
+    5:
+    - A
+    - B
+    - C
+    - D
+    - E
+    4:
+    - A
+    - B
+    - C
+    - Central
+  sensitivity_only_k:
+  - 6
+  - 7
+  recording_qc:
+    measure: template GEV (recording's GFP peaks fitted to the group templates)
+    robust_z: (x - median) / (1.4826 * MAD), per task across recordings
+    exclude_if_z_below: -3
+    procedure: fit on full cohort -> flag -> refit once without flagged recordings
+      -> stop
+    log_excluded:
+    - subject_id
+    - group
+    - moca
+    sensitivity: repeat analyses with the excluded recordings included
+    per_k: true
+    refit_excludes: subject
+    gev_peaks: all
+  backfit:
+    min_segment_length_samples: 5
+    reject_edges: true
+    smoothing_factor: 10
+    smoothing_half_window_samples: 10
+  metrics:
+  - mean_duration
+  - occurrence
+  - coverage
+  - gev
+  - transition_matrix_no_self
+simon_conditions:
+  epochs: lock-cue (ready-made)
+  keep_trials: beh_accuracy == 1 AND NOT badEpoch AND 150 <= beh_rt <= 1500 ms
+  filter: 2-20 Hz (preprocessing.bandpass_hz) on the full -1.0 to 2.5 s epoch, then
+    crop; applies to any epochs back-fitted to the templates, incl. the recovery pilot
+  analysis_window_ms:
+  - -200
+  - 800
+  erp_plot_lowpass_hz: 30
+  windows_ms:
+    n2:
+    - 200
+    - 350
+    theta:
+    - 400
+    - 750
+  permutation_test:
+    type: paired cluster-based
+    n_permutations: 5000
+    cluster_forming_p: 0.05
+recovery:
+  epochs: lock-resp (ready-made)
+  filter: same as simon_conditions.filter (2-20 Hz before back-fitting)
+  baseline: subject's mean state probabilities, cue-locked -200 to 0 ms
+  reliability: split-half (odd/even trials), Spearman-Brown corrected
+  keep_if_reliability_at_least: 0.5
+statistics:
+  alpha: 0.05
+  fdr: Benjamini-Hochberg, q = 0.05, within each family (RQ1, RQ2, RQ3)
+  primary_features:
+  - reorganization_index (Jensen-Shannon, rest vs simon transitions)
+  - coverage_change per state (simon - rest)
+  - mean_duration per state (rest and simon)
+  - conflict_effect per window (n2, theta)
+  within_subject: Wilcoxon signed-rank (primary); mixed model metric ~ task*group
+    + age + sex + (1|subject) (secondary)
+  group_difference: linear model feature ~ group + age + sex; Mann-Whitney as check
+  clinical_association: Spearman partial correlation controlling age; whole sample
+    and PD only
+  behavior_link: Simon incongruent error rate
+  effect_sizes: rank-biserial r / Cohen's d; rho with 95% bootstrap CI (2000 resamples)
+  report_n_at_every_step: true
+outputs:
+  feature_tables: results/features/<analysis>.csv, one row per subject_id
+  column_names: <task>_<metric>_<state>, e.g. rest_meandur_A, simon_cov_B
+  templates: results/templates/templates_K<k>.fif
+  labels: results/labels/<subject_id>_task-<Task>_labels.npy
+  figures: results/figures/<owner>_<analysis>.png
+  environment: pip freeze > requirements.txt on day 1; everyone installs from it
