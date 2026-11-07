@@ -1,0 +1,15 @@
+Methods
+- N = 139 subjects.
+- EEG features: Rest coverage (A–E), coverage changes (A–E), and reorganization JSD (11 features).
+- Features were standardized before PCA and k-means clustering. UMAP was unavailable.
+- PD/Control labels and MoCA scores were not used for clustering, only for post-hoc comparison.
+
+Results
+1. PCA: PC1 and PC2 explained 30.3% and 20.3% of the variance, respectively (50.6% combined).
+2. Clustering: k-means identified two clusters based on the highest silhouette score among k = 2–10 (0.210). The low silhouette score indicates weak overall cluster separation.
+3. PD vs. Control: Cluster assignments showed little agreement with PD/Control status (ARI = 0.001). Both clusters contained substantial proportions of PD and Control subjects.
+4. MoCA: Mean MoCA scores were similar across the two clusters (25.18 and 25.36, respectively), with the same median of 26, suggesting no clear grouping associated with cognitive performance.
+
+Conclusion
+- Unsupervised analysis revealed variability in resting-state and rest-to-task EEG microstate features across subjects. However, the resulting clusters did not clearly correspond to PD/Control status or cognitive performance (MoCA).
+- These findings suggest that the dominant patterns of variation in the selected EEG features are not strongly aligned with clinical group differences. Further statistical analysis is needed to assess associations with cognition.

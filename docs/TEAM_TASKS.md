@@ -14,7 +14,7 @@ This file describes **each member's tasks, the inputs they need, and the outputs
 
 **Status key:** ⬜ not started · 🟨 in progress · ✅ done · 🟥 blocked · ⏸️ postponed
 
-*Last updated: Nov 2, 2026 (Seonwoo's and Bohyeon's deliverables reviewed; not yet integrated into the repo).*
+*Last updated: Nov 7, 2026 (Bohyeon's adjusted B1–B6 reviewed; Seonwoo's S1–S6 reviewed Nov 2; neither yet integrated into the repo layout).*
 
 ---
 
@@ -142,22 +142,24 @@ Minseo's Phase 3 role (prediction and calibration lead) is unchanged.
 | # | Task | Due | Status | Inputs | Output |
 |---|---|---|---|---|---|
 | B1 | Statistics functions (mixed models, partial Spearman, FDR) | Oct 23 | ✅ | `config.yaml` (statistics) | `src/stats.py` |
-| B2 | Rest vs. Simon within-subject comparisons (Wilcoxon, FDR, effect sizes); mixed models with group, age, sex | Oct 24 | 🟨 | `microstates_task.csv`, `subjects.csv` | `results/features/rq1_stats.csv`, figure |
+| B2 | Rest vs. Simon within-subject comparisons (Wilcoxon, FDR, effect sizes); mixed models with group, age, sex | Oct 24 | ✅ | `microstates_task.csv`, `subjects.csv` | `results/features/rq1_stats.csv`, figure |
 | B3 | Reorganization index (Jensen–Shannon divergence of transitions) and coverage change | Oct 24 | ✅ | `microstates_task.csv` (transition columns `<task>_trans_<X>_to_<Y>`) | `results/features/reorganization.csv` |
 | B4 | Transition networks, Rest vs. Simon | Oct 24 | ✅ | `microstates_task.csv` | `results/figures/bohyeon_transition_networks.png` |
-| B5 | Subject embedding (PCA, UMAP) and k-means; alignment with group and MoCA | Oct 24 | 🟨 | `microstates_task.csv`, `subjects.csv` | Figure + short summary |
-| B6 | PD vs. control and MoCA associations for the primary features (age, sex covariates; UPDRS within PD only; FDR) | Oct 24 | 🟨 | B2, B3, `behavior.csv` (from Chuong), `conflict.csv` (from Seonwoo) | `results/features/rq3_stats.csv` |
+| B5 | Subject embedding (PCA, UMAP) and k-means; alignment with group and MoCA | Oct 24 | ✅ | `microstates_task.csv`, `subjects.csv` | Figure + short summary |
+| B6 | PD vs. control and MoCA associations for the primary features (age, sex covariates; UPDRS within PD only; FDR) | Oct 24 | ✅ (small follow-up) | B2, B3, `behavior.csv` (from Chuong), `conflict.csv` (from Seonwoo) | `results/features/rq3_stats.csv` |
 | B7 | Robustness: rerun the key RQ1/RQ3 results with `_K4`, `_nosmooth`, `_qcincluded` and `microstates_rest_noblink.csv` | Oct 24–25 | ⬜ | The sensitivity files | Short table: does each result hold? |
 | B8 | Results slides for RQ1 and RQ3 | Oct 25 | ⬜ | B2–B7 | Slides in the shared deck |
 
 **Deliverables for Oct 26:** the RQ1 figure (rest vs. Simon per state), the reorganization index, the transition networks, and the preliminary group and MoCA associations.
 
-**Review, Nov 2 (Chuong):** received in `bohyeon/` (`src/stats.py`, `rq1_stats.csv`, `reorganization.csv`, `rq3_stats.csv`, four figures, B5 summary); reviewed, not yet integrated into the repo. Key numbers were reproduced from the repo files (Wilcoxon p-values, coverage changes, JSD, error-rate column, conflict L2 features, group estimates).
-- **All of B2–B6:** only `stats.py` was sent; the analysis code for B2–B6 is still needed (handoff rules).
-- **B2:** Wilcoxon results done (A and E coverage and occurrence up, C coverage and duration down in Simon; FDR-significant). The mixed models (secondary analysis) are missing.
-- **B3:** JSD = mean over the five source states of the Jensen–Shannon divergence (log 2) between Rest and Simon transition probabilities; to be written down as the definition.
-- **B5:** uses states A–D only (E missing); k = 5 is the upper end of the range searched and the silhouette is weak (0.26). Rerun with E.
-- **B6:** no result survives FDR. To fix: FDR within one RQ3 family (config) instead of six sub-families; add mean duration per state (a config primary feature) and the Mann–Whitney check; restore sub-P001 in the conflict analyses (its Rest recording was excluded, its Simon data is valid).
+**Review, Nov 7 (Chuong):** adjusted delivery received in `bohyeon_adjusted/` (code `src/B2_rest_vs_simon.py`, `B4_transition_network.py`, `B5_subject_clustering.py`, `B6_clinical_associations.py`, `reorganization.py`, updated `stats.py`; results `rq1_stats.csv`, new `rq1_mixed.csv`, `reorganization.csv`, `rq3_stats.csv`, four figures, B5 summary). All fixes requested on Nov 2 are done; key numbers reproduced from the repo files. Not yet integrated into the repo layout (the scripts read from a private `data/` folder).
+- **B2:** Wilcoxon results unchanged. Mixed models added (`rq1_mixed.csv`; 60 models, 138 subjects, all converged; 36 used the Powell fallback, and all 60 refit identically with another optimizer). No task × group interaction survives FDR (smallest adjusted p = 0.57).
+- **B2, secondary finding:** the mixed model's group term shows less state E at rest in PD: coverage −4.0 points (FDR p = 0.012), occurrence −0.34 per s (FDR p = 0.003); confirmed by a Rest-only regression with age and sex and by Mann–Whitney (medians 8.6% vs. 14.1%). It comes from a secondary RQ1 term on a feature outside the pre-specified RQ3 set, so present it as secondary or exploratory (team decision).
+- **B3:** JSD definition documented in `reorganization.py`; `reorganization.csv` identical to the first delivery.
+- **B4:** the networks show the 2 strongest outgoing edges per state; these are the same at Rest and in Simon, so the two diagrams look identical. The figure should state the rule.
+- **B5:** state E included (11 features); k searched over 2–10 → k = 2, silhouette 0.21 (weak); no alignment with group (ARI 0.001) or MoCA. UMAP panel missing (umap-learn not installed on that machine).
+- **B6:** one RQ3 family of 108 tests; mean durations and Mann–Whitney added; sub-P001 back in the conflict analyses (n = 137). Nothing survives FDR (smallest adjusted p = 0.10); E is shorter in PD (Simon p = 0.002, Rest p = 0.03, uncorrected).
+- **Small follow-ups:** (1) B6 drops valid Rest data from the `rest_meandur_*` tests (sub-P048, whose Simon failed QC, and the 8 subjects with Simon trial labels `exclude`); (2) delete the unreachable `return output` at the end of `stats.py`; (3) send the outputs the scripts write but that were not included: `rq1_group_delta.csv`, `rq1_individual_changes.csv`, `b5_subject_clusters.csv`, `b6_eeg_features.csv`, `b6_group_stats.csv`, `b6_correlations.csv`, `bohyeon_b6_correlations.png`.
 
 **Notes:**
 - Descriptive preview (Chuong, Oct 23; paired Simon − Rest medians over 139 subjects, uncorrected, no tests): coverage of E +1.3 points (68% of subjects increase) and A +2.1 (60%); C coverage −1.8 (37% increase) and C mean duration −8.3 ms. The formal test is B2.
