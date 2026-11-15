@@ -1,0 +1,6 @@
+tag,micro,conflict,simon_qc,run_at,all_steps_ok,rq1_tests,rq1_fdr_sig,K,n_reorganization,reorg_jsd_mean,rq1_group_delta_tests,rq1_group_delta_fdr_sig,b5_n_clusters,rq3_tests,rq3_fdr_sig
+K4,microstates_task_K4.csv,,True,2026-11-12 19:46,False,12,7,4.0,138.0,0.021314721824439543,12.0,0.0,2.0,,
+task,microstates_task.csv,conflict.csv,True,2026-11-12 21:14,True,20,7,5.0,139.0,0.028721445206458727,20.0,0.0,2.0,108.0,0.0
+rest_noblink,microstates_rest_noblink.csv,,True,2026-11-12 21:15,False,20,5,5.0,106.0,0.025370372110222993,20.0,0.0,2.0,,
+task_qcincluded,microstates_task_qcincluded.csv,,True,2026-11-12 21:17,False,20,8,5.0,141.0,0.02927911672583245,20.0,0.0,2.0,,
+nosmooth,microstates_task_nosmooth.csv,,True,2026-11-12 21:19,False,20,6,5.0,139.0,0.01414519972345751,20.0,0.0,2.0,,

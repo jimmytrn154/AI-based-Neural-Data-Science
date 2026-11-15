@@ -1,0 +1,19 @@
+{
+  "run": {
+    "tag": "K4",
+    "micro_file": "microstates_task_K4.csv",
+    "conflict_file": null,
+    "simon_qc": true,
+    "states": [
+      "A",
+      "B",
+      "C",
+      "Central"
+    ]
+  },
+  "scripts_run": [
+    "B3_reorganization",
+    "B2_rest_vs_simon",
+    "B5_subject_clustering"
+  ]
+}

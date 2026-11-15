@@ -17,11 +17,11 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Phase | Window | Status | Notes |
 |---|---|---|---|
-| 1. Data structure (unsupervised) | Oct 20 → Oct 26 | 🟨 | Progress presentation on Oct 26 |
-| 2. Consolidation | After Oct 26 | ⬜ | To be planned after professor's feedback |
-| 3. Prediction | Mid-semester | ⬜ | Placeholder |
+| 1. Data structure (unsupervised) | Oct 20 → Oct 26 | ✅ | Progress presentation held (per team; the deck is not in the repo) |
+| 2. Consolidation | Oct 27 → about two weeks before the final | 🟨 | Phase 2 results presented Nov 9; plan revised Nov 15 after the professor's feedback (see Phase 2) |
+| 3. Prediction | After P2.2 and P2.4 | ⬜ | Planned (see Phase 3) |
 | 4. Extensions | Late semester | ⬜ | Placeholder |
-| Final presentation | Week 16 | ⬜ | |
+| Final presentation | Week 16 (date: [TO FILL]) | ⬜ | |
 
 ---
 
@@ -37,9 +37,9 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 | Oct 21 | **Draft templates released** (~15 subjects, K = 4) | Chuong | ✅ |
 | Oct 22 | **Final templates released** (full cohort, K chosen) | Chuong | ✅ (Oct 23; primary K = 5) |
 | Oct 23 | Task-level metrics delivered for Rest and Simon | Chuong | ✅ |
-| Oct 24 | All feature tables merged; PD/MoCA associations run; figures chosen | All | 🟨 (associations run; teammates' outputs reviewed Nov 2, not yet merged into the repo) |
-| Oct 25 | Slides finished and rehearsed | All | ⬜ |
-| Oct 26 | **Progress presentation** | All | ⬜ |
+| Oct 24 | All feature tables merged; PD/MoCA associations run; figures chosen | All | ✅ (teammates' outputs committed in their own folders: `seonwoo_S1-S6_review/`, `bohyeon_adjusted/`; not moved into `results/`) |
+| Oct 25 | Slides finished and rehearsed | All | ✅ (per team; the deck is not in the repo) |
+| Oct 26 | **Progress presentation** | All | ✅ (per team) |
 
 ### 0. Setup (all)
 
@@ -77,7 +77,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Load Simon cue-locked epochs; drop bad epochs; keep correct trials | Seonwoo | Oct 21 | ✅ | Config trial rules (correct, RT 150–1500 ms, no bad epochs, ≥ 40 per condition): 138 subjects. Received in `seonwoo_S1-S6_review/`, reviewed Nov 2; not yet in the repo. |
+| Load Simon cue-locked epochs; drop bad epochs; keep correct trials | Seonwoo | Oct 21 | ✅ | Config trial rules (correct, RT 150–1500 ms, no bad epochs, ≥ 40 per condition): 138 subjects. Committed in `seonwoo_S1-S6_review/` (reviewed Nov 2; not moved into `results/`). |
 | Reproduce the Simon ERP at Cz (Dataset Guide, Figure 2) | Seonwoo | Oct 21 | ✅ | `seonwoo_erp_cz.png`: central positivity ≈ 440 ms, larger for incongruent; matches the Guide (138 subjects) |
 | Topographic segmentation of each condition's ERP (0–800 ms) | Seonwoo | Oct 22 | ✅ | Template-based: condition ERPs labeled with the shared K = 5 templates (137 subjects); `seonwoo_erp_segmentation.png` |
 | Single-trial back-fitting and state-probability time courses | Seonwoo | Oct 23 | ✅ | 137 subjects (Simon recording QC applied); 2–20 Hz, 250 Hz, K = 5, documented smoothing |
@@ -88,7 +88,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Statistics functions on dummy data (mixed models, partial Spearman, FDR) | Bohyeon | Oct 21 | ✅ | `src/stats.py` (received in `bohyeon/`, updated in `bohyeon_adjusted/` Nov 7 with a fallback optimizer for the mixed model; not yet in the repo): FDR by family, paired Wilcoxon + rank-biserial, mixed model, partial Spearman with bootstrap CI, group model |
+| Statistics functions on dummy data (mixed models, partial Spearman, FDR) | Bohyeon | Oct 21 | ✅ | `src/stats.py` (committed in `bohyeon/` and `bohyeon_adjusted/`; the Nov 7 version adds a fallback optimizer for the mixed model; not yet moved into `src/`): FDR by family, paired Wilcoxon + rank-biserial, mixed model, partial Spearman with bootstrap CI, group model |
 | Rest vs. Simon within-subject comparisons | Bohyeon | Oct 23 | ✅ | `rq1_stats.csv` (139 subjects): Simon > Rest for A and E coverage and occurrence; Simon < Rest for C coverage and C duration (FDR-significant). Mixed models added Nov 7 (`rq1_mixed.csv`, reproduced): no task × group interaction; group term shows less E at rest in PD (secondary, see Blockers) |
 | Reorganization index (Jensen–Shannon divergence) and coverage change | Bohyeon | Oct 23 | ✅ | `reorganization.csv` (139 subjects), reproduced: JSD = mean over the five source states of the Rest-vs-Simon Jensen–Shannon divergence (log 2) of transition probabilities |
 | Transition networks (rest vs. Simon) | Bohyeon | Oct 24 | ✅ | `bohyeon_transition_networks.png`: 2 strongest outgoing edges per state (same at Rest and in Simon); rule to be stated on the figure |
@@ -108,28 +108,28 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Rest results without recordings with `nICremoved == 0` | Chuong | Oct 24 | ✅ | Blink sensitivity: `results/features/microstates_rest_noblink.csv` (113 Rest recordings; 35 of 149 have `nICremoved == 0`). Rerunning the Rest analyses on it is B7 (Bohyeon) |
-| Key results at K = 4 and K = 5 | Each analysis owner | Oct 24 | ⬜ | |
+| Rest results without recordings with `nICremoved == 0` | Chuong | Oct 24 | ✅ | Blink-sensitivity file `results/features/microstates_rest_noblink.csv` (113 Rest recordings; 35 of 149 have `nICremoved == 0`). RQ1 rerun on it by Bohyeon (`bohyeon 261112/results/rest_noblink/`, N = 106): E and A changes hold, C's decrease no longer FDR-significant. Remaining reruns are P2.7 |
+| Key results at K = 4 and K = 5 | Each analysis owner | Oct 24 | 🟨 | RQ1 (B2–B5) rerun at K = 4 by Bohyeon (`bohyeon 261112/results/K4/`); RQ2 and RQ3 not rerun at K = 4 |
 
 ### 7. Presentation (all)
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| Slide outline: research questions → data → methods → results → plan | All | Oct 24 | ⬜ | |
-| Results slides, one or two per analysis | Each analysis owner | Oct 25 | ⬜ | |
-| Slide on sanity checks (reference values reproduced) | Minseo | Oct 25 | ⬜ | |
-| Slide on next phases | Chuong | Oct 25 | 🟨 | Draft in `docs/slides_chuong.md` (7 slides: pipeline, K choice, K = 5 templates, rest vs Simon check, state E, recovery pilot, next phases) |
-| Rehearsal and timing check | All | Oct 25 | ⬜ | |
+| Slide outline: research questions → data → methods → results → plan | All | Oct 24 | ✅ | Presented (per team; deck not in repo) |
+| Results slides, one or two per analysis | Each analysis owner | Oct 25 | ✅ | Presented (per team; deck not in repo) |
+| Slide on sanity checks (reference values reproduced) | Minseo | Oct 25 | ✅ | Presented (per team); source `docs/behavior_sanity_checks.md` |
+| Slide on next phases | Chuong | Oct 25 | ✅ | Draft `docs/slides_chuong.md`; presented (per team) |
+| Rehearsal and timing check | All | Oct 25 | ✅ | Per team |
 
 ### 8. Presentation support (Minseo, from Oct 24; see `docs/TEAM_TASKS.md`)
 
 | Task | Owner | Due | Status | Notes |
 |---|---|---|---|---|
-| M1: install the environment and load one subject | Minseo | Oct 24 | ⬜ | `requirements.txt` |
+| M1: install the environment and load one subject | Minseo | Oct 24 | ⬜ | Not confirmed in the repo |
 | M2: sanity-check slide (same as section 7 row) | Minseo | Oct 25 | ⬜ | From `docs/behavior_sanity_checks.md` |
-| M3: fill the Phase 1 results summary table below | Minseo | Oct 25 | ⬜ | |
+| M3: fill the Phase 1 results summary table below | Minseo | Oct 25 | ⬜ | Table below is still empty (checked Nov 15) |
 | M4: assemble the slide deck (style, A–E terminology, numbers match the files) | Minseo | Oct 25 | ⬜ | |
-| M5: draft questions for the professor (below) | Minseo | Oct 25 | ⬜ | |
+| M5: draft questions for the professor (below) | Minseo | Oct 25 | ⬜ | Section below is still empty (checked Nov 15) |
 
 ### Phase 1 results summary
 
@@ -160,17 +160,64 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 ---
 
-## Phase 2: consolidation (placeholder)
+## Phase 2: consolidation
 
-To be planned after the Oct 26 feedback. Planned so far:
+**Goal:** test whether the Phase 1 picture (Simon shifts the brain-state balance from C towards E, and conflict trials do so more) is real, specific to E, and robust, then interpret it.
 
-- [ ] Refine research questions from the feedback
-- [ ] Robustness: K, blinks, filter choices
-- [ ] Alpha control with spectral parameterization (Rest)
+### Professor's feedback on the Phase 2 presentation (Nov 9)
+
+1. **E vs. normative templates.** Compare state E with published normative microstate templates, with proper controls and baselines.
+2. **Probability dependence.** State probabilities sum to 1: is the E increase more than the compositional consequence of the C decrease?
+3. **C↔E transitions.** Look at the transitions between C and E directly, in the conflict windows.
+4. **Randomization tests.** Use permutation or surrogate tests rather than relying only on parametric p-values.
+5. **Brain activity.** What does the C → E pattern say about brain activity?
+6. **Novelty.** What is new compared with other papers?
+
+### Done so far (Nov 9 deck)
+
+| Item | Owner | Status | Evidence |
+|---|---|---|---|
+| Refined research question: focus on C down / E up from Rest to Simon and from congruent to incongruent | All | ✅ | Nov 9 deck (not in repo) |
+| E internal validation: spatial distinctness (K5 E–C \|r\| = 0.337; C–D 0.796 for comparison), recurrence across K (K4 Central–K5 E 0.986, K5 E–K6 F 0.960, K6 F–K7 G 0.948) and across tasks (Rest-only E vs. Simon-only E 0.948; vs. shared E 0.984 / 0.983) | Chuong (templates) | ✅ | Recomputed Nov 15 from `results/templates/` |
+| Coverage sensitivity: Simon − Rest coverage A +2.20, C −3.00, E +1.80 points (N = 139); E +1.45 without smoothing, +1.76 with QC-excluded recordings (N = 141); K = 4 and no-blink runs also done | Bohyeon | ✅ | `bohyeon 261112/results/{task,nosmooth,task_qcincluded,K4,rest_noblink}/rq1_stats_*.csv` |
+| **P2-B7** conflict state contrast (N = 137): D = Δ(E) − Δ(C) is +1.23 points in theta (FDR p = 0.00724), +0.67 in N2 (0.214); PD − control in D: N2 −2.80 points (FDR p = 0.0291, **not age/sex adjusted**), theta −0.86 (0.349) | Bohyeon | ✅ | `bohyeon 261112/results/task/B7_conflict_state_contrast.csv` |
+| **P2-B8** conflict group windows (N = 136, age/sex adjusted): PD − control N2 Δ(C) +2.46 points (FDR p = 0.00513), D −2.90 (0.0413); theta Δ(E) −1.35 (0.0443); group × window for C p = 0.00203 | Bohyeon | ✅ | `bohyeon 261112/results/task/b8_adjusted_tests_task.csv` |
+| Normative-template comparison: best matches Zanesco et al. 2020 (\|r\| = 0.868) and 2021a (0.843) | TBD | 🟨 | Results reported by a teammate; code not yet in repo |
+
+All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/README.md`). The P2-B7 and P2-B8 samples differ by sub-P069 (sex recorded "F\|M", dropped from the sex-adjusted P2-B8 models).
+
+### Revised plan (Nov 15)
+
+| ID | Item | Feedback | Owner | Status | What remains |
+|---|---|---|---|---|---|
+| P2.1 | E vs. normative templates | 1 | TBD (teammate who ran the Zanesco comparison) | 🟨 | Full match matrix (all 5 of our maps × all reference classes); our A–D as a control; baseline of correlations between non-matching reference classes (our own C–D is 0.80, so \|r\| ≈ 0.85 needs context); results for **all** reference studies, not only the best matches; re-reference to the common electrode subset, or interpolate to our 64 positions; add the Microstate Toolbox normative templates (Custo 2017; Koenig 2024 meta-maps); put the code in the repo |
+| P2.2 | Probability dependence: is E-up more than the compositional consequence of C-down? | 2 | Chuong | ⬜ | All five state changes; proportional-redistribution null; E's share of non-C time, P(E) / (1 − P(C)); log-ratio analysis; a non-competitive measure (per-template spatial correlation over time); second-best labels of frames that switch to E |
+| P2.3 | C↔E transitions | 3 | TBD | ⬜ | C → E and E → C in the N2 and theta windows, incongruent vs. congruent; observed vs. expected given occurrences; directional asymmetry; where E segments come from |
+| P2.4 | Randomization / surrogate tests | 4 | Bohyeon | ⬜ | Group-label permutation for the P2-B7 / P2-B8 group results, Freedman–Lane for the age/sex-adjusted models and a max-statistic correction across the six P2-B8 group tests; within-subject sign-flip for condition contrasts; segment-shuffle or Markov surrogates for transitions; all on **one fixed sample** |
+| P2.5 | Brain-activity interpretation | 5 | TBD | ⬜ | Trial level: correct vs. error incongruent trials, and reaction time; subject level: E increase vs. Simon error rate; then a cautious interpretation using P2.1–P2.3 |
+| P2.6 | Novelty: what is new? | 6 | TBD | ⬜ | Targeted literature check: microstates in PD (rest and task); microstates in conflict tasks (Simon, Stroop, flanker); rest-to-task microstate changes; extra classes in clinical groups. Then a "contribution" statement, with claims at the level the evidence supports |
+| P2.7 | Blink sensitivity | — | Chuong | 🟨 | RQ1 rerun done by Bohyeon (N = 106; C's decrease no longer FDR-significant). Rerun the other key results (conflict contrasts, group results) with `microstates_rest_noblink.csv` |
+| P2.8 | Alpha control: spectral parameterization of Rest | — | TBD | ⬜ | Periodic (alpha peak) and aperiodic Rest features; test whether the main results survive them |
+| P2.9 | Recovery pilot: report the go/no-go result | — | Chuong | 🟨 | Result exists (`docs/recovery_pilot.md`: keep overall recovery and error effect, drop the conflict effect); it was not in the Nov 9 deck, so add it to the final |
+
+**Dependencies:**
+- P2.5 depends on P2.1–P2.3.
+- Novelty claims (P2.6) only for findings that survive P2.4.
+- Phase 3 starts after P2.2 and P2.4.
+
+**Postponed (kept listed):** RT-sorted analysis of E; conflict adaptation; PCA trajectories (recovery pilot, C5); Phase 4 extensions.
+
+**Timeline:** today is Nov 15; final presentation in Week 16 (date: [TO FILL]). Target: Phase 2 done about two weeks before the final, then Phase 3.
+
+### Earlier Phase 2 placeholder items (Oct 26), for the record
+
+- [x] Refine research questions from the feedback (C down / E up focus, Nov 9)
+- [ ] Robustness: K, blinks, filter choices (partly done: RQ1 at K = 4, no smoothing, QC included, no-blink; rest is P2.7)
+- [ ] Alpha control with spectral parameterization (Rest) → P2.8
 - [ ] Fix the final feature set
-- [ ] Go/no-go decision on the recovery analysis
+- [x] Go/no-go decision on the recovery analysis (Oct 23; reporting is P2.9)
 
-## Phase 3: prediction (placeholder)
+## Phase 3: prediction (planned; starts after P2.2 and P2.4)
 
 - [ ] Prediction study: demographics → behavior → Rest EEG → Rest + reorganization; EEG only
 - [ ] Calibration (Brier score, reliability), within-PD analysis, selective prediction
@@ -223,6 +270,8 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 24 | Epochs are resampled to 250 Hz (after filtering) before back-fitting; written into config.yaml (`simon_conditions.resample_before_backfit_hz`) | Chuong |
 | Oct 24 | Behavior rules written into config.yaml (`behavior`): `simon_n_*` count all trials; no RT limit for behavior features | Chuong |
 | Oct 24 | C5 (PCA trajectories of the recovery pilot) postponed to Phase 2 | Chuong |
+| Nov 15 | Phase 2 revised after professor feedback (Nov 9): four validity checks plus interpretation and novelty questions; postponed items listed | Chuong |
+| Nov 15 | The deck's new Phase 2 analyses "B7" and "B8" are called P2-B7 (conflict state contrast) and P2-B8 (conflict group windows) in all docs, to avoid a clash with Bohyeon's Phase 1 task IDs B7 and B8; script names unchanged | Chuong |
 
 ## Blockers
 
@@ -236,8 +285,9 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 23 | Full-cohort K = 4 (primary by config rule) has no map matching draft D (best r = 0.42): its 4th map is a central maximum with temporal-edge negativity (= K = 5 map E, 3.7–4.4% of GEV), while fronto-central D is merged into C (r = 0.95 with draft C, 0.86 with draft D). At K = 5, A–D match the draft at r ≥ 0.97. Column `*_D` at K = 4 is therefore not canonical D | Chuong, Bohyeon, Seonwoo (anyone using K = 4 labels) | Chuong | Yes (Oct 23): primary K = 5; K = 4 fourth map renamed 'Central' (sensitivity) |
 | Oct 23 | Davies-Bouldin (~1e15) and Dunn (~0) are degenerate for every K with pycrostates' distance (\|1/r\| − 1 explodes for near-orthogonal maps); the K choice rests on silhouette and Calinski-Harabasz (both K = 4) | Chuong | Chuong | Yes (Oct 23): both removed from the K-selection rule in config.yaml |
 | Nov 2 | Bohyeon sent `src/stats.py` and the B2–B6 outputs but not the B2–B6 analysis code (handoff rules ask for code with outputs); key numbers were reproduced from repo files, the rest can't be audited. Open fixes: mixed models (B2), B5 with state E, one RQ3 FDR family, mean durations and Mann–Whitney check, sub-P001 in conflict analyses (B6) | Chuong (integration), team (RQ3 slides) | Bohyeon | Yes (Nov 7): code and all requested fixes delivered in `bohyeon_adjusted/`; small follow-ups listed in `docs/TEAM_TASKS.md` (Rest data in `rest_meandur_*` tests, unsent secondary outputs) |
-| Nov 2 | Conflict effect: the config's primary feature is one distance per window, but `conflict.csv` holds per-state differences; Bohyeon used the L2 norm of the window-averaged difference vector. Team to agree the definition and which file holds it (checked: not related to trial counts, ρ ≈ −0.02 to −0.05) | Seonwoo, Bohyeon | Team | No |
-| Nov 7 | The RQ1 mixed model's group term shows less state E at rest in PD (coverage −4.0 points, FDR p = 0.012; occurrence −0.34 per s, FDR p = 0.003; robust across optimizers, a Rest-only regression and Mann–Whitney). It is a group comparison on a feature outside the pre-specified RQ3 set, from a secondary model; decide how to present it (secondary or exploratory) | Bohyeon (RQ1/RQ3 slides), all | Team | No |
+| Nov 2 | Conflict effect: the config's primary feature is one distance per window, but `conflict.csv` holds per-state differences; Bohyeon used the L2 norm of the window-averaged difference vector. Team to agree the definition and which file holds it (checked: not related to trial counts, ρ ≈ −0.02 to −0.05) | Seonwoo, Bohyeon | Team | Partly (Nov 15): P2-B7 / P2-B8 work with per-state differences (Δ(C), Δ(E), D = Δ(E) − Δ(C)); the scalar distance in RQ3 is still Bohyeon's L2 version and not formally agreed |
+| Nov 7 | The RQ1 mixed model's group term shows less state E at rest in PD (coverage −4.0 points, FDR p = 0.012; occurrence −0.34 per s, FDR p = 0.003; robust across optimizers, a Rest-only regression and Mann–Whitney). It is a group comparison on a feature outside the pre-specified RQ3 set, from a secondary model; decide how to present it (secondary or exploratory) | Bohyeon (RQ1/RQ3 slides), all | Team | Superseded (Nov 15): group results are now part of the Phase 2 plan (P2.4 permutation tests; presentation as secondary) |
+| Nov 15 | Normative-template comparison (Zanesco et al. 2020, 2021a) was reported in the Nov 9 deck, but its code is not in the repo and its owner is not recorded | P2.1 | TBD | No |
 
 ## Daily log
 
@@ -256,3 +306,4 @@ To be planned after the Oct 26 feedback. Planned so far:
 | Oct 24 | Chuong | Behavior: primary error rate errors / responded trials plus Guide-definition columns; recovery files split by reliability; config: epoch resampling and behavior rules; C5 postponed to Phase 2. Epoch-order blocker resolved (all 147 subjects, 0 mismatching trials). Slide draft `docs/slides_chuong.md` (C6) | Integrate teammates' outputs; finalize slides with Minseo |
 | Nov 2 | Chuong | Reviewed Seonwoo's S1–S6 (`seonwoo_S1-S6_review/`) and Bohyeon's B1–B6 (`bohyeon/`) deliverables. Seonwoo: all config rules followed; ERP matches the Guide; 2 significant clusters (E and C, ≈ 350–580 ms); `conflict.csv` reproduced. Bohyeon: RQ1, JSD, coverage changes and RQ3 numbers reproduced; code for B2–B6, mixed models and several RQ3/B5 fixes still needed. `docs/TEAM_TASKS.md` updated; nothing integrated yet | Integrate outputs; request fixes from Bohyeon; agree conflict-effect definition |
 | Nov 7 | Chuong | Reviewed Bohyeon's adjusted B1–B6 (`bohyeon_adjusted/`): code delivered; mixed models (all 60 reproduced with another optimizer), B5 with state E (k = 2, weak), B6 with one RQ3 family (108 tests, none FDR-significant), durations, Mann–Whitney, sub-P001 restored. Secondary finding: less E at rest in PD. B2, B5, B6 → done; small follow-ups listed in `docs/TEAM_TASKS.md` | Integrate teammates' outputs into the repo layout; agree conflict-effect definition and how to present the E finding |
+| Nov 15 | Chuong | Verified Bohyeon's Phase 2 folder (`bohyeon 261112/`, README added): every checked slide number found in the outputs; E-validation correlations recomputed from the templates; P2-B7 (137) vs P2-B8 (136) differ by sub-P069 (sex "F\|M"); P2-B7 group test is unadjusted; normative-template code not in repo. Phase 1 statuses reconciled; Phase 2 plan revised after the Nov 9 feedback (P2.1–P2.9); docs/TEAM_TASKS.md updated | Assign TBD owners; start P2.2 and P2.7 |

@@ -1,0 +1,21 @@
+{
+  "run": {
+    "tag": "task",
+    "micro_file": "microstates_task.csv",
+    "conflict_file": "conflict.csv",
+    "simon_qc": true,
+    "states": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ]
+  },
+  "scripts_run": [
+    "B3_reorganization",
+    "B2_rest_vs_simon",
+    "B5_subject_clustering",
+    "B6_clinical_associations"
+  ]
+}

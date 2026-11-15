@@ -1,0 +1,239 @@
+
+--- B3_reorganization (reorganization.py) ---
+[run task_qcincluded] micro = data/microstates_task_qcincluded.csv | conflict = - | Simon QC = on | outputs -> results/task_qcincluded, figures/task_qcincluded
+Loaded microstates: 149 subjects
+Microstates: K = 5 (['A', 'B', 'C', 'D', 'E'])
+Subjects: 141
+       reorganization_jsd  delta_cov_A  ...  delta_cov_D  delta_cov_E
+count            141.0000     141.0000  ...     141.0000     141.0000
+mean               0.0293       2.0629  ...       0.1116       1.7570
+std                0.0282       8.5668  ...       7.7450       6.6868
+min                0.0010     -21.1735  ...     -27.7930     -31.1951
+25%                0.0093      -3.3691  ...      -2.9581      -1.1894
+50%                0.0188       1.9837  ...       0.0720       1.2931
+75%                0.0386       7.4125  ...       3.5906       4.4537
+max                0.1261      24.8706  ...      32.7200      24.1783
+
+[8 rows x 6 columns]
+Coverage delta row-sum maximum |error|: 1.1546319456101628e-14
+
+--- B2_rest_vs_simon (B2_rest_vs_simon.py) ---
+[run task_qcincluded] micro = data/microstates_task_qcincluded.csv | conflict = - | Simon QC = on | outputs -> results/task_qcincluded, figures/task_qcincluded
+Loaded microstates: 149 subjects
+Microstates: K = 5 (['A', 'B', 'C', 'D', 'E'])
+QC-eligible subjects: 141
+
+Paired Wilcoxon tests completed.
+ metric state  n_pairs  mean_delta  median_delta  p_value    p_fdr
+    cov     A      141    2.062944      1.983750 0.005837 0.021375
+    cov     B      141   -0.823810     -0.712655 0.326757 0.408446
+    cov     C      141   -3.107747     -1.812742 0.006413 0.021375
+    cov     D      141    0.111573      0.072042 0.579135 0.609616
+    cov     E      141    1.757040      1.293148 0.000066 0.000656
+meandur     A      141    2.744140      2.734523 0.126996 0.181424
+meandur     B      141   -4.251386     -2.296248 0.018810 0.047025
+meandur     C      141  -12.165534     -8.311523 0.002392 0.015947
+meandur     D      141   -2.455947     -0.535618 0.399353 0.460542
+meandur     E      141    1.743183      3.036501 0.027875 0.055750
+    occ     A      141    0.124523      0.086371 0.004241 0.021204
+    occ     B      141   -0.002152     -0.026583 0.966347 0.966347
+    occ     C      141   -0.057552     -0.070993 0.106855 0.164392
+    occ     D      141    0.071588      0.041215 0.054447 0.098995
+    occ     E      141    0.160522      0.125968 0.000004 0.000080
+    gev     A      141    1.008013      1.005502 0.016271 0.046487
+    gev     B      141   -0.924624     -0.495071 0.173385 0.231179
+    gev     C      141   -2.975319     -1.966478 0.023267 0.051705
+    gev     D      141   -0.160539      0.160016 0.414488 0.460542
+    gev     E      141    0.266573      0.244989 0.070285 0.117142
+
+PD vs Control differences in within-subject changes:
+ metric state  estimate_group_difference  p_value    p_fdr
+    cov     A                   0.552755 0.734075 0.800352
+    cov     B                   1.553942 0.258915 0.498209
+    cov     C                  -3.877819 0.153634 0.498209
+    cov     D                   2.126545 0.169502 0.498209
+    cov     E                  -0.355423 0.745905 0.800352
+meandur     A                   1.266882 0.714519 0.800352
+meandur     B                   0.931614 0.769279 0.800352
+meandur     C                 -17.310439 0.178878 0.498209
+meandur     D                   7.254881 0.090022 0.498209
+meandur     E                  -1.587595 0.584110 0.800352
+    occ     A                   0.023965 0.800352 0.800352
+    occ     B                   0.114673 0.182216 0.498209
+    occ     C                  -0.129032 0.110504 0.498209
+    occ     D                   0.088795 0.268390 0.498209
+    occ     E                   0.019404 0.778366 0.800352
+    gev     A                   0.849240 0.397705 0.662841
+    gev     B                   1.175795 0.235719 0.498209
+    gev     C                  -4.924022 0.173526 0.498209
+    gev     D                   1.257214 0.274015 0.498209
+    gev     E                   0.243530 0.631773 0.800352
+
+Mixed models (secondary): task and task x group terms
+ metric state                    term   estimate  p_value    p_fdr
+    cov     A task_simon (in Control)   1.635792 0.189664 0.429509
+    cov     A            task_x_group   0.585503 0.701999 0.776962
+    cov     B task_simon (in Control)  -2.071765 0.072367 0.241224
+    cov     B            task_x_group   1.777252 0.209015 0.501086
+    cov     C task_simon (in Control)  -0.556582 0.785737 0.898638
+    cov     C            task_x_group  -3.855793 0.124798 0.501086
+    cov     D task_simon (in Control)  -1.027606 0.360345 0.637200
+    cov     D            task_x_group   1.723951 0.211038 0.501086
+    cov     E task_simon (in Control)   2.020162 0.034690 0.158948
+    cov     E            task_x_group  -0.230913 0.844020 0.844020
+meandur     A task_simon (in Control)   1.934085 0.476006 0.732317
+meandur     A            task_x_group   1.189982 0.720780 0.776962
+meandur     B task_simon (in Control)  -5.550630 0.039737 0.158948
+meandur     B            task_x_group   1.792751 0.588267 0.776962
+meandur     C task_simon (in Control)  -0.005733 0.999541 0.999541
+meandur     C            task_x_group -18.262827 0.135735 0.501086
+meandur     D task_simon (in Control)  -6.543746 0.032058 0.158948
+meandur     D            task_x_group   6.185829 0.098612 0.501086
+meandur     E task_simon (in Control)   2.721084 0.286728 0.573456
+meandur     E            task_x_group  -1.047817 0.738114 0.776962
+    occ     A task_simon (in Control)   0.097429 0.170567 0.429509
+    occ     A            task_x_group   0.035428 0.684642 0.776962
+    occ     B task_simon (in Control)  -0.086327 0.193279 0.429509
+    occ     B            task_x_group   0.120074 0.140259 0.501086
+    occ     C task_simon (in Control)   0.017301 0.808774 0.898638
+    occ     C            task_x_group  -0.114550 0.191578 0.501086
+    occ     D task_simon (in Control)   0.029860 0.611733 0.805918
+    occ     D            task_x_group   0.063683 0.377601 0.713424
+    occ     E task_simon (in Control)   0.148759 0.012215 0.158948
+    occ     E            task_x_group   0.025081 0.730586 0.776962
+    gev     A task_simon (in Control)   0.490217 0.533211 0.761730
+    gev     A            task_x_group   0.758809 0.431799 0.719665
+    gev     B task_simon (in Control)  -1.807538 0.036525 0.158948
+    gev     B            task_x_group   1.285507 0.225489 0.501086
+    gev     C task_simon (in Control)   0.058939 0.982393 0.999541
+    gev     C            task_x_group  -4.576578 0.162500 0.501086
+    gev     D task_simon (in Control)  -0.746005 0.382320 0.637200
+    gev     D            task_x_group   0.896100 0.392383 0.713424
+    gev     E task_simon (in Control)   0.170310 0.644735 0.805918
+    gev     E            task_x_group   0.252347 0.577646 0.776962
+Non-converged fits: 0
+
+B2 completed [task_qcincluded].
+Saved files in C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\results\task_qcincluded and C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\figures\task_qcincluded
+ - rq1_stats_task_qcincluded.csv
+ - rq1_individual_changes_task_qcincluded.csv
+ - rq1_group_delta_task_qcincluded.csv
+ - rq1_mixed_task_qcincluded.csv
+ - bohyeon_rest_vs_task_all_metrics_task_qcincluded.png
+
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\base\model.py:589: SingularMatrixWarning: Random effects covariance is singular
+  return -self.score(params, *args) / nobs
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\statsmodels\regression\mixed_linear_model.py:2429: SingularMatrixWarning: The random effects covariance matrix is singular.
+  scale = self.get_scale(fe_params, cov_re_unscaled, vcomp_unscaled)
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  fit = model.fit(reml=False, method="lbfgs")
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\src\stats.py:106: SingularMatrixWarning: The random effects covariance matrix is singular.
+  fit = model.fit(reml=False, method="lbfgs")
+
+--- B4_transition_network (B4_transition_network.py) ---
+[run task_qcincluded] micro = data/microstates_task_qcincluded.csv | conflict = - | Simon QC = on | outputs -> results/task_qcincluded, figures/task_qcincluded
+Loaded microstates: 149 subjects
+Microstates: K = 5 (['A', 'B', 'C', 'D', 'E'])
+
+--- B5_subject_clustering (B5_subject_clustering.py) ---
+[run task_qcincluded] micro = data/microstates_task_qcincluded.csv | conflict = - | Simon QC = on | outputs -> results/task_qcincluded, figures/task_qcincluded
+Loaded microstates: 149 subjects
+Microstates: K = 5 (['A', 'B', 'C', 'D', 'E'])
+Subjects with complete features: 141
+PCA explained variance:
+[0.30125087 0.20054412]
+Silhouette scores: {2: 0.20987240851468886, 3: 0.16088874781262633, 4: 0.13165561406361462, 5: 0.14110447950325436, 6: 0.13387688763434683, 7: 0.1793958468717949, 8: 0.13675869742400534, 9: 0.14689915113090338, 10: 0.14758897958389572}
+Selected k: 2
+NOTE: best silhouette = 0.21 (< 0.5): weak cluster structure; treat clusters as descriptive only.
+
+PD/Control vs clusters:
+group  Control  PD
+row_0             
+0           18  33
+1           29  61
+Adjusted Rand Index: 0.00017496792254753296
+
+MoCA by cluster:
+         count       mean  median
+cluster                          
+0           51  25.274510    26.0
+1           90  25.111111    26.0
+
+B5 completed [task_qcincluded].
+
+C:\Users\sodua\OneDrive - UNIST\2026_2UNIST\AI Based Neural Data Science\Team Project - Code, Results\.venv\Lib\site-packages\umap\umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
