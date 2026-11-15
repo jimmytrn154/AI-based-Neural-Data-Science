@@ -296,6 +296,7 @@ The no-blink file holds the same per-subject values as the primary file, so the 
 | Nov 15 | All Phase 2 group analyses (P2.4 onward) use the sex-complete sample (136 people for the Simon conflict features; sub-P069 excluded because its sex is recorded as "F\|M"); in config.yaml (`phase2.group_sample`) | Chuong |
 | Nov 15 | Phase 2 owners proposed, pending confirmation: P2.1 Minseo, P2.3 Seonwoo, P2.5 Minseo with Seonwoo, P2.6 Minseo, P2.8 Seonwoo | Chuong |
 | Nov 15 | P2.1 owner confirmed: Minseo (other Phase 2 owners still pending confirmation) | Chuong |
+| Nov 15 | P2.7 blink cleaning rule, fixed before any coverage result: in Rest recordings with no eye component removed, mark 0.5-s windows with Fp1 or Fp2 peak-to-peak > 100 µV (2–20 Hz, 250 Hz data) as BAD_blink and exclude them from back-fitting. Threshold justified by the Fp amplitude distribution of recordings with eye components removed (config `phase2.blink_cleaning`) | Chuong |
 
 ## Blockers
 
