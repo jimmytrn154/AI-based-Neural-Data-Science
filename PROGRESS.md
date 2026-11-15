@@ -206,7 +206,7 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | P2.4 | Randomization / surrogate tests | 4 | Bohyeon | ⬜ | Group-label permutation for the P2-B7 / P2-B8 group results, Freedman–Lane for the age/sex-adjusted models and a max-statistic correction across the six P2-B8 group tests; within-subject sign-flip for condition contrasts; segment-shuffle or Markov surrogates for transitions; all on **one fixed sample** |
 | P2.5 | Brain-activity interpretation | 5 | Minseo, with Seonwoo (pending confirmation) | ⬜ | Trial level: correct vs. error incongruent trials, and reaction time; subject level: E increase vs. Simon error rate; then a cautious interpretation using P2.1–P2.3 |
 | P2.6 | Novelty: what is new? | 6 | Minseo (pending confirmation) | ⬜ | Targeted literature check: microstates in PD (rest and task); microstates in conflict tasks (Simon, Stroop, flanker); rest-to-task microstate changes; extra classes in clinical groups. Then a "contribution" statement, with claims at the level the evidence supports |
-| P2.7 | Blink sensitivity | — | Chuong | 🟨 in progress: run done by Bohyeon, effect-size comparison pending review | RQ1 rerun on `microstates_rest_noblink.csv` done by Bohyeon; rerun the other key results (conflict contrasts, group results). Coverage comparison in the P2.7 note below |
+| P2.7 | Blink sensitivity | — | Chuong | 🟨 in progress: RQ1 coverage done (no-blink run by Bohyeon; blink-cleaned run Nov 15); conflict and group results not yet rerun | See the P2.7 notes below: E holds in both checks; C's decrease weakens (FDR p 0.128 without the 33, 0.072 after cleaning). Remaining: rerun the conflict contrasts and group results |
 | P2.8 | Alpha control: spectral parameterization of Rest | — | Seonwoo (pending confirmation) | ⬜ | Periodic (alpha peak) and aperiodic Rest features; test whether the main results survive them |
 | P2.9 | Recovery pilot: report the go/no-go result | — | Chuong | 🟨 | Result exists (`docs/recovery_pilot.md`: keep overall recovery and error effect, drop the conflict effect); it was not in the Nov 9 deck, so add it to the final |
 
@@ -219,6 +219,22 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | E | +1.80 [+0.72, +2.92], r 0.40, d_z 0.27, p 0.0005 | +1.58 [+0.27, +2.78], r 0.34, d_z 0.24, p 0.019 | identical to the no-blink run |
 
 The no-blink file holds the same per-subject values as the primary file, so the no-blink run equals the primary analysis restricted to those 106 subjects. In the 33 subjects it drops (Rest recordings with `nICremoved == 0`), mean changes are A +2.46, C −4.88, E +2.52 points. Recomputed with Bohyeon's `stats.py` and procedure, which reproduces her primary results exactly.
+
+**P2.7 blink follow-up (Nov 15).**
+
+*Who are the 33?* (Rest recordings with no eye component removed, vs. the other 106 of the 139.) No difference in group (PD/control 25/8 vs. 67/39, Fisher p = 0.21), sex (F/M 15/17 vs. 36/70, p = 0.21; F|M excluded), age (median 68 vs. 70, Mann–Whitney p = 0.74) or MoCA (26 vs. 26, p = 0.31). Rest C coverage is higher (median 33.1% vs. 22.0%, p = 0.0002) and Rest E coverage lower (5.9% vs. 11.8%, p = 0.001); Rest A does not differ (22.0% vs. 21.9%, p = 0.77).
+
+*Cleaning* (rule fixed in config `phase2.blink_cleaning` before any coverage result: 0.5-s windows with Fp1/Fp2 peak-to-peak > 100 µV in the 2–20 Hz data marked BAD_blink and excluded from back-fitting; `notebooks/chuong_blink_clean.py`, `results/features/microstates_rest_blinkclean.csv`). Applied to all 35 QC-passing Rest recordings without eye-component removal; 20 had time marked (median 0.7%, IQR 0–10.7%, max 42%), 19 of them among the 33. Unmarked recordings reproduce their primary values exactly. After cleaning, the 33 still have higher Rest C (median 31.8% vs. 22.0%, p = 0.008), and their mean C change is −1.77 points (−4.88 before cleaning).
+
+Simon − Rest coverage, all 139 subjects (same format as the table above):
+
+| State | Primary | Blink-cleaned Rest |
+|---|---|---|
+| A | +2.20 [+0.75, +3.67], r 0.29, d_z 0.26, p 0.012 | +1.95 [+0.47, +3.42], r 0.26, d_z 0.22, p 0.040 |
+| C | −3.00 [−5.20, −0.58], r −0.26, d_z −0.21, p 0.025 | −2.26 [−4.56, +0.13], r −0.21, d_z −0.16, p 0.072 |
+| E | +1.80 [+0.72, +2.92], r 0.40, d_z 0.27, p 0.0005 | +1.67 [+0.59, +2.81], r 0.37, d_z 0.25, p 0.0017 |
+
+Limitation: the 2–20 Hz band attenuates slow blink waveforms, so the 100 µV rule marks time in only 19 of the 33 recordings; residual blink activity below the threshold is not removed.
 
 **Dependencies:**
 - P2.5 depends on P2.1–P2.3.
@@ -334,3 +350,4 @@ The no-blink file holds the same per-subject values as the primary file, so the 
 | Nov 15 | Chuong | Verified Bohyeon's Phase 2 folder (`bohyeon 261112/`, README added): every checked slide number found in the outputs; E-validation correlations recomputed from the templates; P2-B7 (137) vs P2-B8 (136) differ by sub-P069 (sex "F\|M"); P2-B7 group test is unadjusted; normative-template code not in repo. Phase 1 statuses reconciled; Phase 2 plan revised after the Nov 9 feedback (P2.1–P2.9); docs/TEAM_TASKS.md updated | Assign TBD owners; start P2.2 and P2.7 |
 | Nov 15 | Chuong | Follow-ups: no-blink coverage comparison (no-blink run = primary data on the same 106 subjects; C −3.00 → −2.41 points, FDR p 0.025 → 0.128); Bohyeon's inputs match the repo files by value (all five runs, `conflict.csv`); sex-complete sample rule for Phase 2 in config; limitations recorded; owners proposed (pending confirmation). Meeting PDF left untracked (author name in its metadata) | Confirm owners; continue P2.2 and P2.7 |
 | Nov 15 | Chuong | Part A: meeting note committed without author metadata (`docs/meetings/ND_meeting_1107.pdf`); P2.1 owner confirmed (Minseo); `subjects.csv` and `behavior.csv` match Bohyeon's inputs by value | Part B (blink follow-up), Part C (P2.1 verification) |
+| Nov 15 | Chuong | Part B (P2.7): the 33 Rest recordings without eye-component removal match the 106 on group, sex, age and MoCA but have higher Rest C (33.1% vs 22.0%); blink cleaning (Fp > 100 µV, 0.5 s; rule committed before results) marks time in 20 of 35 recordings; with cleaned Rest, Simon − Rest coverage: E +1.67 (FDR p 0.002), A +1.95 (0.040), C −2.26 (0.072) | Part C (P2.1 verification) |

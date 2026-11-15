@@ -5,6 +5,7 @@ Every rule here is read from ``config.yaml``; nothing is hard-coded.
 
 import logging
 
+import numpy as np
 import pandas as pd
 
 from src import io as pio
@@ -96,3 +97,27 @@ def preprocess_raw(raw, cfg):
     raw.filter(l_freq, h_freq, verbose="error")
     raw.resample(pp["resample_hz"], verbose="error")
     return raw
+
+
+def annotate_blinks(raw, cfg):
+    """Mark blink windows as ``BAD_blink`` (config ``phase2.blink_cleaning``).
+
+    Every sliding ``window_s`` window whose peak-to-peak amplitude at any of
+    ``channels`` exceeds ``threshold_uv_peak_to_peak`` is annotated in full.
+    ``raw`` must already be preprocessed like the back-fitted data. The
+    annotations are added in place; returns the fraction of time marked.
+    """
+    from scipy.ndimage import maximum_filter1d, minimum_filter1d
+
+    rule = cfg["phase2"]["blink_cleaning"]
+    win = int(round(rule["window_s"] * raw.info["sfreq"]))
+    data = raw.get_data(picks=rule["channels"], units="uV")
+    ptp = np.max([maximum_filter1d(x, win) - minimum_filter1d(x, win) for x in data], axis=0)
+    bad = maximum_filter1d((ptp > rule["threshold_uv_peak_to_peak"]).astype(np.uint8), win) > 0
+    edges = np.flatnonzero(np.diff(np.concatenate([[0], bad.astype(np.int8), [0]])))
+    sfreq = raw.info["sfreq"]
+    # Annotation onsets are relative to meas_date when it is set, else to the first sample
+    offset = raw.first_time if raw.annotations.orig_time is not None else 0.0
+    for start, stop in zip(edges[::2], edges[1::2]):
+        raw.annotations.append(offset + raw.times[start], (stop - start) / sfreq, "BAD_blink")
+    return float(bad.mean())
