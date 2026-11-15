@@ -190,21 +190,35 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 | **P2-B8** conflict group windows (N = 136, age/sex adjusted): PD − control N2 Δ(C) +2.46 points (FDR p = 0.00513), D −2.90 (0.0413); theta Δ(E) −1.35 (0.0443); group × window for C p = 0.00203 | Bohyeon | ✅ | `bohyeon 261112/results/task/b8_adjusted_tests_task.csv` |
 | Normative-template comparison: best matches Zanesco et al. 2020 (\|r\| = 0.868) and 2021a (0.843) | TBD | 🟨 | Results reported by a teammate; code not yet in repo |
 
+**Limitations of the work so far:**
+- E partly splits across two maps at K = 7 (\|r\| = 0.82 with F, 0.83 with G); at K = 4–6 it has one clear counterpart.
+- P2-B7's group difference in D is **unadjusted** (no age/sex); P2-B8 holds the adjusted version (N2 D −2.90 points, FDR p = 0.041).
+
 All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/README.md`). The P2-B7 and P2-B8 samples differ by sub-P069 (sex recorded "F\|M", dropped from the sex-adjusted P2-B8 models).
 
 ### Revised plan (Nov 15)
 
 | ID | Item | Feedback | Owner | Status | What remains |
 |---|---|---|---|---|---|
-| P2.1 | E vs. normative templates | 1 | TBD (teammate who ran the Zanesco comparison) | 🟨 | Full match matrix (all 5 of our maps × all reference classes); our A–D as a control; baseline of correlations between non-matching reference classes (our own C–D is 0.80, so \|r\| ≈ 0.85 needs context); results for **all** reference studies, not only the best matches; re-reference to the common electrode subset, or interpolate to our 64 positions; add the Microstate Toolbox normative templates (Custo 2017; Koenig 2024 meta-maps); put the code in the repo |
+| P2.1 | E vs. normative templates | 1 | Minseo (pending confirmation) | 🟨 | Full match matrix (all 5 of our maps × all reference classes); our A–D as a control; baseline of correlations between non-matching reference classes (our own C–D is 0.80, so \|r\| ≈ 0.85 needs context); results for **all** reference studies, not only the best matches; re-reference to the common electrode subset, or interpolate to our 64 positions; add the Microstate Toolbox normative templates (Custo 2017; Koenig 2024 meta-maps); put the code in the repo |
 | P2.2 | Probability dependence: is E-up more than the compositional consequence of C-down? | 2 | Chuong | ⬜ | All five state changes; proportional-redistribution null; E's share of non-C time, P(E) / (1 − P(C)); log-ratio analysis; a non-competitive measure (per-template spatial correlation over time); second-best labels of frames that switch to E |
-| P2.3 | C↔E transitions | 3 | TBD | ⬜ | C → E and E → C in the N2 and theta windows, incongruent vs. congruent; observed vs. expected given occurrences; directional asymmetry; where E segments come from |
+| P2.3 | C↔E transitions | 3 | Seonwoo (pending confirmation) | ⬜ | C → E and E → C in the N2 and theta windows, incongruent vs. congruent; observed vs. expected given occurrences; directional asymmetry; where E segments come from |
 | P2.4 | Randomization / surrogate tests | 4 | Bohyeon | ⬜ | Group-label permutation for the P2-B7 / P2-B8 group results, Freedman–Lane for the age/sex-adjusted models and a max-statistic correction across the six P2-B8 group tests; within-subject sign-flip for condition contrasts; segment-shuffle or Markov surrogates for transitions; all on **one fixed sample** |
-| P2.5 | Brain-activity interpretation | 5 | TBD | ⬜ | Trial level: correct vs. error incongruent trials, and reaction time; subject level: E increase vs. Simon error rate; then a cautious interpretation using P2.1–P2.3 |
-| P2.6 | Novelty: what is new? | 6 | TBD | ⬜ | Targeted literature check: microstates in PD (rest and task); microstates in conflict tasks (Simon, Stroop, flanker); rest-to-task microstate changes; extra classes in clinical groups. Then a "contribution" statement, with claims at the level the evidence supports |
-| P2.7 | Blink sensitivity | — | Chuong | 🟨 | RQ1 rerun done by Bohyeon (N = 106; C's decrease no longer FDR-significant). Rerun the other key results (conflict contrasts, group results) with `microstates_rest_noblink.csv` |
-| P2.8 | Alpha control: spectral parameterization of Rest | — | TBD | ⬜ | Periodic (alpha peak) and aperiodic Rest features; test whether the main results survive them |
+| P2.5 | Brain-activity interpretation | 5 | Minseo, with Seonwoo (pending confirmation) | ⬜ | Trial level: correct vs. error incongruent trials, and reaction time; subject level: E increase vs. Simon error rate; then a cautious interpretation using P2.1–P2.3 |
+| P2.6 | Novelty: what is new? | 6 | Minseo (pending confirmation) | ⬜ | Targeted literature check: microstates in PD (rest and task); microstates in conflict tasks (Simon, Stroop, flanker); rest-to-task microstate changes; extra classes in clinical groups. Then a "contribution" statement, with claims at the level the evidence supports |
+| P2.7 | Blink sensitivity | — | Chuong | 🟨 in progress: run done by Bohyeon, effect-size comparison pending review | RQ1 rerun on `microstates_rest_noblink.csv` done by Bohyeon; rerun the other key results (conflict contrasts, group results). Coverage comparison in the P2.7 note below |
+| P2.8 | Alpha control: spectral parameterization of Rest | — | Seonwoo (pending confirmation) | ⬜ | Periodic (alpha peak) and aperiodic Rest features; test whether the main results survive them |
 | P2.9 | Recovery pilot: report the go/no-go result | — | Chuong | 🟨 | Result exists (`docs/recovery_pilot.md`: keep overall recovery and error effect, drop the conflict effect); it was not in the Nov 9 deck, so add it to the final |
+
+**P2.7 note (Nov 15, from Bohyeon's outputs; report only).** Simon − Rest coverage change: mean [95% bootstrap CI], rank-biserial r, Cohen's d_z, FDR p (RQ1 family of 20 tests):
+
+| State | Primary run, N = 139 | No-blink run, N = 106 | Primary data, same 106 subjects |
+|---|---|---|---|
+| A | +2.20 [+0.75, +3.67], r 0.29, d_z 0.26, p 0.012 | +2.12 [+0.50, +3.71], r 0.29, d_z 0.25, p 0.038 | identical to the no-blink run |
+| C | −3.00 [−5.20, −0.58], r −0.26, d_z −0.21, p 0.025 | −2.41 [−5.03, +0.36], r −0.22, d_z −0.17, p 0.128 | identical to the no-blink run |
+| E | +1.80 [+0.72, +2.92], r 0.40, d_z 0.27, p 0.0005 | +1.58 [+0.27, +2.78], r 0.34, d_z 0.24, p 0.019 | identical to the no-blink run |
+
+The no-blink file holds the same per-subject values as the primary file, so the no-blink run equals the primary analysis restricted to those 106 subjects. In the 33 subjects it drops (Rest recordings with `nICremoved == 0`), mean changes are A +2.46, C −4.88, E +2.52 points. Recomputed with Bohyeon's `stats.py` and procedure, which reproduces her primary results exactly.
 
 **Dependencies:**
 - P2.5 depends on P2.1–P2.3.
@@ -279,6 +293,8 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | Nov 15 | Phase 2 revised after professor feedback (Nov 9): four validity checks plus interpretation and novelty questions; postponed items listed | Chuong |
 | Nov 15 | The deck's new Phase 2 analyses "B7" and "B8" are called P2-B7 (conflict state contrast) and P2-B8 (conflict group windows) in all docs, to avoid a clash with Bohyeon's Phase 1 task IDs B7 and B8; script names unchanged | Chuong |
 | Nov 15 | Main research question unchanged; Phase 2 scope narrowed to the C-down / E-up pattern. Final deck uses the original wording, including 'beyond resting EEG and behavioral tests' | Chuong |
+| Nov 15 | All Phase 2 group analyses (P2.4 onward) use the sex-complete sample (136 people for the Simon conflict features; sub-P069 excluded because its sex is recorded as "F\|M"); in config.yaml (`phase2.group_sample`) | Chuong |
+| Nov 15 | Phase 2 owners proposed, pending confirmation: P2.1 Minseo, P2.3 Seonwoo, P2.5 Minseo with Seonwoo, P2.6 Minseo, P2.8 Seonwoo | Chuong |
 
 ## Blockers
 
@@ -294,7 +310,7 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | Nov 2 | Bohyeon sent `src/stats.py` and the B2–B6 outputs but not the B2–B6 analysis code (handoff rules ask for code with outputs); key numbers were reproduced from repo files, the rest can't be audited. Open fixes: mixed models (B2), B5 with state E, one RQ3 FDR family, mean durations and Mann–Whitney check, sub-P001 in conflict analyses (B6) | Chuong (integration), team (RQ3 slides) | Bohyeon | Yes (Nov 7): code and all requested fixes delivered in `bohyeon_adjusted/`; small follow-ups listed in `docs/TEAM_TASKS.md` (Rest data in `rest_meandur_*` tests, unsent secondary outputs) |
 | Nov 2 | Conflict effect: the config's primary feature is one distance per window, but `conflict.csv` holds per-state differences; Bohyeon used the L2 norm of the window-averaged difference vector. Team to agree the definition and which file holds it (checked: not related to trial counts, ρ ≈ −0.02 to −0.05) | Seonwoo, Bohyeon | Team | Partly (Nov 15): P2-B7 / P2-B8 work with per-state differences (Δ(C), Δ(E), D = Δ(E) − Δ(C)); the scalar distance in RQ3 is still Bohyeon's L2 version and not formally agreed |
 | Nov 7 | The RQ1 mixed model's group term shows less state E at rest in PD (coverage −4.0 points, FDR p = 0.012; occurrence −0.34 per s, FDR p = 0.003; robust across optimizers, a Rest-only regression and Mann–Whitney). It is a group comparison on a feature outside the pre-specified RQ3 set, from a secondary model; decide how to present it (secondary or exploratory) | Bohyeon (RQ1/RQ3 slides), all | Team | Superseded (Nov 15): group results are now part of the Phase 2 plan (P2.4 permutation tests; presentation as secondary) |
-| Nov 15 | Normative-template comparison (Zanesco et al. 2020, 2021a) was reported in the Nov 9 deck, but its code is not in the repo and its owner is not recorded | P2.1 | TBD | No |
+| Nov 15 | Normative-template comparison (Zanesco et al. 2020, 2021a) was reported in the Nov 9 deck, but its code is not in the repo and its owner is not recorded | P2.1 | Minseo (pending confirmation) | No |
 
 ## Daily log
 
@@ -314,3 +330,4 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | Nov 2 | Chuong | Reviewed Seonwoo's S1–S6 (`seonwoo_S1-S6_review/`) and Bohyeon's B1–B6 (`bohyeon/`) deliverables. Seonwoo: all config rules followed; ERP matches the Guide; 2 significant clusters (E and C, ≈ 350–580 ms); `conflict.csv` reproduced. Bohyeon: RQ1, JSD, coverage changes and RQ3 numbers reproduced; code for B2–B6, mixed models and several RQ3/B5 fixes still needed. `docs/TEAM_TASKS.md` updated; nothing integrated yet | Integrate outputs; request fixes from Bohyeon; agree conflict-effect definition |
 | Nov 7 | Chuong | Reviewed Bohyeon's adjusted B1–B6 (`bohyeon_adjusted/`): code delivered; mixed models (all 60 reproduced with another optimizer), B5 with state E (k = 2, weak), B6 with one RQ3 family (108 tests, none FDR-significant), durations, Mann–Whitney, sub-P001 restored. Secondary finding: less E at rest in PD. B2, B5, B6 → done; small follow-ups listed in `docs/TEAM_TASKS.md` | Integrate teammates' outputs into the repo layout; agree conflict-effect definition and how to present the E finding |
 | Nov 15 | Chuong | Verified Bohyeon's Phase 2 folder (`bohyeon 261112/`, README added): every checked slide number found in the outputs; E-validation correlations recomputed from the templates; P2-B7 (137) vs P2-B8 (136) differ by sub-P069 (sex "F\|M"); P2-B7 group test is unadjusted; normative-template code not in repo. Phase 1 statuses reconciled; Phase 2 plan revised after the Nov 9 feedback (P2.1–P2.9); docs/TEAM_TASKS.md updated | Assign TBD owners; start P2.2 and P2.7 |
+| Nov 15 | Chuong | Follow-ups: no-blink coverage comparison (no-blink run = primary data on the same 106 subjects; C −3.00 → −2.41 points, FDR p 0.025 → 0.128); Bohyeon's inputs match the repo files by value (all five runs, `conflict.csv`); sex-complete sample rule for Phase 2 in config; limitations recorded; owners proposed (pending confirmation). Meeting PDF left untracked (author name in its metadata) | Confirm owners; continue P2.2 and P2.7 |

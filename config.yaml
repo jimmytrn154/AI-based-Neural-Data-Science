@@ -145,6 +145,13 @@ statistics:
   report_n_at_every_step: true
 
 # -------------------------------------------------------------
+# 6b. Phase 2 (added Nov 15)
+# -------------------------------------------------------------
+phase2:
+  group_sample: "sex-complete"           # all Phase 2 group analyses (P2.4 onward) use subjects with sex recorded as F or M
+  group_sample_note: "Simon conflict features: 136 subjects; sub-P069 excluded because its sex is recorded as 'F|M' (see subjects.clinical.conflicting_sex_values)"
+
+# -------------------------------------------------------------
 # 7. Outputs and naming
 # -------------------------------------------------------------
 outputs:

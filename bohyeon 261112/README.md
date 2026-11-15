@@ -47,6 +47,10 @@ All runs use the K = 5 templates (states A–E) except `K4`, and the Simon trial
 
 B6 runs only when a conflict file is given, so `all_steps_ok` is False for the four sensitivity runs; their logs show no errors.
 
+## Input provenance (checked Nov 15)
+
+The private `data/` folder was not delivered, so the inputs were checked by value instead of by checksum. For all five runs, the per-subject Simon − Rest changes (`rq1_individual_changes_<run>.csv`) equal those computed from the repo's `results/features/` files (largest difference 3e-14; 5e-9 for K4, CSV rounding), with the same subjects and the same missing values. The conflict values used by P2-B8 equal `conflict.csv` exactly, and B6's conflict features match it to 1e-16. `behavior.csv` and `subjects.csv` were not checked directly here; B6's error-rate results were reproduced from the repo files on Nov 7.
+
 ## Numbers checked against the Nov 9 deck
 
 All found in these outputs (or, for the template checks, recomputed from `results/templates/`):
@@ -61,6 +65,6 @@ All found in these outputs (or, for the template checks, recomputed from `result
 ## Caveats
 
 - **P2-B7 group test is unadjusted.** Rerun with `--clinical subjects.csv` for an age/sex-adjusted version comparable with P2-B8.
-- **Blink sensitivity:** in `rest_noblink` (N = 106), E (+1.58 points, FDR p = 0.019) and A (+2.12) hold, but C's decrease (−2.41 points) is no longer FDR-significant (p = 0.13). B6, P2-B7 and P2-B8 were not rerun on the sensitivity files.
+- **Blink sensitivity:** in `rest_noblink` (N = 106), E (+1.58 points, FDR p = 0.019) and A (+2.12) hold, but C's decrease (−2.41 points) is no longer FDR-significant (p = 0.13). The `rest_noblink` run is the primary data restricted to those 106 subjects (identical values); see `PROGRESS.md`, P2.7 note. B6, P2-B7 and P2-B8 were not rerun on the sensitivity files.
 - **Not committed:** `results/task/b8_subject_window_features_task.csv` stays local (untracked) because it holds per-subject group, age and sex copied from `subjects.csv` (dataset content; see the data rules in `README.md`). P2-B8 rebuilds it from `conflict.csv` and `subjects.csv`.
 - **Normative-template comparison** (Zanesco et al. 2020, \|r\| = 0.868; Zanesco et al. 2021a, \|r\| = 0.843): not in this folder or anywhere in the repo. Results reported by a teammate; code not yet in the repo.
