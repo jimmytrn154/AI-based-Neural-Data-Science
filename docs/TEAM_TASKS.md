@@ -24,7 +24,13 @@ After the Phase 2 presentation (Nov 9) the professor asked for four validity che
 
 **Naming.** The Nov 9 deck's new analyses "B7" and "B8" are called **P2-B7** (conflict state contrast) and **P2-B8** (conflict group windows) here, to keep them apart from the Phase 1 tasks B7 (robustness) and B8 (slides) below. Their scripts keep their names: `bohyeon 261112/src/B7_conflict_state_contrast.py`, `B8_conflict_group_windows.py` (see `bohyeon 261112/README.md`).
 
-**Already done (Nov 9 deck, verified Nov 15):** refined research question (C down / E up); E internal validation (spatial distinctness, recurrence across K and across tasks); coverage sensitivity (smoothing, QC, K = 4, no-blink for RQ1); P2-B7 and P2-B8.
+**Research question:** Phase 2 scope narrowed to validating and explaining the C-down / E-up pattern (rest -> Simon and congruent -> incongruent); the main research question is unchanged.
+
+- **Main question** (answered in Phase 3): Do changes in brain-state dynamics from rest to task carry information about cognitive function in PD, beyond resting EEG and behavioral tests?
+- **Sub-questions RQ1–RQ3** (done in Phase 1): rest vs. Simon dynamics; congruent vs. incongruent; groups and cognition.
+- **Current focus** (Phase 2): is the C-down / E-up pattern real and robust, what is E, what does it mean, and is it new?
+
+**Already done (Nov 9 deck, verified Nov 15):** E internal validation (spatial distinctness, recurrence across K and across tasks); coverage sensitivity (smoothing, QC, K = 4, no-blink for RQ1); P2-B7 and P2-B8.
 
 | ID | Task | Owner | Status | Inputs | Outputs |
 |---|---|---|---|---|---|

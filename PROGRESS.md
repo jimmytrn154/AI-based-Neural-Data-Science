@@ -162,7 +162,13 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 ## Phase 2: consolidation
 
-**Goal:** test whether the Phase 1 picture (Simon shifts the brain-state balance from C towards E, and conflict trials do so more) is real, specific to E, and robust, then interpret it.
+**Goal:** test whether the Phase 1 picture (Simon shifts the brain-state balance from C towards E, and conflict trials do so more) is real, specific to E, and robust, then interpret it. Phase 2 scope narrowed to validating and explaining the C-down / E-up pattern (rest -> Simon and congruent -> incongruent); the main research question is unchanged.
+
+**Research question structure:**
+
+- **Main question** (answered in Phase 3): Do changes in brain-state dynamics from rest to task carry information about cognitive function in PD, beyond resting EEG and behavioral tests?
+- **Sub-questions RQ1–RQ3** (done in Phase 1): rest vs. Simon dynamics; congruent vs. incongruent; groups and cognition.
+- **Current focus** (Phase 2): is the C-down / E-up pattern real and robust, what is E, what does it mean, and is it new?
 
 ### Professor's feedback on the Phase 2 presentation (Nov 9)
 
@@ -177,7 +183,7 @@ See `README.md` for the plan and `docs/proposal.tex` for the full proposal.
 
 | Item | Owner | Status | Evidence |
 |---|---|---|---|
-| Refined research question: focus on C down / E up from Rest to Simon and from congruent to incongruent | All | ✅ | Nov 9 deck (not in repo) |
+| Phase 2 scope narrowed to validating and explaining the C-down / E-up pattern (rest -> Simon and congruent -> incongruent); the main research question is unchanged. | All | ✅ | Nov 9 deck (not in repo) |
 | E internal validation: spatial distinctness (K5 E–C \|r\| = 0.337; C–D 0.796 for comparison), recurrence across K (K4 Central–K5 E 0.986, K5 E–K6 F 0.960, K6 F–K7 G 0.948) and across tasks (Rest-only E vs. Simon-only E 0.948; vs. shared E 0.984 / 0.983) | Chuong (templates) | ✅ | Recomputed Nov 15 from `results/templates/` |
 | Coverage sensitivity: Simon − Rest coverage A +2.20, C −3.00, E +1.80 points (N = 139); E +1.45 without smoothing, +1.76 with QC-excluded recordings (N = 141); K = 4 and no-blink runs also done | Bohyeon | ✅ | `bohyeon 261112/results/{task,nosmooth,task_qcincluded,K4,rest_noblink}/rq1_stats_*.csv` |
 | **P2-B7** conflict state contrast (N = 137): D = Δ(E) − Δ(C) is +1.23 points in theta (FDR p = 0.00724), +0.67 in N2 (0.214); PD − control in D: N2 −2.80 points (FDR p = 0.0291, **not age/sex adjusted**), theta −0.86 (0.349) | Bohyeon | ✅ | `bohyeon 261112/results/task/B7_conflict_state_contrast.csv` |
@@ -211,7 +217,7 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 
 ### Earlier Phase 2 placeholder items (Oct 26), for the record
 
-- [x] Refine research questions from the feedback (C down / E up focus, Nov 9)
+- [x] Research questions after the feedback: Phase 2 scope narrowed to validating and explaining the C-down / E-up pattern (rest -> Simon and congruent -> incongruent); the main research question is unchanged.
 - [ ] Robustness: K, blinks, filter choices (partly done: RQ1 at K = 4, no smoothing, QC included, no-blink; rest is P2.7)
 - [ ] Alpha control with spectral parameterization (Rest) → P2.8
 - [ ] Fix the final feature set
@@ -272,6 +278,7 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | Oct 24 | C5 (PCA trajectories of the recovery pilot) postponed to Phase 2 | Chuong |
 | Nov 15 | Phase 2 revised after professor feedback (Nov 9): four validity checks plus interpretation and novelty questions; postponed items listed | Chuong |
 | Nov 15 | The deck's new Phase 2 analyses "B7" and "B8" are called P2-B7 (conflict state contrast) and P2-B8 (conflict group windows) in all docs, to avoid a clash with Bohyeon's Phase 1 task IDs B7 and B8; script names unchanged | Chuong |
+| Nov 15 | Main research question unchanged; Phase 2 scope narrowed to the C-down / E-up pattern. Final deck uses the original wording, including 'beyond resting EEG and behavioral tests' | Chuong |
 
 ## Blockers
 

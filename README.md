@@ -20,7 +20,15 @@ We analyze the **Iowa Parkinson's Disease (PD) EEG dataset**: 64-channel EEG fro
 
 ### Overall question
 
-Do changes in brain-state dynamics from **rest to task** carry information about cognitive function in PD, beyond what resting EEG and cheap behavioral tests already provide?
+Do changes in brain-state dynamics from rest to task carry information about cognitive function in PD, beyond resting EEG and behavioral tests?
+
+The clause "beyond resting EEG and behavioral tests" defines Phase 3 as a test of added value. How the questions fit together:
+
+- **Main question** (answered in Phase 3): Do changes in brain-state dynamics from rest to task carry information about cognitive function in PD, beyond resting EEG and behavioral tests?
+- **Sub-questions RQ1–RQ3** (done in Phase 1): rest vs. Simon dynamics; congruent vs. incongruent; groups and cognition.
+- **Current focus** (Phase 2): is the C-down / E-up pattern real and robust, what is E, what does it mean, and is it new?
+
+Phase 2 scope narrowed to validating and explaining the C-down / E-up pattern (rest -> Simon and congruent -> incongruent); the main research question is unchanged.
 
 We study brain states with **EEG microstates**: the 4–5 recurring scalp patterns that the brain switches between every 60–120 ms. They are found by polarity-invariant modified k-means clustering of the maps at peaks of global field power (GFP), an unsupervised method from Lecture 5.
 
