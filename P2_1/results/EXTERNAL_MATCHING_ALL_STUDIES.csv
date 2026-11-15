@@ -1,0 +1,13 @@
+file,reference_k,common_channels,best_reference_label,best_reference_letter,best_abs_r,runner_up_reference_label,runner_up_abs_r,published_E_exists,published_E_abs_r,published_E_shared_variance_pct,E_margin_vs_best_competitor_sv_pct,interpolation_method,native_coordinate_matching_completed,approx_interp_best_letter,approx_interp_best_abs_r,approx_interp_E_abs_r,interp_ref_channel_count,hungarian_E_match,interp_error
+Custo 2017.set,7,59,Custo 2017_D,D,0.7197695,Custo 2017_G,0.6701936,True,0.0798405,0.6374505,-51.1693627,standard_1005_approx_diagnostic,False,D,0.7203942,0.1156754,66.0000000,Custo 2017_D,
+Zanesco 2020.set,5,59,Zanesco 2020_E,E,0.8683075,Zanesco 2020_D,0.4310257,True,0.8683075,75.3957915,56.8174747,standard_1005_approx_diagnostic,False,E,0.8672887,0.8672887,64.0000000,Zanesco 2020_E,
+Zanesco 2021a.set,6,62,Zanesco 2021 Meditation_E,E,0.8432092,Zanesco 2021 Meditation_F,0.7747844,True,0.8432092,71.1001836,11.0711035,standard_1005_approx_diagnostic,False,E,0.8445212,0.8445212,76.0000000,Zanesco 2021 Meditation_E,
+Hwang 2025.set,4,55,E,E,0.5129551,B,0.2746542,True,0.5129551,26.3122948,18.7687992,standard_1005_approx_diagnostic,False,E,0.4693971,0.4693971,60.0000000,,
+Qin2022 Depression_Controls.set,5,57,Qin2022_Depression_HC_ClassC,C,0.6422005,Qin2022_Depression_HC_ClassE,0.3403214,True,0.3403214,11.5818624,-29.6602819,standard_1005_approx_diagnostic,False,C,0.6266186,0.4219796,60.0000000,Qin2022_Depression_HC_ClassC,
+Qin2022 Depression_Patients.set,5,57,Qin2022_Depression_Patients_ClassC,C,0.4955447,Qin2022_Depression_Patients_ClassA,0.2210190,True,0.0988297,0.9767300,-23.5797254,standard_1005_approx_diagnostic,False,C,0.4542956,0.1527708,60.0000000,Qin2022_Depression_Patients_ClassE,
+Zelenina_2022 Oxytocin.set,4,60,Zelenina_C,C,0.6813917,Zelenina_A,0.2927479,False,,,,standard_1005_approx_diagnostic,False,C,0.6487536,,63.0000000,,
+Giordano 2018.set,4,24,Giordano_2018_C,C,0.6014686,Giordano_2018_B,0.2314487,False,,,,standard_1005_approx_diagnostic,False,C,0.5757556,,29.0000000,,
+Lassi2023.set,4,54,Lassi_SubjectiveCognitiveDecline_2023_C,C,0.4508060,Lassi_SubjectiveCognitiveDecline_2023_B,0.2284464,False,,,,standard_1005_approx_diagnostic,False,C,0.3039701,,61.0000000,,
+Milz_2016_Cognitive Style.set,4,58,Milz_2016_C,C,0.4988128,Milz_2016_A,0.1907332,False,,,,standard_1005_approx_diagnostic,False,C,0.4445283,,61.0000000,,
+Schiller2021 Alcohol Intoxication.set,4,51,Schiller2021_Alc_ClassC,C,0.5373234,Schiller2021_Alc_ClassD,0.3635782,False,,,,standard_1005_approx_diagnostic,False,C,0.4773072,,56.0000000,,
+Toplutas 2023 DOC_HC.set,4,19,Toplutas2023DOC_MC_ClassC,C,0.5221249,Toplutas2023DOC_MC_ClassB,0.1481093,False,,,,standard_1005_approx_diagnostic,False,,,,,,Insufficient standard_1005-identifiable coordinates

@@ -29,6 +29,7 @@ kiwisolver==1.5.1
 lazy-loader==0.6
 llvmlite==0.50.0
 MarkupSafe==3.0.4
+mat73==0.65
 matplotlib==3.10.9
 matplotlib-inline==0.2.2
 mne==1.12.1
@@ -54,6 +55,7 @@ Pygments==2.21.0
 pymatreader==1.3.2
 pynndescent==0.6.0
 pyparsing==3.3.3
+pypdf==6.21.2
 pytest==9.1.1
 pytest-xdist==3.8.0
 python-dateutil==2.9.0.post0

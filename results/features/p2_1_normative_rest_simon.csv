@@ -1,0 +1,37 @@
+dataset,our_map_set,E_best,E_best_abs_r,their_E_abs_r
+Custo 2017 K7,shared,Custo 2017_D,0.719769,0.079840
+Custo 2017 K7,rest_only,Custo 2017_D,0.806304,0.090939
+Custo 2017 K7,simon_only,Custo 2017_F,0.732907,0.206800
+Zanesco 2020 K5,shared,Zanesco 2020_E,0.868308,0.868308
+Zanesco 2020 K5,rest_only,Zanesco 2020_E,0.814549,0.814549
+Zanesco 2020 K5,simon_only,Zanesco 2020_E,0.905421,0.905421
+Zanesco 2021a K6,shared,Zanesco 2021 Meditation_E,0.843209,0.843209
+Zanesco 2021a K6,rest_only,Zanesco 2021 Meditation_E,0.834233,0.834233
+Zanesco 2021a K6,simon_only,Zanesco 2021 Meditation_E,0.891631,0.891631
+Hwang 2025 K4,shared,E,0.512955,0.512955
+Hwang 2025 K4,rest_only,E,0.394167,0.394167
+Hwang 2025 K4,simon_only,E,0.614489,0.614489
+Qin2022 Depression_Controls K5,shared,Qin2022_Depression_HC_ClassC,0.642200,0.340321
+Qin2022 Depression_Controls K5,rest_only,Qin2022_Depression_HC_ClassC,0.539172,0.446459
+Qin2022 Depression_Controls K5,simon_only,Qin2022_Depression_HC_ClassC,0.720979,0.330369
+Qin2022 Depression_Patients K5,shared,Qin2022_Depression_Patients_ClassC,0.495545,0.098830
+Qin2022 Depression_Patients K5,rest_only,Qin2022_Depression_Patients_ClassC,0.379182,0.131557
+Qin2022 Depression_Patients K5,simon_only,Qin2022_Depression_Patients_ClassC,0.558510,0.202286
+Zelenina_2022 Oxytocin K4,shared,Zelenina_C,0.681392,
+Zelenina_2022 Oxytocin K4,rest_only,Zelenina_C,0.585568,
+Zelenina_2022 Oxytocin K4,simon_only,Zelenina_C,0.734495,
+Giordano 2018 K4,shared,Giordano_2018_C,0.601469,
+Giordano 2018 K4,rest_only,Giordano_2018_C,0.454465,
+Giordano 2018 K4,simon_only,Giordano_2018_C,0.684840,
+Lassi2023 K4,shared,Lassi_SubjectiveCognitiveDecline_2023_C,0.450806,
+Lassi2023 K4,rest_only,Lassi_SubjectiveCognitiveDecline_2023_C,0.327219,
+Lassi2023 K4,simon_only,Lassi_SubjectiveCognitiveDecline_2023_C,0.548664,
+Milz_2016_Cognitive Style K4,shared,Milz_2016_C,0.498813,
+Milz_2016_Cognitive Style K4,rest_only,Milz_2016_C,0.382971,
+Milz_2016_Cognitive Style K4,simon_only,Milz_2016_C,0.567801,
+Schiller2021 Alcohol Intoxication K4,shared,Schiller2021_Alc_ClassC,0.537323,
+Schiller2021 Alcohol Intoxication K4,rest_only,Schiller2021_Alc_ClassD,0.482202,
+Schiller2021 Alcohol Intoxication K4,simon_only,Schiller2021_Alc_ClassC,0.616760,
+Toplutas 2023 DOC_HC K4,shared,Toplutas2023DOC_MC_ClassC,0.522125,
+Toplutas 2023 DOC_HC K4,rest_only,Toplutas2023DOC_MC_ClassC,0.396775,
+Toplutas 2023 DOC_HC K4,simon_only,Toplutas2023DOC_MC_ClassC,0.581732,

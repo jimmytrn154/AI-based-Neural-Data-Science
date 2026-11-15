@@ -1,0 +1,37 @@
+reference_file,reference_k,our_map_set,n_common_channels,best_reference_label,best_abs_r,published_E_abs_r
+Custo 2017.set,7,shared,59,Custo 2017_D,0.7197694992743644,0.07984049812521722
+Custo 2017.set,7,rest_only,59,Custo 2017_D,0.8063035954820109,0.09093888851643028
+Custo 2017.set,7,simon_only,59,Custo 2017_F,0.7329067145371272,0.2068001973100896
+Zanesco 2020.set,5,shared,59,Zanesco 2020_E,0.8683075001955222,0.8683075001955222
+Zanesco 2020.set,5,rest_only,59,Zanesco 2020_E,0.814548879346903,0.814548879346903
+Zanesco 2020.set,5,simon_only,59,Zanesco 2020_E,0.9054211189689612,0.9054211189689612
+Zanesco 2021a.set,6,shared,62,Zanesco 2021 Meditation_E,0.8432092481692053,0.8432092481692053
+Zanesco 2021a.set,6,rest_only,62,Zanesco 2021 Meditation_E,0.8342328133320097,0.8342328133320097
+Zanesco 2021a.set,6,simon_only,62,Zanesco 2021 Meditation_E,0.8916307112232342,0.8916307112232342
+Hwang 2025.set,4,shared,55,E,0.5129551130999563,0.5129551130999563
+Hwang 2025.set,4,rest_only,55,E,0.3941670016411141,0.3941670016411141
+Hwang 2025.set,4,simon_only,55,E,0.614489334097052,0.614489334097052
+Qin2022 Depression_Controls.set,5,shared,57,Qin2022_Depression_HC_ClassC,0.6422004700386776,0.3403213545943849
+Qin2022 Depression_Controls.set,5,rest_only,57,Qin2022_Depression_HC_ClassC,0.5391720277187654,0.4464585090718628
+Qin2022 Depression_Controls.set,5,simon_only,57,Qin2022_Depression_HC_ClassC,0.7209786359597671,0.3303688604887286
+Qin2022 Depression_Patients.set,5,shared,57,Qin2022_Depression_Patients_ClassC,0.4955447049521873,0.09882965341513641
+Qin2022 Depression_Patients.set,5,rest_only,57,Qin2022_Depression_Patients_ClassC,0.3791822879511986,0.13155654123106544
+Qin2022 Depression_Patients.set,5,simon_only,57,Qin2022_Depression_Patients_ClassC,0.5585102876828033,0.20228645960783231
+Zelenina_2022 Oxytocin.set,4,shared,60,Zelenina_C,0.6813917475298507,
+Zelenina_2022 Oxytocin.set,4,rest_only,60,Zelenina_C,0.5855677706674737,
+Zelenina_2022 Oxytocin.set,4,simon_only,60,Zelenina_C,0.7344953605581874,
+Giordano 2018.set,4,shared,24,Giordano_2018_C,0.6014685710496828,
+Giordano 2018.set,4,rest_only,24,Giordano_2018_C,0.45446548077736076,
+Giordano 2018.set,4,simon_only,24,Giordano_2018_C,0.684840265954976,
+Lassi2023.set,4,shared,54,Lassi_SubjectiveCognitiveDecline_2023_C,0.4508060371158058,
+Lassi2023.set,4,rest_only,54,Lassi_SubjectiveCognitiveDecline_2023_C,0.3272194167776497,
+Lassi2023.set,4,simon_only,54,Lassi_SubjectiveCognitiveDecline_2023_C,0.5486639385515478,
+Milz_2016_Cognitive Style.set,4,shared,58,Milz_2016_C,0.4988128352456821,
+Milz_2016_Cognitive Style.set,4,rest_only,58,Milz_2016_C,0.38297064813266457,
+Milz_2016_Cognitive Style.set,4,simon_only,58,Milz_2016_C,0.5678010568364183,
+Schiller2021 Alcohol Intoxication.set,4,shared,51,Schiller2021_Alc_ClassC,0.537323408374083,
+Schiller2021 Alcohol Intoxication.set,4,rest_only,51,Schiller2021_Alc_ClassD,0.48220187547920157,
+Schiller2021 Alcohol Intoxication.set,4,simon_only,51,Schiller2021_Alc_ClassC,0.616760289538457,
+Toplutas 2023 DOC_HC.set,4,shared,19,Toplutas2023DOC_MC_ClassC,0.5221249095736888,
+Toplutas 2023 DOC_HC.set,4,rest_only,19,Toplutas2023DOC_MC_ClassC,0.3967747886506415,
+Toplutas 2023 DOC_HC.set,4,simon_only,19,Toplutas2023DOC_MC_ClassC,0.5817323814877763,

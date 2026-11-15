@@ -1,0 +1,281 @@
+dataset,our_map,reference_label,reference_letter,abs_r,abs_r_interp_DIAGNOSTIC,n_common_channels
+Custo 2017 K7,A,Custo 2017_A,A,0.949187,0.953348,59
+Custo 2017 K7,A,Custo 2017_B,B,0.173447,0.089363,59
+Custo 2017 K7,A,Custo 2017_C,C,0.523018,0.560029,59
+Custo 2017 K7,A,Custo 2017_D,D,0.079570,0.127929,59
+Custo 2017 K7,A,Custo 2017_E,E,0.815075,0.792065,59
+Custo 2017 K7,A,Custo 2017_F,F,0.524239,0.562215,59
+Custo 2017 K7,A,Custo 2017_G,G,0.515957,0.504216,59
+Custo 2017 K7,B,Custo 2017_A,A,0.206192,0.150083,59
+Custo 2017 K7,B,Custo 2017_B,B,0.943753,0.935966,59
+Custo 2017 K7,B,Custo 2017_C,C,0.516900,0.531192,59
+Custo 2017 K7,B,Custo 2017_D,D,0.322114,0.379248,59
+Custo 2017 K7,B,Custo 2017_E,E,0.791879,0.788242,59
+Custo 2017 K7,B,Custo 2017_F,F,0.413988,0.412898,59
+Custo 2017 K7,B,Custo 2017_G,G,0.747974,0.716663,59
+Custo 2017 K7,C,Custo 2017_A,A,0.703264,0.733132,59
+Custo 2017 K7,C,Custo 2017_B,B,0.689837,0.721607,59
+Custo 2017 K7,C,Custo 2017_C,C,0.942552,0.947485,59
+Custo 2017 K7,C,Custo 2017_D,D,0.262204,0.336762,59
+Custo 2017 K7,C,Custo 2017_E,E,0.066768,0.059708,59
+Custo 2017 K7,C,Custo 2017_F,F,0.926254,0.926551,59
+Custo 2017 K7,C,Custo 2017_G,G,0.265543,0.238820,59
+Custo 2017 K7,D,Custo 2017_A,A,0.523206,0.553842,59
+Custo 2017 K7,D,Custo 2017_B,B,0.733488,0.761097,59
+Custo 2017 K7,D,Custo 2017_C,C,0.924453,0.925587,59
+Custo 2017 K7,D,Custo 2017_D,D,0.784930,0.828344,59
+Custo 2017 K7,D,Custo 2017_E,E,0.189560,0.200465,59
+Custo 2017 K7,D,Custo 2017_F,F,0.526989,0.534578,59
+Custo 2017 K7,D,Custo 2017_G,G,0.003771,0.032710,59
+Custo 2017 K7,E,Custo 2017_A,A,0.104031,0.101365,59
+Custo 2017 K7,E,Custo 2017_B,B,0.206818,0.156746,59
+Custo 2017 K7,E,Custo 2017_C,C,0.103082,0.063204,59
+Custo 2017 K7,E,Custo 2017_D,D,0.719769,0.720394,59
+Custo 2017 K7,E,Custo 2017_E,E,0.079840,0.115675,59
+Custo 2017 K7,E,Custo 2017_F,F,0.650180,0.619316,59
+Custo 2017 K7,E,Custo 2017_G,G,0.670194,0.666386,59
+Zanesco 2020 K5,A,Zanesco 2020_A,A,0.968743,0.967461,59
+Zanesco 2020 K5,A,Zanesco 2020_B,B,0.523418,0.533253,59
+Zanesco 2020 K5,A,Zanesco 2020_C,C,0.412588,0.414015,59
+Zanesco 2020 K5,A,Zanesco 2020_D,D,0.234637,0.236564,59
+Zanesco 2020 K5,A,Zanesco 2020_E,E,0.351717,0.347129,59
+Zanesco 2020 K5,B,Zanesco 2020_A,A,0.168642,0.177107,59
+Zanesco 2020 K5,B,Zanesco 2020_B,B,0.971520,0.970429,59
+Zanesco 2020 K5,B,Zanesco 2020_C,C,0.683729,0.674742,59
+Zanesco 2020 K5,B,Zanesco 2020_D,D,0.521221,0.537005,59
+Zanesco 2020 K5,B,Zanesco 2020_E,E,0.377613,0.325969,59
+Zanesco 2020 K5,C,Zanesco 2020_A,A,0.717056,0.722936,59
+Zanesco 2020 K5,C,Zanesco 2020_B,B,0.386654,0.368181,59
+Zanesco 2020 K5,C,Zanesco 2020_C,C,0.974069,0.973442,59
+Zanesco 2020 K5,C,Zanesco 2020_D,D,0.579115,0.595966,59
+Zanesco 2020 K5,C,Zanesco 2020_E,E,0.732957,0.698035,59
+Zanesco 2020 K5,D,Zanesco 2020_A,A,0.543560,0.538162,59
+Zanesco 2020 K5,D,Zanesco 2020_B,B,0.436405,0.432159,59
+Zanesco 2020 K5,D,Zanesco 2020_C,C,0.848992,0.848394,59
+Zanesco 2020 K5,D,Zanesco 2020_D,D,0.936699,0.949419,59
+Zanesco 2020 K5,D,Zanesco 2020_E,E,0.223725,0.156698,59
+Zanesco 2020 K5,E,Zanesco 2020_A,A,0.128599,0.100168,59
+Zanesco 2020 K5,E,Zanesco 2020_B,B,0.248868,0.184101,59
+Zanesco 2020 K5,E,Zanesco 2020_C,C,0.344884,0.265442,59
+Zanesco 2020 K5,E,Zanesco 2020_D,D,0.431026,0.483825,59
+Zanesco 2020 K5,E,Zanesco 2020_E,E,0.868308,0.867289,59
+Zanesco 2021a K6,A,Zanesco 2021a_A,A,0.974276,0.973361,62
+Zanesco 2021a K6,A,Zanesco 2021a_B,B,0.317051,0.288169,62
+Zanesco 2021a K6,A,Zanesco 2021a_C,C,0.489667,0.500691,62
+Zanesco 2021a K6,A,Zanesco 2021a_D,D,0.420546,0.444679,62
+Zanesco 2021a K6,A,Zanesco 2021 Meditation_E,E,0.491244,0.424278,62
+Zanesco 2021a K6,A,Zanesco 2021 Meditation_F,F,0.435252,0.462162,62
+Zanesco 2021a K6,B,Zanesco 2021a_A,A,0.370987,0.342948,62
+Zanesco 2021a K6,B,Zanesco 2021a_B,B,0.971042,0.970869,62
+Zanesco 2021a K6,B,Zanesco 2021a_C,C,0.558004,0.568017,62
+Zanesco 2021a K6,B,Zanesco 2021a_D,D,0.485361,0.498159,62
+Zanesco 2021a K6,B,Zanesco 2021 Meditation_E,E,0.151235,0.185280,62
+Zanesco 2021a K6,B,Zanesco 2021 Meditation_F,F,0.513380,0.438408,62
+Zanesco 2021a K6,C,Zanesco 2021a_A,A,0.573847,0.584201,62
+Zanesco 2021a K6,C,Zanesco 2021a_B,B,0.559660,0.569696,62
+Zanesco 2021a K6,C,Zanesco 2021a_C,C,0.973939,0.973963,62
+Zanesco 2021a K6,C,Zanesco 2021a_D,D,0.759931,0.768497,62
+Zanesco 2021a K6,C,Zanesco 2021 Meditation_E,E,0.420065,0.334624,62
+Zanesco 2021a K6,C,Zanesco 2021 Meditation_F,F,0.142551,0.060671,62
+Zanesco 2021a K6,D,Zanesco 2021a_A,A,0.381007,0.402275,62
+Zanesco 2021a K6,D,Zanesco 2021a_B,B,0.659787,0.664027,62
+Zanesco 2021a K6,D,Zanesco 2021a_C,C,0.740477,0.737782,62
+Zanesco 2021a K6,D,Zanesco 2021a_D,D,0.982867,0.982677,62
+Zanesco 2021a K6,D,Zanesco 2021 Meditation_E,E,0.192585,0.266405,62
+Zanesco 2021a K6,D,Zanesco 2021 Meditation_F,F,0.242817,0.321679,62
+Zanesco 2021a K6,E,Zanesco 2021a_A,A,0.082672,0.063429,62
+Zanesco 2021a K6,E,Zanesco 2021a_B,B,0.127991,0.105860,62
+Zanesco 2021a K6,E,Zanesco 2021a_C,C,0.438532,0.420243,62
+Zanesco 2021a K6,E,Zanesco 2021a_D,D,0.271871,0.296639,62
+Zanesco 2021a K6,E,Zanesco 2021 Meditation_E,E,0.843209,0.844521,62
+Zanesco 2021a K6,E,Zanesco 2021 Meditation_F,F,0.774784,0.770352,62
+Hwang 2025 K4,A,A,A,0.926030,0.916818,55
+Hwang 2025 K4,A,B,B,0.089816,0.037806,55
+Hwang 2025 K4,A,C,C,0.433506,0.434317,55
+Hwang 2025 K4,A,E,E,0.556381,0.573080,55
+Hwang 2025 K4,B,A,A,0.067723,0.019426,55
+Hwang 2025 K4,B,B,B,0.937974,0.930623,55
+Hwang 2025 K4,B,C,C,0.502748,0.518247,55
+Hwang 2025 K4,B,E,E,0.455331,0.461808,55
+Hwang 2025 K4,C,A,A,0.784274,0.805244,55
+Hwang 2025 K4,C,B,B,0.765234,0.782126,55
+Hwang 2025 K4,C,C,C,0.791491,0.780963,55
+Hwang 2025 K4,C,E,E,0.964766,0.968758,55
+Hwang 2025 K4,D,A,A,0.653087,0.679237,55
+Hwang 2025 K4,D,B,B,0.756536,0.771576,55
+Hwang 2025 K4,D,C,C,0.987035,0.989607,55
+Hwang 2025 K4,D,E,E,0.665676,0.665235,55
+Hwang 2025 K4,E,A,A,0.070485,0.046278,55
+Hwang 2025 K4,E,B,B,0.274654,0.206306,55
+Hwang 2025 K4,E,C,C,0.221129,0.289781,55
+Hwang 2025 K4,E,E,E,0.512955,0.469397,55
+Qin2022 Depression_Controls K5,A,Qin2022_Depression_HC_ClassA,A,0.920763,0.919253,57
+Qin2022 Depression_Controls K5,A,Qin2022_Depression_HC_ClassB,B,0.456091,0.436665,57
+Qin2022 Depression_Controls K5,A,Qin2022_Depression_HC_ClassC,C,0.503957,0.502617,57
+Qin2022 Depression_Controls K5,A,Qin2022_Depression_HC_ClassD,D,0.340665,0.370753,57
+Qin2022 Depression_Controls K5,A,Qin2022_Depression_HC_ClassE,E,0.128616,0.054011,57
+Qin2022 Depression_Controls K5,B,Qin2022_Depression_HC_ClassA,A,0.082617,0.055817,57
+Qin2022 Depression_Controls K5,B,Qin2022_Depression_HC_ClassB,B,0.965415,0.962915,57
+Qin2022 Depression_Controls K5,B,Qin2022_Depression_HC_ClassC,C,0.501314,0.466096,57
+Qin2022 Depression_Controls K5,B,Qin2022_Depression_HC_ClassD,D,0.695460,0.692664,57
+Qin2022 Depression_Controls K5,B,Qin2022_Depression_HC_ClassE,E,0.732958,0.729220,57
+Qin2022 Depression_Controls K5,C,Qin2022_Depression_HC_ClassA,A,0.761395,0.780396,57
+Qin2022 Depression_Controls K5,C,Qin2022_Depression_HC_ClassB,B,0.433407,0.433762,57
+Qin2022 Depression_Controls K5,C,Qin2022_Depression_HC_ClassC,C,0.953039,0.921425,57
+Qin2022 Depression_Controls K5,C,Qin2022_Depression_HC_ClassD,D,0.906260,0.914806,57
+Qin2022 Depression_Controls K5,C,Qin2022_Depression_HC_ClassE,E,0.460306,0.505479,57
+Qin2022 Depression_Controls K5,D,Qin2022_Depression_HC_ClassA,A,0.616122,0.632735,57
+Qin2022 Depression_Controls K5,D,Qin2022_Depression_HC_ClassB,B,0.534775,0.527382,57
+Qin2022 Depression_Controls K5,D,Qin2022_Depression_HC_ClassC,C,0.607455,0.536791,57
+Qin2022 Depression_Controls K5,D,Qin2022_Depression_HC_ClassD,D,0.940952,0.945070,57
+Qin2022 Depression_Controls K5,D,Qin2022_Depression_HC_ClassE,E,0.839418,0.876193,57
+Qin2022 Depression_Controls K5,E,Qin2022_Depression_HC_ClassA,A,0.124025,0.075416,57
+Qin2022 Depression_Controls K5,E,Qin2022_Depression_HC_ClassB,B,0.182362,0.128516,57
+Qin2022 Depression_Controls K5,E,Qin2022_Depression_HC_ClassC,C,0.642200,0.626619,57
+Qin2022 Depression_Controls K5,E,Qin2022_Depression_HC_ClassD,D,0.136183,0.040657,57
+Qin2022 Depression_Controls K5,E,Qin2022_Depression_HC_ClassE,E,0.340321,0.421980,57
+Qin2022 Depression_Patients K5,A,Qin2022_Depression_Patients_ClassA,A,0.918261,0.918108,57
+Qin2022 Depression_Patients K5,A,Qin2022_Depression_Patients_ClassB,B,0.197067,0.158998,57
+Qin2022 Depression_Patients K5,A,Qin2022_Depression_Patients_ClassC,C,0.364933,0.379503,57
+Qin2022 Depression_Patients K5,A,Qin2022_Depression_Patients_ClassD,D,0.404279,0.430599,57
+Qin2022 Depression_Patients K5,A,Qin2022_Depression_Patients_ClassE,E,0.702304,0.672130,57
+Qin2022 Depression_Patients K5,B,Qin2022_Depression_Patients_ClassA,A,0.077783,0.059599,57
+Qin2022 Depression_Patients K5,B,Qin2022_Depression_Patients_ClassB,B,0.945244,0.944528,57
+Qin2022 Depression_Patients K5,B,Qin2022_Depression_Patients_ClassC,C,0.683475,0.665429,57
+Qin2022 Depression_Patients K5,B,Qin2022_Depression_Patients_ClassD,D,0.543832,0.548341,57
+Qin2022 Depression_Patients K5,B,Qin2022_Depression_Patients_ClassE,E,0.835692,0.843512,57
+Qin2022 Depression_Patients K5,C,Qin2022_Depression_Patients_ClassA,A,0.772621,0.785797,57
+Qin2022 Depression_Patients K5,C,Qin2022_Depression_Patients_ClassB,B,0.638228,0.654296,57
+Qin2022 Depression_Patients K5,C,Qin2022_Depression_Patients_ClassC,C,0.963116,0.954129,57
+Qin2022 Depression_Patients K5,C,Qin2022_Depression_Patients_ClassD,D,0.798339,0.809246,57
+Qin2022 Depression_Patients K5,C,Qin2022_Depression_Patients_ClassE,E,0.069562,0.087338,57
+Qin2022 Depression_Patients K5,D,Qin2022_Depression_Patients_ClassA,A,0.568978,0.576730,57
+Qin2022 Depression_Patients K5,D,Qin2022_Depression_Patients_ClassB,B,0.766767,0.777241,57
+Qin2022 Depression_Patients K5,D,Qin2022_Depression_Patients_ClassC,C,0.759713,0.719435,57
+Qin2022 Depression_Patients K5,D,Qin2022_Depression_Patients_ClassD,D,0.971571,0.980962,57
+Qin2022 Depression_Patients K5,D,Qin2022_Depression_Patients_ClassE,E,0.340664,0.365460,57
+Qin2022 Depression_Patients K5,E,Qin2022_Depression_Patients_ClassA,A,0.221019,0.179740,57
+Qin2022 Depression_Patients K5,E,Qin2022_Depression_Patients_ClassB,B,0.110976,0.029811,57
+Qin2022 Depression_Patients K5,E,Qin2022_Depression_Patients_ClassC,C,0.495545,0.454296,57
+Qin2022 Depression_Patients K5,E,Qin2022_Depression_Patients_ClassD,D,0.123495,0.218511,57
+Qin2022 Depression_Patients K5,E,Qin2022_Depression_Patients_ClassE,E,0.098830,0.152771,57
+Zelenina_2022 Oxytocin K4,A,Zelenina_A,A,0.914371,0.913556,60
+Zelenina_2022 Oxytocin K4,A,Zelenina_B,B,0.249472,0.209139,60
+Zelenina_2022 Oxytocin K4,A,Zelenina_C,C,0.414456,0.394769,60
+Zelenina_2022 Oxytocin K4,A,Zelenina_D,D,0.438130,0.494151,60
+Zelenina_2022 Oxytocin K4,B,Zelenina_A,A,0.037248,0.006679,60
+Zelenina_2022 Oxytocin K4,B,Zelenina_B,B,0.965538,0.965957,60
+Zelenina_2022 Oxytocin K4,B,Zelenina_C,C,0.547426,0.561220,60
+Zelenina_2022 Oxytocin K4,B,Zelenina_D,D,0.489096,0.475417,60
+Zelenina_2022 Oxytocin K4,C,Zelenina_A,A,0.817278,0.830485,60
+Zelenina_2022 Oxytocin K4,C,Zelenina_B,B,0.631884,0.640769,60
+Zelenina_2022 Oxytocin K4,C,Zelenina_C,C,0.920449,0.901288,60
+Zelenina_2022 Oxytocin K4,C,Zelenina_D,D,0.794127,0.804586,60
+Zelenina_2022 Oxytocin K4,D,Zelenina_A,A,0.559541,0.609165,60
+Zelenina_2022 Oxytocin K4,D,Zelenina_B,B,0.713923,0.704859,60
+Zelenina_2022 Oxytocin K4,D,Zelenina_C,C,0.549231,0.532784,60
+Zelenina_2022 Oxytocin K4,D,Zelenina_D,D,0.981752,0.984613,60
+Zelenina_2022 Oxytocin K4,E,Zelenina_A,A,0.292748,0.207491,60
+Zelenina_2022 Oxytocin K4,E,Zelenina_B,B,0.167825,0.138531,60
+Zelenina_2022 Oxytocin K4,E,Zelenina_C,C,0.681392,0.648754,60
+Zelenina_2022 Oxytocin K4,E,Zelenina_D,D,0.201126,0.269076,60
+Giordano 2018 K4,A,Giordano_2018_A,A,0.878299,0.914466,24
+Giordano 2018 K4,A,Giordano_2018_B,B,0.069187,0.139374,24
+Giordano 2018 K4,A,Giordano_2018_C,C,0.507916,0.449016,24
+Giordano 2018 K4,A,Giordano_2018_D,D,0.567329,0.485535,24
+Giordano 2018 K4,B,Giordano_2018_A,A,0.206582,0.040967,24
+Giordano 2018 K4,B,Giordano_2018_B,B,0.924953,0.939237,24
+Giordano 2018 K4,B,Giordano_2018_C,C,0.650548,0.555134,24
+Giordano 2018 K4,B,Giordano_2018_D,D,0.615631,0.517091,24
+Giordano 2018 K4,C,Giordano_2018_A,A,0.856873,0.796668,24
+Giordano 2018 K4,C,Giordano_2018_B,B,0.760247,0.673346,24
+Giordano 2018 K4,C,Giordano_2018_C,C,0.936096,0.934467,24
+Giordano 2018 K4,C,Giordano_2018_D,D,0.888821,0.836656,24
+Giordano 2018 K4,D,Giordano_2018_A,A,0.725556,0.618342,24
+Giordano 2018 K4,D,Giordano_2018_B,B,0.798124,0.736149,24
+Giordano 2018 K4,D,Giordano_2018_C,C,0.709597,0.606095,24
+Giordano 2018 K4,D,Giordano_2018_D,D,0.988635,0.983653,24
+Giordano 2018 K4,E,Giordano_2018_A,A,0.226222,0.125431,24
+Giordano 2018 K4,E,Giordano_2018_B,B,0.231449,0.132020,24
+Giordano 2018 K4,E,Giordano_2018_C,C,0.601469,0.575756,24
+Giordano 2018 K4,E,Giordano_2018_D,D,0.047758,0.199330,24
+Lassi2023 K4,A,Lassi_SubjectiveCognitiveDecline_2023_A,A,0.958863,0.951649,54
+Lassi2023 K4,A,Lassi_SubjectiveCognitiveDecline_2023_B,B,0.568721,0.592125,54
+Lassi2023 K4,A,Lassi_SubjectiveCognitiveDecline_2023_C,C,0.601680,0.592348,54
+Lassi2023 K4,A,Lassi_SubjectiveCognitiveDecline_2023_D,D,0.132623,0.132256,54
+Lassi2023 K4,B,Lassi_SubjectiveCognitiveDecline_2023_A,A,0.129582,0.154920,54
+Lassi2023 K4,B,Lassi_SubjectiveCognitiveDecline_2023_B,B,0.936524,0.935242,54
+Lassi2023 K4,B,Lassi_SubjectiveCognitiveDecline_2023_C,C,0.535323,0.504392,54
+Lassi2023 K4,B,Lassi_SubjectiveCognitiveDecline_2023_D,D,0.811742,0.782241,54
+Lassi2023 K4,C,Lassi_SubjectiveCognitiveDecline_2023_A,A,0.708913,0.716513,54
+Lassi2023 K4,C,Lassi_SubjectiveCognitiveDecline_2023_B,B,0.311177,0.271344,54
+Lassi2023 K4,C,Lassi_SubjectiveCognitiveDecline_2023_C,C,0.988746,0.981139,54
+Lassi2023 K4,C,Lassi_SubjectiveCognitiveDecline_2023_D,D,0.765109,0.748128,54
+Lassi2023 K4,D,Lassi_SubjectiveCognitiveDecline_2023_A,A,0.569503,0.576720,54
+Lassi2023 K4,D,Lassi_SubjectiveCognitiveDecline_2023_B,B,0.393895,0.380773,54
+Lassi2023 K4,D,Lassi_SubjectiveCognitiveDecline_2023_C,C,0.803758,0.804597,54
+Lassi2023 K4,D,Lassi_SubjectiveCognitiveDecline_2023_D,D,0.942289,0.942534,54
+Lassi2023 K4,E,Lassi_SubjectiveCognitiveDecline_2023_A,A,0.129896,0.042394,54
+Lassi2023 K4,E,Lassi_SubjectiveCognitiveDecline_2023_B,B,0.228446,0.125913,54
+Lassi2023 K4,E,Lassi_SubjectiveCognitiveDecline_2023_C,C,0.450806,0.303970,54
+Lassi2023 K4,E,Lassi_SubjectiveCognitiveDecline_2023_D,D,0.010551,0.156929,54
+Milz_2016_Cognitive Style K4,A,Milz_2016_A,A,0.949056,0.947684,58
+Milz_2016_Cognitive Style K4,A,Milz_2016_B,B,0.260825,0.233717,58
+Milz_2016_Cognitive Style K4,A,Milz_2016_C,C,0.412053,0.421411,58
+Milz_2016_Cognitive Style K4,A,Milz_2016_D,D,0.514391,0.521915,58
+Milz_2016_Cognitive Style K4,B,Milz_2016_A,A,0.217823,0.219635,58
+Milz_2016_Cognitive Style K4,B,Milz_2016_B,B,0.950788,0.947469,58
+Milz_2016_Cognitive Style K4,B,Milz_2016_C,C,0.652033,0.632311,58
+Milz_2016_Cognitive Style K4,B,Milz_2016_D,D,0.543566,0.540071,58
+Milz_2016_Cognitive Style K4,C,Milz_2016_A,A,0.671742,0.678439,58
+Milz_2016_Cognitive Style K4,C,Milz_2016_B,B,0.584903,0.591421,58
+Milz_2016_Cognitive Style K4,C,Milz_2016_C,C,0.969137,0.960899,58
+Milz_2016_Cognitive Style K4,C,Milz_2016_D,D,0.909726,0.905592,58
+Milz_2016_Cognitive Style K4,D,Milz_2016_A,A,0.459124,0.451029,58
+Milz_2016_Cognitive Style K4,D,Milz_2016_B,B,0.687397,0.695054,58
+Milz_2016_Cognitive Style K4,D,Milz_2016_C,C,0.760550,0.725149,58
+Milz_2016_Cognitive Style K4,D,Milz_2016_D,D,0.951852,0.949072,58
+Milz_2016_Cognitive Style K4,E,Milz_2016_A,A,0.190733,0.165550,58
+Milz_2016_Cognitive Style K4,E,Milz_2016_B,B,0.168987,0.084354,58
+Milz_2016_Cognitive Style K4,E,Milz_2016_C,C,0.498813,0.444528,58
+Milz_2016_Cognitive Style K4,E,Milz_2016_D,D,0.078609,0.024469,58
+Schiller2021 Alcohol Intoxication K4,A,Schiller2021_Alc_ClassA,A,0.917696,0.920318,51
+Schiller2021 Alcohol Intoxication K4,A,Schiller2021_Alc_ClassB,B,0.225940,0.138987,51
+Schiller2021 Alcohol Intoxication K4,A,Schiller2021_Alc_ClassC,C,0.506266,0.546066,51
+Schiller2021 Alcohol Intoxication K4,A,Schiller2021_Alc_ClassD,D,0.209407,0.289516,51
+Schiller2021 Alcohol Intoxication K4,B,Schiller2021_Alc_ClassA,A,0.243363,0.151162,51
+Schiller2021 Alcohol Intoxication K4,B,Schiller2021_Alc_ClassB,B,0.936211,0.937969,51
+Schiller2021 Alcohol Intoxication K4,B,Schiller2021_Alc_ClassC,C,0.455402,0.505691,51
+Schiller2021 Alcohol Intoxication K4,B,Schiller2021_Alc_ClassD,D,0.542877,0.575987,51
+Schiller2021 Alcohol Intoxication K4,C,Schiller2021_Alc_ClassA,A,0.638014,0.674565,51
+Schiller2021 Alcohol Intoxication K4,C,Schiller2021_Alc_ClassB,B,0.646785,0.676586,51
+Schiller2021 Alcohol Intoxication K4,C,Schiller2021_Alc_ClassC,C,0.948798,0.961510,51
+Schiller2021 Alcohol Intoxication K4,C,Schiller2021_Alc_ClassD,D,0.632431,0.684048,51
+Schiller2021 Alcohol Intoxication K4,D,Schiller2021_Alc_ClassA,A,0.559484,0.615923,51
+Schiller2021 Alcohol Intoxication K4,D,Schiller2021_Alc_ClassB,B,0.684702,0.717519,51
+Schiller2021 Alcohol Intoxication K4,D,Schiller2021_Alc_ClassC,C,0.623859,0.686266,51
+Schiller2021 Alcohol Intoxication K4,D,Schiller2021_Alc_ClassD,D,0.954952,0.965528,51
+Schiller2021 Alcohol Intoxication K4,E,Schiller2021_Alc_ClassA,A,0.050747,0.071944,51
+Schiller2021 Alcohol Intoxication K4,E,Schiller2021_Alc_ClassB,B,0.205759,0.171561,51
+Schiller2021 Alcohol Intoxication K4,E,Schiller2021_Alc_ClassC,C,0.537323,0.477307,51
+Schiller2021 Alcohol Intoxication K4,E,Schiller2021_Alc_ClassD,D,0.363578,0.354767,51
+Toplutas 2023 DOC_HC K4,A,Toplutas2023DOC_MC_ClassA,A,0.833652,,19
+Toplutas 2023 DOC_HC K4,A,Toplutas2023DOC_MC_ClassB,B,0.580233,,19
+Toplutas 2023 DOC_HC K4,A,Toplutas2023DOC_MC_ClassC,C,0.421813,,19
+Toplutas 2023 DOC_HC K4,A,Toplutas2023DOC_MC_ClassD,D,0.302745,,19
+Toplutas 2023 DOC_HC K4,B,Toplutas2023DOC_MC_ClassA,A,0.151133,,19
+Toplutas 2023 DOC_HC K4,B,Toplutas2023DOC_MC_ClassB,B,0.915032,,19
+Toplutas 2023 DOC_HC K4,B,Toplutas2023DOC_MC_ClassC,C,0.666353,,19
+Toplutas 2023 DOC_HC K4,B,Toplutas2023DOC_MC_ClassD,D,0.665336,,19
+Toplutas 2023 DOC_HC K4,C,Toplutas2023DOC_MC_ClassA,A,0.812832,,19
+Toplutas 2023 DOC_HC K4,C,Toplutas2023DOC_MC_ClassB,B,0.246869,,19
+Toplutas 2023 DOC_HC K4,C,Toplutas2023DOC_MC_ClassC,C,0.925031,,19
+Toplutas 2023 DOC_HC K4,C,Toplutas2023DOC_MC_ClassD,D,0.754005,,19
+Toplutas 2023 DOC_HC K4,D,Toplutas2023DOC_MC_ClassA,A,0.793772,,19
+Toplutas 2023 DOC_HC K4,D,Toplutas2023DOC_MC_ClassB,B,0.364742,,19
+Toplutas 2023 DOC_HC K4,D,Toplutas2023DOC_MC_ClassC,C,0.737915,,19
+Toplutas 2023 DOC_HC K4,D,Toplutas2023DOC_MC_ClassD,D,0.955142,,19
+Toplutas 2023 DOC_HC K4,E,Toplutas2023DOC_MC_ClassA,A,0.050954,,19
+Toplutas 2023 DOC_HC K4,E,Toplutas2023DOC_MC_ClassB,B,0.148109,,19
+Toplutas 2023 DOC_HC K4,E,Toplutas2023DOC_MC_ClassC,C,0.522125,,19
+Toplutas 2023 DOC_HC K4,E,Toplutas2023DOC_MC_ClassD,D,0.108739,,19
