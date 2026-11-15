@@ -49,7 +49,7 @@ B6 runs only when a conflict file is given, so `all_steps_ok` is False for the f
 
 ## Input provenance (checked Nov 15)
 
-The private `data/` folder was not delivered, so the inputs were checked by value instead of by checksum. For all five runs, the per-subject Simon − Rest changes (`rq1_individual_changes_<run>.csv`) equal those computed from the repo's `results/features/` files (largest difference 3e-14; 5e-9 for K4, CSV rounding), with the same subjects and the same missing values. The conflict values used by P2-B8 equal `conflict.csv` exactly, and B6's conflict features match it to 1e-16. `behavior.csv` and `subjects.csv` were not checked directly here; B6's error-rate results were reproduced from the repo files on Nov 7.
+The private `data/` folder was not delivered, so the inputs were checked by value instead of by checksum. For all five runs, the per-subject Simon − Rest changes (`rq1_individual_changes_<run>.csv`) equal those computed from the repo's `results/features/` files (largest difference 3e-14; 5e-9 for K4, CSV rounding), with the same subjects and the same missing values. The conflict values used by P2-B8 equal `conflict.csv` exactly, and B6's conflict features match it to 1e-16. `subjects.csv` and `behavior.csv` also match: the group, age and sex in Bohyeon's local P2-B8 table equal `subjects.csv` for all 136 subjects, and all 90 B6 partial correlations (MoCA, `simon_err_inc`, UPDRS) and all 18 B6 group models reproduce from the repo's `subjects.csv` and `results/features/behavior.csv` with her `stats.py` (differences ≤ 1e-13).
 
 ## Numbers checked against the Nov 9 deck
 
