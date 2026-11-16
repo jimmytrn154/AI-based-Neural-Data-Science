@@ -236,6 +236,27 @@ Simon − Rest coverage, all 139 subjects (same format as the table above):
 
 Limitation: the 2–20 Hz band attenuates slow blink waveforms, so the 100 µV rule marks time in only 19 of the 33 recordings; residual blink activity below the threshold is not removed.
 
+**Review of Bohyeon's Nov 15 delivery (`1115 bohyeon/`; reviewed Nov 16 by Chuong).** Results and figures only: no code, no README. Five analyses, all congruent vs. incongruent Simon trials with PD vs. control:
+
+| Folder | What it tests | Fits | Result | Caveat |
+|---|---|---|---|---|
+| `state_prob` | PD − control in incongruent − congruent coverage, 5 states × 3 windows, one FDR family of 15 | P2-B8, extended to all five states | Reproduces P2-B8's N2 Δ(C): PD − control +2.46 points (FDR p 0.013). Theta Δ(E) −1.35 points no longer survives (raw p 0.022, FDR p 0.17) | Primary FDR family for P2-B8 to be agreed (see Blockers) |
+| `state_observed_runs` | PD − control in the raw count of state runs, incongruent − congruent | Not in the plan | 11 of 15 significant; PD lose more runs in every state and window | Raw counts, not normalized; consistent with PD having fewer correct incongruent trials. Likely a trial-count effect: drop, or redo as a rate |
+| `transition_prob` | Incongruent − congruent transition probabilities, 20 transitions × 3 effects × 3 windows (families of 60) | Overlaps P2.3 | One survives: controls, theta, D → E (FDR p 0.040) | Not C ↔ E; P2.3 needs one owner and one method |
+| `JSD_rest_reference` | Jensen–Shannon divergence of each condition's transitions from the subject's own Rest | New (links RQ1 reorganization to the conflict contrast) | No group differences; controls, theta: incongruent further from Rest than congruent (FDR p 0.030); group × condition null | Mostly null; minor supporting point at most |
+| `JSD_behavior` | Incongruent-vs-congruent transition divergence vs. RT and error-rate conflict costs (partial Spearman, age and sex; FDR over 18) | P2.5, subject level | PD: ρp +0.26 to +0.34 (FDR p 0.022–0.048); controls null | **Confounded by transition count** (below) |
+
+*Transition-count check on `JSD_behavior`* (Chuong, from Bohyeon's per-subject table; her values reproduce). Divergence from fewer transitions is larger by sampling noise, and subjects with larger conflict costs have fewer transitions (ρ with log total transitions: −0.43 to −0.62 for error cost, −0.34 to −0.44 for RT cost). Adding log total transitions as a covariate, PD:
+
+| PD | Bohyeon's ρp | With transition count |
+|---|---|---|
+| Error cost, analysis window | +0.31 (p 0.003) | +0.04 (p 0.71) |
+| Error cost, theta | +0.27 (p 0.010) | +0.08 (p 0.44) |
+| RT cost, theta | +0.33 (p 0.002) | +0.20 (p 0.055) |
+| RT cost, N2 | +0.27 (p 0.011) | +0.18 (p 0.094) |
+
+The error-cost links disappear and the RT-cost links weaken to borderline. Not a finding yet; needs the transition count as a covariate, or a divergence measure corrected for trial count, before it goes to P2.5. Two per-subject files (`jsd_behavior_subject_values.csv`, `jsd_subject_values.csv`) hold group, age and sex and stay uncommitted.
+
 **Dependencies:**
 - P2.5 depends on P2.1–P2.3.
 - Novelty claims (P2.6) only for findings that survive P2.4.
@@ -330,6 +351,10 @@ Limitation: the 2–20 Hz band attenuates slow blink waveforms, so the 100 µV r
 | Nov 2 | Conflict effect: the config's primary feature is one distance per window, but `conflict.csv` holds per-state differences; Bohyeon used the L2 norm of the window-averaged difference vector. Team to agree the definition and which file holds it (checked: not related to trial counts, ρ ≈ −0.02 to −0.05) | Seonwoo, Bohyeon | Team | Partly (Nov 15): P2-B7 / P2-B8 work with per-state differences (Δ(C), Δ(E), D = Δ(E) − Δ(C)); the scalar distance in RQ3 is still Bohyeon's L2 version and not formally agreed |
 | Nov 7 | The RQ1 mixed model's group term shows less state E at rest in PD (coverage −4.0 points, FDR p = 0.012; occurrence −0.34 per s, FDR p = 0.003; robust across optimizers, a Rest-only regression and Mann–Whitney). It is a group comparison on a feature outside the pre-specified RQ3 set, from a secondary model; decide how to present it (secondary or exploratory) | Bohyeon (RQ1/RQ3 slides), all | Team | Superseded (Nov 15): group results are now part of the Phase 2 plan (P2.4 permutation tests; presentation as secondary) |
 | Nov 15 | Normative-template comparison (Zanesco et al. 2020, 2021a) was reported in the Nov 9 deck, but its code is not in the repo and its owner is not recorded | P2.1 | Minseo | Yes (Nov 15): code and results in `P2_1/`, verified |
+| Nov 16 | Bohyeon's Nov 15 delivery (`1115 bohyeon/`) has results and figures but no code or README, so its methods can't be checked (handoff rules ask for code with outputs) | Chuong (integration) | Bohyeon | No |
+| Nov 16 | P2-B8 FDR family: with all five states (family of 15, `1115 bohyeon/state_prob`) only N2 Δ(C) survives; theta Δ(E) (FDR p 0.044 in P2-B8) does not (0.17). Agree which family is primary | P2-B8, P2.4 | Team | No |
+| Nov 16 | Bohyeon's transition analysis (`1115 bohyeon/transition_prob`) overlaps P2.3 (Seonwoo, pending confirmation); one owner and one method needed | P2.3 | Team | No |
+| Nov 16 | Trial-count confounds in Bohyeon's Nov 15 delivery: raw run counts (`state_observed_runs`) not normalized; transition divergence vs. conflict costs (`JSD_behavior`) explained largely by transition count (see the review note in Phase 2) | P2.5 | Bohyeon | No |
 
 ## Daily log
 
@@ -353,3 +378,4 @@ Limitation: the 2–20 Hz band attenuates slow blink waveforms, so the 100 µV r
 | Nov 15 | Chuong | Part A: meeting note committed without author metadata (`docs/meetings/ND_meeting_1107.pdf`); P2.1 owner confirmed (Minseo); `subjects.csv` and `behavior.csv` match Bohyeon's inputs by value | Part B (blink follow-up), Part C (P2.1 verification) |
 | Nov 15 | Chuong | Part B (P2.7): the 33 Rest recordings without eye-component removal match the 106 on group, sex, age and MoCA but have higher Rest C (33.1% vs 22.0%); blink cleaning (Fp > 100 µV, 0.5 s; rule committed before results) marks time in 20 of 35 recordings; with cleaned Rest, Simon − Rest coverage: E +1.67 (FDR p 0.002), A +1.95 (0.040), C −2.26 (0.072) | Part C (P2.1 verification) |
 | Nov 15 | Chuong | Part C (P2.1): Minseo's normative-template comparison integrated in `P2_1/` with a repo script and README (sources of all 12 template sets; .set files not committed). Method verified (centred \|r\|, name-matched common channels = common-average reference); Zanesco 2020 0.868 and 2021a 0.843 reproduced, all matrices within 5e-7. E's best match is an E-type map in 3 of 12 sets; A–D controls match in 10–12 of 12; within-set baseline max 0.68–0.88. Koenig 2024 meta-maps still missing | Next: P2.2; Minseo continues P2.1 (meta-maps, coordinates, uncertainty) |
+| Nov 16 | Chuong | Reviewed Bohyeon's Nov 15 delivery (`1115 bohyeon/`, results only): `state_prob` reproduces P2-B8's N2 Δ(C) (theta Δ(E) does not survive a 15-test family); raw run counts likely a trial-count effect; transitions overlap P2.3 (only control theta D → E survives); divergence from Rest mostly null; divergence vs. conflict costs in PD largely explained by transition count. Per-member Phase 2 tables added to `docs/TEAM_TASKS.md` | Ask Bohyeon for the code; agree P2-B8 FDR family and P2.3 ownership |

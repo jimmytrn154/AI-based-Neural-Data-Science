@@ -14,7 +14,7 @@ This file describes **each member's tasks, the inputs they need, and the outputs
 
 **Status key:** ⬜ not started · 🟨 in progress · ✅ done · 🟥 blocked · ⏸️ postponed
 
-*Last updated: Nov 15, 2026 (Phase 2 revised after the professor's Nov 9 feedback; Phase 1 sections kept as a record below).*
+*Last updated: Nov 16, 2026 (per-member Phase 2 tables; review of Bohyeon's Nov 15 delivery. Phase 2 revised Nov 15 after the professor's Nov 9 feedback; Phase 1 sections kept as a record below).*
 
 ---
 
@@ -51,6 +51,53 @@ After the Phase 2 presentation (Nov 9) the professor asked for four validity che
 **Postponed:** RT-sorted analysis of E; conflict adaptation; PCA trajectories (C5); Phase 4 extensions.
 
 **Timeline:** final presentation in Week 16 (date: [TO FILL]); target Phase 2 done about two weeks before it, then Phase 3.
+
+## Phase 2 tasks by member
+
+The same tasks as the table above, grouped by person. The table above is the reference for scope, inputs and outputs. When something changes, update both, plus `PROGRESS.md`. Owners marked "pending confirmation" are proposals until the person agrees. Due dates are not set yet; everything is due when Phase 2 ends (about two weeks before the final).
+
+#### Tran Anh Chuong: probability dependence, blink sensitivity, recovery, integration
+
+| # | Task | Status | Inputs | Output |
+|---|---|---|---|---|
+| P2.2 | Probability dependence: is E-up more than a side effect of C-down? (redistribution null, P(E) / (1 − P(C)), log-ratios, spatial correlation over time, second-best labels) | ⬜ | `microstates_task.csv`, `results/labels/`, Seonwoo's S4 probabilities, templates | `results/features/p2_2_probability_dependence.csv`, `results/figures/chuong_p2_2_probability_dependence.png` |
+| P2.7 | Blink sensitivity of the key results | 🟨 RQ1 coverage done (no-blink and blink-cleaned runs): E holds, C weakens; conflict and group results not yet rerun | `microstates_rest_noblink.csv`, `microstates_rest_blinkclean.csv` | `results/features/p2_7_noblink_sensitivity.csv` |
+| P2.9 | Recovery pilot result (go/no-go) for the final deck | 🟨 result in `docs/recovery_pilot.md`; slide to do | `recovery.csv`, `docs/recovery_pilot.md` | Slide in the final deck |
+| — | Integration and verification of everyone's deliveries; keep `PROGRESS.md` and this file up to date | 🟨 ongoing (P2.1, P2-B7 and P2-B8 verified Nov 15) | Teammates' outputs and code | Commits; review notes in `PROGRESS.md` |
+
+#### Seonwoo Kim: transitions and alpha control (pending confirmation)
+
+| # | Task | Status | Inputs | Output |
+|---|---|---|---|---|
+| P2.3 | C↔E transitions in the N2 and theta windows, incongruent vs. congruent (observed vs. expected, asymmetry, origin of E segments) | ⬜ (overlaps Bohyeon's `1115 bohyeon/transition_prob`; owner and method to agree) | Single-trial labels of the cue-locked epochs (as in S4), `src/microstates.py` | `results/features/p2_3_ce_transitions.csv`, `results/figures/seonwoo_p2_3_ce_transitions.png` |
+| P2.5 | Support Minseo on the trial-level brain-activity analyses (correct vs. error incongruent trials, RT) | ⬜ (depends on P2.1–P2.3) | Cue-locked epochs and trial tables | Shared with Minseo (see P2.5) |
+| P2.8 | Alpha control: spectral parameterization of Rest (alpha peak, aperiodic features); do the main results survive it? | ⬜ | Continuous Rest recordings | `results/features/p2_8_rest_spectral.csv`, `results/figures/seonwoo_p2_8_spectral.png` |
+
+#### Bohyeon Rhee: conflict group analyses and randomization tests
+
+| # | Task | Status | Inputs | Output |
+|---|---|---|---|---|
+| P2-B7 | Conflict state contrast, D = Δ(E) − Δ(C) per window (N = 137) | ✅ verified Nov 15 | `conflict.csv` | `bohyeon 261112/results/task/B7_conflict_state_contrast.csv` |
+| P2-B8 | Conflict group windows, age/sex adjusted (N = 136) | ✅ verified Nov 15 | `conflict.csv`, `subjects.csv` | `bohyeon 261112/results/task/b8_adjusted_tests_task.csv` |
+| P2.4 | Randomization and surrogate tests on one fixed sample: group-label permutation for P2-B7 / P2-B8 (Freedman–Lane; max-statistic across the six P2-B8 group tests), sign-flip for condition contrasts, surrogates for transitions | ⬜ | `conflict.csv`, `subjects.csv`, P2-B7 / P2-B8 scripts, P2.3 outputs | `results/features/p2_4_permutation_tests.csv`, `results/figures/bohyeon_p2_4_null_distributions.png` |
+| — | Nov 15 delivery (`1115 bohyeon/`): state coverage, run counts, transitions, divergence from Rest, divergence vs. conflict costs | 🟨 reviewed Nov 16; code needed | Not stated (no code) | `1115 bohyeon/` (results and figures only) |
+
+**Review, Nov 16 (Chuong):** `1115 bohyeon/` has results and figures but **no code and no README**. Full notes and numbers in `PROGRESS.md` (Phase 2, review note).
+- `state_prob`: P2-B8 extended to all five states (one FDR family of 15). N2 Δ(C), PD − control +2.46 points, holds (FDR p 0.013); theta Δ(E) does not (FDR p 0.17). The team has to agree which family is primary.
+- `state_observed_runs`: raw run counts, not normalized; PD lose more runs in every state, which fits fewer correct incongruent trials. Drop, or redo as a rate.
+- `transition_prob`: overlaps P2.3; only controls, theta, D → E survives (FDR p 0.040). P2.3 needs one owner and one method.
+- `JSD_rest_reference`: no group differences; controls, theta: incongruent further from Rest than congruent (FDR p 0.030).
+- `JSD_behavior`: PD correlations with conflict costs (ρp +0.26 to +0.34) are largely explained by the number of transitions; with it as a covariate, error-cost links vanish (ρp ≤ 0.08) and RT-cost links weaken (ρp 0.18–0.20, p 0.055–0.094). Needs that covariate, or a trial-count-corrected divergence, before it feeds P2.5.
+- **To send:** the scripts for all five analyses. The two per-subject files with group, age and sex stay uncommitted.
+
+#### Minseo: normative templates, interpretation, novelty; Phase 3 lead
+
+| # | Task | Status | Inputs | Output |
+|---|---|---|---|---|
+| P2.1 | E vs. normative templates | 🟨 comparison done and verified Nov 15; remaining: Koenig 2024 meta-maps, native electrode coordinates, bootstrap CI | `results/templates/`, published template files (see `P2_1/README.md`) | `P2_1/`, `results/features/p2_1_normative_*.csv`, `results/figures/minseo_p2_1_normative_match.png` |
+| P2.5 | Brain-activity interpretation: trial level (with Seonwoo) and subject level (E increase vs. Simon error rate), then a cautious interpretation (pending confirmation) | ⬜ (depends on P2.1–P2.3; Bohyeon's divergence-vs-conflict-cost result is not usable until corrected for transition count) | Cue-locked epochs and trial tables, `behavior.csv`, P2.1–P2.3 outputs | `results/features/p2_5_behavior_link.csv`, `results/figures/minseo_p2_5_behavior_link.png`, `docs/p2_5_interpretation.md` |
+| P2.6 | Novelty: targeted literature check, then a contribution statement at the level the evidence supports (pending confirmation) | ⬜ (claims only for findings that survive P2.4) | Literature, P2.4 results | `docs/p2_6_novelty.md` |
+| Phase 3 | Prediction and calibration design (lead) | ⏸️ starts after P2.2 and P2.4 | Proposal (Phase 3 section) | Design note |
 
 ## Shared resources (everyone)
 
