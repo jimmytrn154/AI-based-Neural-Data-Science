@@ -201,14 +201,14 @@ All numbers above were checked against the outputs on Nov 15 (`bohyeon 261112/RE
 | ID | Item | Feedback | Owner | Status | What remains |
 |---|---|---|---|---|---|
 | P2.1 | E vs. normative templates | 1 | Minseo | 🟨 in progress (verified Nov 15) | Done (`P2_1/`, verified): full 5 × K matrices for all 12 sets; A–D controls (A, B match the same letter in 12/12 sets, C 11, D 10; \|r\| 0.83–0.99); within-set baseline between different classes (median 0.42–0.77, max 0.68–0.88); E's best match is the set's E-type map in 3 of 12 sets (Zanesco 2020 0.868, Zanesco 2021a 0.843 with runner-up F 0.775, Hwang 2025 0.513), and C in the six 4-class sets without E; Custo 2017 (A–G) included: our E matches their D (0.72), their E 0.08; Rest-only and Simon-only E give the same matches; common-channel correlation equals re-referencing to the common subset; interpolation diagnostic only. Remaining: Koenig 2024 meta-maps (not among the 12); native electrode coordinates; uncertainty (bootstrap over subjects' maps); account for eyes-closed vs. our eyes-open/task data |
-| P2.2 | Probability dependence: is E-up more than the compositional consequence of C-down? | 2 | Chuong | ⬜ | All five state changes; proportional-redistribution null; E's share of non-C time, P(E) / (1 − P(C)); log-ratio analysis; a non-competitive measure (per-template spatial correlation over time); second-best labels of frames that switch to E |
+| P2.2 | Probability dependence: is E-up more than the compositional consequence of C-down? | 2 | Chuong | ✅ done (Nov 18) | Part 1 (Nov 17): E's share of non-C time rises and E rises in log-ratio terms, so E-up is more than a proportional redistribution of C's time. Part 2 (Nov 18): the fit to E rises on a non-competitive measure (mean \|r\|, q 0.012), and E samples are not more C-like in Simon, so E-up is not mainly relabelled C frames; small effects, not significant at GFP peaks. See the P2.2 notes below |
 | P2.3 | C↔E transitions | 3 | Seonwoo (pending confirmation) | ⬜ | C → E and E → C in the N2 and theta windows, incongruent vs. congruent; observed vs. expected given occurrences; directional asymmetry; where E segments come from |
 | P2.4 | Randomization / surrogate tests | 4 | Bohyeon | ⬜ | Group-label permutation for the P2-B7 / P2-B8 group results, Freedman–Lane for the age/sex-adjusted models and a max-statistic correction across the six P2-B8 group tests; within-subject sign-flip for condition contrasts; segment-shuffle or Markov surrogates for transitions; all on **one fixed sample** |
 | P2.5 | Brain-activity interpretation | 5 | Minseo, with Seonwoo (pending confirmation) | ⬜ | Trial level: correct vs. error incongruent trials, and reaction time; subject level: E increase vs. Simon error rate; then a cautious interpretation using P2.1–P2.3 |
 | P2.6 | Novelty: what is new? | 6 | Minseo (pending confirmation) | ⬜ | Targeted literature check: microstates in PD (rest and task); microstates in conflict tasks (Simon, Stroop, flanker); rest-to-task microstate changes; extra classes in clinical groups. Then a "contribution" statement, with claims at the level the evidence supports |
-| P2.7 | Blink sensitivity | — | Chuong | 🟨 in progress: RQ1 coverage done (no-blink run by Bohyeon; blink-cleaned run Nov 15); conflict and group results not yet rerun | See the P2.7 notes below: E holds in both checks; C's decrease weakens (FDR p 0.128 without the 33, 0.072 after cleaning). Remaining: rerun the conflict contrasts and group results |
+| P2.7 | Blink sensitivity | — | Chuong | ✅ done (Nov 17) | See the P2.7 notes below. RQ1 coverage: E holds in both checks; C's decrease weakens (FDR p 0.128 without the 33, 0.072 after cleaning). Group results with blink-cleaned Rest: all hold (PD less E at rest, coverage −4.07, FDR q 0.010; RQ3 still nothing significant). P2-B7 holds; P2-B8 keeps N2 Δ(C) and the C interaction, while three borderline results (q 0.041–0.044) move to q 0.059–0.069 with 9 fewer subjects and unchanged estimates |
 | P2.8 | Alpha control: spectral parameterization of Rest | — | Seonwoo (pending confirmation) | ⬜ | Periodic (alpha peak) and aperiodic Rest features; test whether the main results survive them |
-| P2.9 | Recovery pilot: report the go/no-go result | — | Chuong | 🟨 | Result exists (`docs/recovery_pilot.md`: keep overall recovery and error effect, drop the conflict effect); it was not in the Nov 9 deck, so add it to the final |
+| P2.9 | Recovery pilot: report the go/no-go result | — | Chuong | 🟨 slide drafted (Nov 18) | Result exists (`docs/recovery_pilot.md`: keep overall recovery and error effect, drop the conflict effect); it was not in the Nov 9 deck. Slide drafted in `docs/slides_chuong_final.md` (slide 3, with P2.2 part 1 and P2.7 slides); to add to the shared deck |
 
 **P2.7 note (Nov 15, from Bohyeon's outputs; report only).** Simon − Rest coverage change: mean [95% bootstrap CI], rank-biserial r, Cohen's d_z, FDR p (RQ1 family of 20 tests):
 
@@ -235,6 +235,54 @@ Simon − Rest coverage, all 139 subjects (same format as the table above):
 | E | +1.80 [+0.72, +2.92], r 0.40, d_z 0.27, p 0.0005 | +1.67 [+0.59, +2.81], r 0.37, d_z 0.25, p 0.0017 |
 
 Limitation: the 2–20 Hz band attenuates slow blink waveforms, so the 100 µV rule marks time in only 19 of the 33 recordings; residual blink activity below the threshold is not removed.
+
+**P2.7 remaining reruns (Nov 17; rules fixed beforehand in config `phase2.blink_sensitivity_reruns`).** Bohyeon's scripts unchanged; the primary reruns reproduce her committed results (largest difference 1e-13; the RQ1 mixed models converge with lbfgs here instead of powell, CI within 1.4e-4). Code `notebooks/chuong_p2_7_reruns.py`; table `results/features/p2_7_blink_sensitivity.csv`. A result holds if its sign and its side of FDR q = 0.05 are unchanged.
+
+| Results | Check | Tests | Hold | FDR q < 0.05, primary → check |
+|---|---|---|---|---|
+| RQ1 mixed models, group and task × group terms | Blink-cleaned Rest | 40 | 39 | 2 → 2 |
+| RQ3 (B6) group models and partial correlations, incl. reorganization | Blink-cleaned Rest | 108 | 106 | 0 → 0 |
+| P2-B7 | Without the 9 Simon recordings with no eye component removed (N 137 → 128) | 6 | 6 | 2 → 2 |
+| P2-B8 | Same (N 136 → 127) | 21 | 18 | 7 → 4 |
+
+- **The three "fails" in RQ1/RQ3 are sign flips of null estimates** (p 0.82–0.98), not changes in conclusions.
+- **PD has less E at rest** (RQ1 mixed model): coverage −3.96 → −4.07 points (q 0.012 → 0.010), occurrence −0.34 → −0.35 per s (q 0.003 → 0.002).
+- **P2-B7:** theta D = Δ(E) − Δ(C) +1.23 → +1.13 points (q 0.007 → 0.019); N2 PD − control in D −2.80 → −2.82 (q 0.029 → 0.043).
+- **P2-B8 holds:** N2 Δ(C) PD − control +2.46 → +2.47 points (q 0.005 → 0.010); group × window for C (q 0.002 → 0.004); controls' N2 Δ(C) and theta Δ(E) vs. zero.
+- **P2-B8 no longer below 0.05:** N2 D PD − control −2.90 → −2.92 (q 0.041 → 0.062); theta Δ(E) PD − control −1.35 → −1.28 (q 0.044 → 0.069); controls' N2 D vs. zero (q 0.041 → 0.059). The estimates barely change, so this reflects fewer subjects (9 removed, 4 of them controls) rather than blink artifacts. These three were already borderline.
+
+**P2.2 part 1 (Nov 17; definitions fixed beforehand in config `phase2.probability_dependence`).** `notebooks/chuong_p2_2_probability_dependence.py`, `results/features/p2_2_probability_dependence.csv`, `results/figures/chuong_p2_2_probability_dependence.png`. N = 139, Simon − Rest; mean [95% bootstrap CI], rank-biserial r, FDR q (one family of 12):
+
+| Measure | A | B | C | D | E |
+|---|---|---|---|---|---|
+| Coverage change, observed (points) | +2.20 | −0.80 | −3.00 | −0.21 | +1.80 |
+| Expected if C's lost time is shared in proportion to Rest coverage | +0.84 | +0.70 | — | +0.85 | +0.61 |
+| Excess, observed − expected | +1.36 [+0.23, +2.42] | −1.50 [−2.59, −0.50] | — | −1.06 [−2.30, +0.19] | +1.19 [+0.10, +2.33] |
+| Share of non-C time, X / (100 − C) | +1.64 [+0.16, +3.20], r 0.19, q 0.083 | −2.17 [−3.68, −0.75], r −0.24, q 0.028 | — | −1.30 [−2.90, +0.41], r −0.06, q 0.56 | **+1.83 [+0.35, +3.35], r 0.32, q 0.0035** |
+| CLR (log units) | +0.05, q 0.14 | −0.08, q 0.037 | −0.16, q 0.0035 | +0.02, q 0.90 | **+0.18 [+0.10, +0.26], r 0.40, q 0.0003** |
+
+log(E/X): E/A +0.13 (q 0.11), E/B +0.26 (r 0.39, q 0.0003), E/D +0.16 (r 0.26, q 0.018).
+
+- **E-up is not just C-down redistributed:** a proportional share-out of C's time would raise E by about 0.6 points; it rises by 1.8, so about two-thirds is excess. E's share of non-C time rises (q 0.0035), E has the largest CLR increase of the five states, and E rises relative to B and D (not significantly relative to A, which also rises).
+- **The rest of the reorganization:** B loses share (q 0.028) and A gains (q 0.083, not significant); D is flat.
+- **Blink-cleaned Rest (sensitivity):** same conclusions: E share +1.80 (q 0.0048), CLR E +0.17 (q 0.0005), log E/B and E/D q ≤ 0.015; CLR C −0.13 (q 0.014).
+- **Limit:** these are coverage (composition) results. Back-fitting assigns each sample to one state, so they cannot show whether frames lost by C are relabelled E; that is part 2 (spatial correlation over time, second-best labels).
+
+**P2.2 part 2 (Nov 18; definitions fixed beforehand in config `phase2.probability_dependence_part2`).** `notebooks/chuong_p2_2_part2.py`, `results/features/p2_2_part2_probability_dependence.csv`, per-subject measures `results/features/p2_2_part2_subject_measures.csv` (no demographics), `results/figures/chuong_p2_2_part2.png`. N = 139, Simon − Rest; mean [95% bootstrap CI], rank-biserial r, FDR q (one family of 7). The correlations reproduce pycrostates' assignments exactly (checked on sub-C001).
+
+| Measure | Rest | Simon | Change | r | q |
+|---|---|---|---|---|---|
+| Mean \|r\| with E (all labelled samples) | 0.285 | 0.292 | **+0.007 [+0.001, +0.012]** | 0.26 | 0.012 |
+| Mean \|r\| with C | 0.461 | 0.445 | −0.016 [−0.026, −0.005] | −0.28 | 0.012 |
+| Mean \|r\| with B / D / A | | | −0.010 / −0.012 / +0.000 | | 0.012 / 0.018 / 0.90 |
+| E samples whose runner-up is C | 28.8% | 28.1% | −0.7 points [−1.3, −0.1] | −0.21 | 0.035 |
+| C samples whose runner-up is E | 15.4% | 16.3% | **+1.0 points [+0.3, +1.6]** | 0.30 | 0.012 |
+
+- **E rises on a non-competitive measure:** each sample counts for every template, so this is not forced by C-down. The fit to E rises while the fit to B, C and D falls. Effects are small (|r| changes below 0.02).
+- **No sign that E's new frames are borderline C frames:** in Simon, E samples have C as runner-up slightly *less* often. C samples do have E as runner-up more often, but so do all states (runner-up E share, Simon − Rest: A +0.5, B +0.9, C +1.0, D +1.1 points; descriptive). E-like activity rises in the signal generally, not specifically at C's expense.
+- **GFP peaks only (sensitivity):** B, C and D fall (p ≤ 0.0005); E +0.003, p 0.16 (not significant). The E increase is carried by samples away from the GFP peaks, so it is weaker where the maps are most stable.
+- **Blink-cleaned Rest:** same conclusions (E +0.006, q 0.028; C −0.013, q 0.041; E → runner-up C q 0.043; C → runner-up E q 0.035).
+- **Conclusion for P2.2:** E-up is more than C-down redistributed (part 1) and is not mainly C frames being relabelled E (part 2). Caveat: small effects, and not significant at GFP peaks.
 
 **Review of Bohyeon's Nov 15 delivery (`1115 bohyeon/`; reviewed Nov 16 by Chuong).** Results and figures only: no code, no README. Five analyses, all congruent vs. incongruent Simon trials with PD vs. control:
 
@@ -269,7 +317,7 @@ The error-cost links disappear and the RT-cost links weaken to borderline. Not a
 ### Earlier Phase 2 placeholder items (Oct 26), for the record
 
 - [x] Research questions after the feedback: Phase 2 scope narrowed to validating and explaining the C-down / E-up pattern (rest -> Simon and congruent -> incongruent); the main research question is unchanged.
-- [ ] Robustness: K, blinks, filter choices (partly done: RQ1 at K = 4, no smoothing, QC included, no-blink; rest is P2.7)
+- [ ] Robustness: K, blinks, filter choices (RQ1 at K = 4, no smoothing, QC included, no-blink; blinks done in P2.7)
 - [ ] Alpha control with spectral parameterization (Rest) → P2.8
 - [ ] Fix the final feature set
 - [x] Go/no-go decision on the recovery analysis (Oct 23; reporting is P2.9)
@@ -335,6 +383,9 @@ The error-cost links disappear and the RT-cost links weaken to borderline. Not a
 | Nov 15 | P2.1 owner confirmed: Minseo (other Phase 2 owners still pending confirmation) | Chuong |
 | Nov 15 | P2.7 blink cleaning rule, fixed before any coverage result: in Rest recordings with no eye component removed, mark 0.5-s windows with Fp1 or Fp2 peak-to-peak > 100 µV (2–20 Hz, 250 Hz data) as BAD_blink and exclude them from back-fitting. Threshold justified by the Fp amplitude distribution of recordings with eye components removed (config `phase2.blink_cleaning`) | Chuong |
 | Nov 15 | P2.1 primary: centered Pearson \|r\| on common channels; interpolation diagnostic only | Chuong |
+| Nov 17 | P2.7 remaining reruns defined before any result (config `phase2.blink_sensitivity_reruns`): Rest-based group results (RQ1 mixed-model group terms, reorganization, RQ3 group models and correlations) with blink-cleaned Rest; P2-B7 / P2-B8 without the Simon recordings that had no eye component removed; a result holds if its sign and its side of FDR q = 0.05 are unchanged | Chuong |
+| Nov 17 | P2.2 part 1 defined before any result (config `phase2.probability_dependence`): N = 139 from `microstates_task.csv`; share of non-C time X / (100 − C) for A, B, D, E; redistribution excess reported with it (same null, not tested separately); CLR changes A–E and log(E/X) for X = A, B, D; paired Wilcoxon; one FDR family "P2.2" of 12 tests; blink-cleaned Rest as sensitivity | Chuong |
+| Nov 18 | P2.2 part 2 defined before any result (config `phase2.probability_dependence_part2`): per recording, mean \|r\| of all labelled samples with each template A–E (GFP peaks as reported sensitivity); runner-up template of each sample (best of the four other than its primary label): share of E samples with runner-up C and of C samples with runner-up E; Simon − Rest, paired Wilcoxon, N = 139; one FDR family "P2.2 part 2" of 7 tests; blink-cleaned Rest as sensitivity | Chuong |
 
 ## Blockers
 
@@ -379,3 +430,6 @@ The error-cost links disappear and the RT-cost links weaken to borderline. Not a
 | Nov 15 | Chuong | Part B (P2.7): the 33 Rest recordings without eye-component removal match the 106 on group, sex, age and MoCA but have higher Rest C (33.1% vs 22.0%); blink cleaning (Fp > 100 µV, 0.5 s; rule committed before results) marks time in 20 of 35 recordings; with cleaned Rest, Simon − Rest coverage: E +1.67 (FDR p 0.002), A +1.95 (0.040), C −2.26 (0.072) | Part C (P2.1 verification) |
 | Nov 15 | Chuong | Part C (P2.1): Minseo's normative-template comparison integrated in `P2_1/` with a repo script and README (sources of all 12 template sets; .set files not committed). Method verified (centred \|r\|, name-matched common channels = common-average reference); Zanesco 2020 0.868 and 2021a 0.843 reproduced, all matrices within 5e-7. E's best match is an E-type map in 3 of 12 sets; A–D controls match in 10–12 of 12; within-set baseline max 0.68–0.88. Koenig 2024 meta-maps still missing | Next: P2.2; Minseo continues P2.1 (meta-maps, coordinates, uncertainty) |
 | Nov 16 | Chuong | Reviewed Bohyeon's Nov 15 delivery (`1115 bohyeon/`, results only): `state_prob` reproduces P2-B8's N2 Δ(C) (theta Δ(E) does not survive a 15-test family); raw run counts likely a trial-count effect; transitions overlap P2.3 (only control theta D → E survives); divergence from Rest mostly null; divergence vs. conflict costs in PD largely explained by transition count. Per-member Phase 2 tables added to `docs/TEAM_TASKS.md` | Ask Bohyeon for the code; agree P2-B8 FDR family and P2.3 ownership |
+| Nov 17 | Chuong | P2.2 part 1 (definitions fixed in config first): E's share of non-C time +1.83 points (FDR q 0.0035), CLR E +0.18 (q 0.0003), E rises relative to B and D; proportional redistribution of C's time explains only about a third of E-up (expected +0.61 vs observed +1.80). Same with blink-cleaned Rest | P2.2 part 2 (spatial correlation over time, second-best labels) |
+| Nov 17 | Chuong | P2.7 done (rules fixed in config first): with blink-cleaned Rest, all RQ1 mixed-model and RQ3 results keep their conclusions (PD less E at rest, q 0.010); without the 9 Simon recordings lacking eye-component removal, P2-B7 holds and P2-B8 keeps N2 Δ(C) (q 0.010) and the C interaction, while three borderline results (q 0.041–0.044) move to 0.059–0.069 with unchanged estimates | P2.2 part 2 |
+| Nov 18 | Chuong | P2.2 part 2 (definitions fixed in config first): mean \|r\| with E rises (+0.007, q 0.012) while C, B, D fall; E samples have C as runner-up less often in Simon (q 0.035), and every state gains E as runner-up, so E-up is not mainly relabelled C frames; E not significant at GFP peaks (p 0.16). Same with blink-cleaned Rest. P2.2 done. P2.9: slide drafted with P2.2 and P2.7 slides (`docs/slides_chuong_final.md`) | Add slides to the shared deck; integration |
