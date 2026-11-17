@@ -162,6 +162,25 @@ phase2:
     rest_based: "rerun with Rest features from results/features/microstates_rest_blinkclean.csv (Simon unchanged): RQ1 mixed-model group terms (B2), reorganization index (B3), RQ3 group models and correlations (B6); Bohyeon's scripts unchanged; the primary run is reproduced first with the same scripts"
     conflict_contrasts: "P2-B7 and P2-B8 rerun excluding Simon recordings with nICremoved == 0 (no eye component removed); conflict.csv unchanged otherwise"
     holds_if: "same sign and the same side of FDR q = 0.05 as the primary result"
+  probability_dependence:                 # P2.2 part 1, set Nov 17 BEFORE any result was computed
+    data: "results/features/microstates_task.csv, coverage (%), subjects with Rest and Simon coverage (N = 139, as RQ1)"
+    sensitivity: "Rest coverage from results/features/microstates_rest_blinkclean.csv (Simon unchanged)"
+    redistribution_null: "expected change of X in {A, B, D, E} if the coverage C loses is shared out in proportion to Rest coverage: -dC * X_rest / (100 - C_rest); excess = observed - expected; reported (mean, bootstrap CI), not tested separately: excess = (100 - C_simon) * change in share, the same null as the share test"
+    share: "X / (100 - C) for X in {A, B, D, E}, Simon vs Rest"
+    log_ratios:
+      clr: "centred log-ratio of the five coverages, Simon - Rest, for A-E"
+      pairwise: "log(E / X) for X in {A, B, D}, Simon - Rest"
+    test: "paired Wilcoxon signed-rank (statistics.within_subject); rank-biserial r, Cohen's d_z, mean with 95% bootstrap CI (2000 resamples, random_seed)"
+    fdr_family: "one Benjamini-Hochberg family 'P2.2' of 12 tests: share (4) + CLR (5) + pairwise log-ratio (3)"
+  probability_dependence_part2:           # P2.2 part 2, set Nov 18 BEFORE any result was computed
+    data: "continuous Rest and Simon recordings preprocessed as for back-fitting (preprocessing.bandpass_hz, resample_hz); K = 5 templates; primary (smoothed) labels from results/labels/; subjects as part 1 (N = 139)"
+    correlation: "absolute spatial correlation of each sample with each template (polarity-invariant, as pycrostates predict); channels picked by template channel name"
+    spatial_correlation: "mean |r| with each template A-E over all labelled samples (label >= 0), per recording; Simon - Rest"
+    spatial_correlation_sensitivity: "the same mean over GFP peaks only (microstates.gfp_peak_outlier_sd cut); reported, not in the FDR family"
+    second_best: "runner-up = template with the highest |r| among the four other than the sample's primary label; per recording: share of E-labelled samples whose runner-up is C, and share of C-labelled samples whose runner-up is E; Simon - Rest. The full runner-up distribution for every label is reported without tests"
+    sensitivity: "blink-cleaned Rest (phase2.blink_cleaning: BAD_blink windows excluded from back-fitting and from these measures) for Rest recordings with nICremoved == 0; Simon unchanged"
+    test: "paired Wilcoxon signed-rank; rank-biserial r, Cohen's d_z, mean with 95% bootstrap CI (2000 resamples, random_seed)"
+    fdr_family: "one Benjamini-Hochberg family 'P2.2 part 2' of 7 tests: mean |r| A-E (5) + E-runner-up-C share (1) + C-runner-up-E share (1)"
 
 # -------------------------------------------------------------
 # 7. Outputs and naming
