@@ -158,6 +158,10 @@ phase2:
     threshold_uv_peak_to_peak: 100        # a window exceeding this at Fp1 or Fp2 is marked BAD_blink
     action: "mark the whole window BAD_blink; excluded from back-fitting (reject_by_annotation); Rest metrics recomputed"
     justification: "in Rest recordings WITH eye components removed, the median subject's 99th-percentile 0.5-s Fp peak-to-peak is 48 uV and stays below ~100 uV in 3 of 4 subjects (median 0% of time above 100 uV), so > 100 uV is rare without blinks; in the 33 recordings without eye-component removal the median 99th percentile is 79 uV (upper quartile 178 uV)"
+  blink_sensitivity_reruns:               # P2.7 remaining reruns, set Nov 17 BEFORE any rerun result was computed
+    rest_based: "rerun with Rest features from results/features/microstates_rest_blinkclean.csv (Simon unchanged): RQ1 mixed-model group terms (B2), reorganization index (B3), RQ3 group models and correlations (B6); Bohyeon's scripts unchanged; the primary run is reproduced first with the same scripts"
+    conflict_contrasts: "P2-B7 and P2-B8 rerun excluding Simon recordings with nICremoved == 0 (no eye component removed); conflict.csv unchanged otherwise"
+    holds_if: "same sign and the same side of FDR q = 0.05 as the primary result"
 
 # -------------------------------------------------------------
 # 7. Outputs and naming
