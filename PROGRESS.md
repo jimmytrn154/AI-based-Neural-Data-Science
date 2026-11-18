@@ -406,6 +406,7 @@ The error-cost links disappear and the RT-cost links weaken to borderline. Not a
 | Nov 16 | P2-B8 FDR family: with all five states (family of 15, `1115 bohyeon/state_prob`) only N2 Δ(C) survives; theta Δ(E) (FDR p 0.044 in P2-B8) does not (0.17). Agree which family is primary | P2-B8, P2.4 | Team | No |
 | Nov 16 | Bohyeon's transition analysis (`1115 bohyeon/transition_prob`) overlaps P2.3 (Seonwoo, pending confirmation); one owner and one method needed | P2.3 | Team | No |
 | Nov 16 | Trial-count confounds in Bohyeon's Nov 15 delivery: raw run counts (`state_observed_runs`) not normalized; transition divergence vs. conflict costs (`JSD_behavior`) explained largely by transition count (see the review note in Phase 2) | P2.5 | Bohyeon | No |
+| Nov 18 | No one is assigned to produce the single-trial state sequences (cue-locked, A–E per sample) that the P2.4 segment-shuffle / Markov surrogates need; Seonwoo's S4 saved probabilities only, `results/labels/` has no trial structure, and P2.3's planned output is a summary table. Specified in `docs/TEAM_TASKS.md` (note after the Phase 2 table); first deliverable of P2.3 | Bohyeon (P2.4 transition surrogates), Seonwoo (P2.3) | Seonwoo to confirm (else Chuong writes the export) | No |
 
 ## Daily log
 
